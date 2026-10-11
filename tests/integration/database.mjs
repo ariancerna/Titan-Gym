@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { createHarness } from './harness.mjs';
-import { writeFile, mkdir } from 'node:fs/promises';
+import { writeFile, mkdir, access } from 'node:fs/promises';
 const results=[];
 const harness = await createHarness();
 const { admin, users, connectAs } = harness;
@@ -14,6 +14,17 @@ const reserve = (client,session,email='test1@example.com',name='Ana López') => 
 try {
   await check('PF-01: catálogo público con ocho sesiones y horarios futuros',async()=>{const {rows}=await anonymous.query('select * from public.list_sessions()'); assert.equal(rows.length,8); assert(rows.every(r=>new Date(r.starts_at)>new Date())); assert(rows.some(r=>r.discipline==='Cross Training'));});
   await check('PF-02: cupos exactos, pocos cupos y clase llena',async()=>{const {rows}=await anonymous.query('select * from public.list_sessions()'); assert.equal(rows.find(r=>r.id===s(1)).available,4); assert.equal(rows.find(r=>r.id===s(3)).available,0); assert.equal(rows.find(r=>r.id===s(5)).available,2);});
+  await check('Sede única Qatuna: dirección de la referencia y todas las sesiones coherentes',async()=>{
+    const locations=(await anonymous.query('select name,address from public.locations')).rows;
+    assert.equal(locations.length,1);assert.equal(locations[0].name,'TITAN GYM QATUNA');assert.equal(locations[0].address,'Isabel Chimpu Ocllo cdra 10, Carabayllo 15318');
+    assert((await anonymous.query('select * from public.list_sessions()')).rows.every(r=>r.location===locations[0].name&&r.address===locations[0].address));
+  });
+  await check('Recursos visuales: seis disciplinas con fotografía existente y aforo intacto',async()=>{
+    const {rows}=await anonymous.query('select * from public.list_sessions()');
+    assert.equal(new Set(rows.map(r=>r.image_url)).size,6);
+    for(const r of rows){assert.match(r.image_url,/^\/assets\/generated\/.+\.jpg$/);await access('public'+r.image_url);}
+    assert.equal(rows.find(r=>r.id===s(3)).available,0);
+  });
   let reservationId;
   await check('PF-03: reserva persistida y disponibilidad actualizada',async()=>{reservationId=(await reserve(a,s(2))).rows[0].id;const {rows}=await a.query('select * from public.reservations where id=$1',[reservationId]);assert.equal(rows.length,1);assert.equal(rows[0].user_id,users[0]);assert.match(rows[0].code,/^TG-[A-F0-9]{32}$/);assert.equal((await anonymous.query('select available from public.list_sessions($1)',[s(2)])).rows[0].available,8);});
   await check('PF-04: aforo completo rechazado por PostgreSQL',async()=>{await assert.rejects(reserve(a,s(3)),/SESSION_FULL/);assert.equal((await admin.query('select count(*) n from public.reservations where session_id=$1',[s(3)])).rows[0].n,'18');});

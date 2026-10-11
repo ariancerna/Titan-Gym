@@ -48,6 +48,9 @@
 .skip-link { clip-path: inset(50%); }
 .skip-link:focus { clip-path: none; }
 .auth-divider { display: flex; align-items: center; gap: 16px; margin: 24px 0; color: #a6a6a6; }
+.footer-brand { display: flex; align-items: center; gap: 12px; }.footer-brand img { border-radius: 8px; }
+.hero-overlay { background: linear-gradient(180deg,#10111470 0%,#101114a6 50%,#101114f2 100%); }
+@media (max-width:639px) { .hero-photo { object-position: 70% center; } }
 .auth-divider::before,.auth-divider::after { content: ''; height: 1px; flex: 1; background: #ffffff1a; }
 .google-signin { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; min-height: 48px; padding: 12px; border: 1px solid #747775; border-radius: 8px; background: #fff; color: #1f1f1f; font: 500 14px/20px 'Google Sans', Arial, sans-serif; }
 .google-signin img { width: 20px; height: 20px; flex: 0 0 20px; object-fit: contain; }

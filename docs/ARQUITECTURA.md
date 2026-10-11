@@ -78,13 +78,15 @@ También se admite signInWithPassword, con verificación getUser. Una cuenta con
 
 Referencias Figma consultadas: logo `1:2`; inicio `1:11`; catálogo `1:367`; detalle `1:758`; formulario `1:1017`; confirmación `1:1226`; reservas `1:1426`.
 
-Se conservan Oswald, Space Grotesk, colores solicitados, hero centrado, fotografías originales, tarjetas de ocupación, formulario de dos columnas y comprobante central. Hay adaptaciones a 768 y 390 px, menú móvil, botones táctiles, estados vacíos, enlaces semánticos, foco visible, labels y errores asociados mediante aria-describedby. Las fotografías cargan diferidas cuando corresponde y las fuentes están empaquetadas localmente.
+Se conservan Oswald, Space Grotesk, colores solicitados, hero centrado, tarjetas de ocupación, formulario de dos columnas y comprobante central. Por petición del propietario se sustituyeron los fondos y fotografías pixeladas por recursos nuevos y se añadieron logo/favicón transparentes. Los originales siguen disponibles; su procedencia se documenta en RECURSOS_VISUALES.md. Hay adaptaciones a 768 y 390 px, menú móvil, botones táctiles, foco visible, labels y errores asociados. Las fotografías cargan diferidas cuando corresponde y las fuentes están empaquetadas localmente.
 
 Los iconos se implementan con Lucide según el stack solicitado. Se retiraron de las pantallas los controles de simulación del diseño y promesas no implementadas: QR de acceso, cancelación automática, recordatorios y cancelación gratuita. El comprobante utiliza un código UUID único real. Los horarios, sedes y métricas de sesiones proceden de la base; no se afirma que las métricas estáticas de Figma sean datos reales del gimnasio.
 
 Las instrucciones de Supabase orientaron la separación de funciones privilegiadas, RLS e índices; las de Figma orientaron la extracción de originales y adaptación al layout responsive.
 
 ## Límites actuales
+
+La única sede persistida es TITAN GYM QATUNA, conforme a la referencia del propietario. Inicio consulta locations mediante TanStack Query independientemente de las sesiones, para no ocultar la dirección cuando el catálogo está vacío. La migración de consolidación conserva sesiones/reservas y retira únicamente dos sedes académicas sobrantes; ver SEDE.md.
 
 El catálogo se refresca cada 15 segundos y al volver a la ventana; las reservas y cambios administrativos invalidan su caché. La validación definitiva es SQL. No se habilitó Realtime ni se necesita para la seguridad de aforo. El historial del socio no infiere asistencia; el panel la registra explícitamente. No hay pagos ni gestión de membresías.
 

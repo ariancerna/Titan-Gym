@@ -7,8 +7,8 @@ Fecha de ejecución: 11 de octubre de 2026, America/Lima. Entorno: Windows, Node
 | Comprobación | Resultado | Alcance |
 | --- | --- | --- |
 | `npm test` | 31 pruebas aprobadas | Validaciones, fechas, filtros, accesibilidad, Auth y administración. |
-| `npm run test:db` | 23 comprobaciones aprobadas | Migraciones y seed sobre PostgreSQL real; reservas, concurrencia, RLS, permisos administrativos y asistencia auditada. |
-| `npm run test:e2e` | 72 pruebas aprobadas | Veinticuatro escenarios en 1440, 768 y 390 px; SQL real independiente y Auth de fixture. |
+| `npm run test:db` | 25 comprobaciones aprobadas | Reservas, concurrencia, RLS, administración, asistencia, recursos y sede única. |
+| `npm run test:e2e` | 78 pruebas aprobadas | Veintiséis escenarios en 1440, 768 y 390 px; SQL real independiente y Auth de fixture. |
 | `npm run build` | Aprobado | TypeScript estricto y bundle de producción. |
 | `npm audit --omit=dev` | 0 vulnerabilidades reportadas | Dependencias de producción instaladas. |
 
@@ -22,7 +22,15 @@ La migración administrativa alojada pasó una verificación transaccional de ro
 
 Capturas locales del módulo: `admin-asistencia-{desktop,tablet,mobile}.png`. Documentación y avisos de advisors: [Administración](ADMINISTRACION.md).
 
-## Matriz APF2
+## Renovación visual y sede única · última ejecución
+
+Se ejecutaron 31 unitarias, 25 comprobaciones SQL, build, auditoría de producción (0 vulnerabilidades reportadas) y **78 pruebas de navegador aprobadas sin retries ni casos omitidos**. Antes de la corrección de sede/transparencia, la renovación visual también tuvo una ejecución completa de 75 aprobadas.
+
+Las nuevas aserciones verifican fotografías de al menos 1600 px en las seis disciplinas, archivos existentes, logo web de 128 px, favicon PNG de 48 px y alfa 0 en sus esquinas. Comprueban sede única Qatuna y dirección de la referencia, ausencia del aviso retirado en frontend y dirección visible incluso sin sesiones publicadas. Se verificaron screenshots desktop/móvil; las capturas actuales reemplazan la evidencia anterior de esas rutas.
+
+En Supabase se aplicaron las migraciones de recursos y consolidación: seis clases ilustradas, una sede, ocho sesiones y 89 reservas conservadas. Se retiraron únicamente las dos sedes académicas sobrantes después de reasignar sus sesiones. Ningún administrador fue asignado automáticamente. La procedencia de los recursos se conserva en RECURSOS_VISUALES.md y la corrección en SEDE.md; no se presenta el flujo Auth de fixture como login real.
+
+## Matriz obligatoria APF2
 
 | Caso | Procedimiento ejecutado | Resultado observado |
 | --- | --- | --- |

@@ -5,7 +5,7 @@ export function errorMessage(error: unknown): string {
   if (raw.includes('SESSION_HAS_RESERVATIONS')) return 'Esta sesión tiene reservas. Solo puede modificarse su capacidad; los datos de los comprobantes deben conservarse.';
   if (raw.includes('ATTENDANCE_TOO_EARLY')) return 'La asistencia puede registrarse cuando comienza la sesión.';
   if (raw.includes('RESERVATION_CANCELLED')) return 'No puedes registrar asistencia para una reserva cancelada.';
-  if (/INVALID_CLASS|INVALID_IMAGE|INVALID_SESSION|INVALID_ATTENDANCE/.test(raw)) return 'Revisa los campos. Usa una fecha futura y una fotografía original del catálogo.';
+  if (/INVALID_CLASS|INVALID_IMAGE|INVALID_SESSION|INVALID_ATTENDANCE/.test(raw)) return 'Revisa los campos. Usa una fecha futura y una fotografía del catálogo.';
   if (/duplicate key|23505/.test(raw)) return 'Ya existe una clase con ese nombre o una sesión en esa sala y horario.';
   if (raw.includes('SESSION_FULL')) return 'La clase se llenó mientras completabas tus datos. No se registró la reserva. Elige otra sesión.';
   if (raw.includes('DUPLICATE_RESERVATION')) return 'Ya tienes una reserva activa para esta sesión. Consúltala en Mis reservas.';

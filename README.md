@@ -65,7 +65,7 @@ Para una instalación independiente:
 
 1. Crea un proyecto Supabase dedicado.
 2. Aplica las migraciones de [supabase/migrations](supabase/migrations) en orden de nombre desde el editor SQL o mediante la CLI vinculada al proyecto. Incluyen el esquema inicial y el módulo administrativo.
-3. Solo en una base vacía de demostración, ejecuta [seed.sql](supabase/seed.sql). Genera seis disciplinas, tres sedes, seis instructores y ocho sesiones con fechas relativas a su ejecución. La ocupación utiliza reservas académicas de identidades `.invalid`, sin contraseñas.
+3. Solo en una base vacía de demostración, ejecuta [seed.sql](supabase/seed.sql). Genera seis disciplinas, una sede (TITAN GYM QATUNA), seis instructores y ocho sesiones con fechas relativas a su ejecución. La ocupación utiliza reservas académicas de identidades `.invalid`, sin contraseñas.
 4. Configura Auth, Site URL y la redirección exacta `http://127.0.0.1:5173/auth/confirm`. Mantén deshabilitado el acceso anónimo.
 5. Configura Google siguiendo [Google Auth](docs/GOOGLE_AUTH.md). Para enlaces por correo destinados a socios externos, configura SMTP propio.
 6. Guarda la URL y la clave pública en `.env.local`, reinicia Vite y verifica el flujo completo.
@@ -110,8 +110,8 @@ Row Level Security protege las tablas. Los socios solo pueden consultar sus prop
 | Comprobación | Resultado |
 | --- | --- |
 | Vitest / pruebas unitarias | 31 aprobadas |
-| Integración SQL en PostgreSQL 17.6 | 23 aprobadas |
-| Playwright en 1440, 768 y 390 px | 72 aprobadas |
+| Integración SQL en PostgreSQL 17.6 | 25 aprobadas |
+| Playwright en 1440, 768 y 390 px | 78 aprobadas |
 | Build de producción | Aprobado |
 | Auditoría de dependencias de producción | 0 vulnerabilidades reportadas |
 
@@ -160,10 +160,12 @@ Cuando exista la URL definitiva, configura Site URL y su redirección `/auth/con
 - [Autenticación con Google](docs/GOOGLE_AUTH.md)
 - [Acceso con contraseña](docs/ACCESO_CONTRASENA.md)
 - [Administración y asistencia](docs/ADMINISTRACION.md)
+- [Sede única Qatuna](docs/SEDE.md)
+- [Recursos visuales y prompts](docs/RECURSOS_VISUALES.md)
 - [Despliegue](docs/DESPLIEGUE.md)
 
 ## Identidad visual
 
-El diseño se basa en las pantallas inspeccionadas de [Figma](https://www.figma.com/design/IdpjhkmQsR4wAKCOLNcfpG/Sin-t%C3%ADtulo?node-id=0-1) y [Stitch](https://stitch.withgoogle.com/projects/2251858017399190487): modo oscuro, amarillo TITAN GYM, tipografías Oswald y Space Grotesk, logotipo y fotografías originales.
+El diseño se basa en las pantallas inspeccionadas de [Figma](https://www.figma.com/design/IdpjhkmQsR4wAKCOLNcfpG/Sin-t%C3%ADtulo?node-id=0-1) y [Stitch](https://stitch.withgoogle.com/projects/2251858017399190487): modo oscuro, amarillo TITAN GYM y tipografías Oswald y Space Grotesk. Por petición del propietario se renovaron los fondos, las fotografías de seis disciplinas, el logo y el favicon. Logo y favicon tienen transparencia real; los originales de Figma se conservan.
 
 Los recursos se sirven desde `public/assets`. Su procedencia está registrada en [tools/assets-local.json](tools/assets-local.json); la aplicación no depende de URLs temporales de Figma. La captura de este README procede de la evidencia de pruebas, no de un despliegue público.

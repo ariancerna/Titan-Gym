@@ -36,7 +36,7 @@ La siguiente operación administrativa se rechaza inmediatamente; no depende de 
 
 ## Gestión del catálogo
 
-- **Nueva clase:** nombre, descripción, disciplina y fotografía original del catálogo. No se implementó carga de imágenes nuevas.
+- **Nueva clase:** nombre, descripción, disciplina y fotografía del catálogo. Ahora incluye imágenes ilustrativas generadas a petición del propietario. No se implementó carga de imágenes nuevas desde el formulario.
 - **Nueva sesión:** clase, instructor, sede, sala, fecha/hora de Lima, duración de 10–240 minutos, capacidad de 1–500 y publicación.
 - Las sesiones futuras publicadas aparecen en el catálogo con aforo calculado por SQL. Los borradores solo aparecen en administración.
 - Las sesiones con reservas conservan clase, instructor, sede, sala, horario, duración y publicación. Solo se admite modificar la capacidad de una sesión futura, sin reducirla por debajo de las reservas activas.
@@ -51,7 +51,17 @@ La asistencia se habilita al comenzar la sesión: **Pendiente**, **Presente** o 
 
 La asistencia se guarda en `public.attendance`, separada de `reservations.status`: una ausencia no cancela reservas ni libera artificialmente cupos. El historial vive en `private.attendance_history`. No se implementaron recordatorios ni estadísticas de inasistencia.
 
-## Seguridad
+## Correo, SMTP y altas manuales
+
+Correo/contraseña y enlace por correo son métodos de autenticación de una cuenta, no roles distintos. SMTP es el servicio que entrega enlaces, invitaciones y recuperación: [documentación oficial](https://supabase.com/docs/guides/auth/auth-smtp).
+
+Crear una cuenta manualmente en **Authentication → Users** no le concede el rol de esta aplicación. Añadirla al equipo de la organización Supabase tampoco: ese equipo administra el proyecto y no debe utilizarse como padrón de empleados del gimnasio solo para eludir restricciones de correo.
+
+Recomendación: socios mediante Google; administradores elegidos explícitamente, con correo/contraseña para su entrada. Las contraseñas existentes de socios no se convierten en privilegios. Para automatizarlo, una futura operación protegida del servidor puede crear la cuenta mediante [Auth Admin](https://supabase.com/docs/reference/javascript/auth-admin-createuser) y asignar el rol tras verificar el titular. Esa automatización todavía no está implementada; no se modificaron roles existentes.
+
+Para la demostración sin contratar SMTP, el administrador puede verificar su cuenta con Google una vez, configurar su propia contraseña y recibir la asignación de rol aprobada. Para invitaciones y recuperación por correo a otros destinatarios se necesita envío configurado.
+
+## Protección del módulo
 
 La migración `20261011225309_admin_attendance.sql` incorpora:
 
@@ -64,7 +74,7 @@ No se autoriza mediante `user_metadata`, roles enviados por React ni claves serv
 
 ## Verificación
 
-Se ejecutaron 31 unitarias, 23 comprobaciones PostgreSQL y 72 de navegador en tres tamaños, además de build y auditoría de producción. Se verifican creación/publicación/persistencia, rechazo de socios y anónimos, metadata falsificada, aforo, asistencia futura bloqueada, historial, actor, revocación y cierre de sesión sin datos privados visibles.
+La última ejecución incluye 31 unitarias, 25 comprobaciones PostgreSQL y 78 de navegador en tres tamaños, además de build y auditoría de producción. Se verifican creación/publicación/persistencia, rechazo de socios y anónimos, metadata falsificada, aforo, asistencia futura bloqueada, historial, actor, revocación, cierre de sesión, recursos y sede única.
 
 La migración se aplicó al Supabase alojado. Una transacción sobre una identidad académica comprobó rol, clase/sesión/reserva, inscritos, dos cambios de asistencia, actor y revocación. Tras rollback quedaron 89 reservas, ningún administrador, ningún registro de asistencia ni historial de prueba. No se cambiaron credenciales ni reservas reales.
 

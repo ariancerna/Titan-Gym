@@ -47,7 +47,7 @@ test('administrador crea clase y sesión, publica y conserva al recargar', async
   await editor.getByLabel('Nombre de la clase', { exact: true }).fill('Entrenamiento administrativo');
   await editor.getByLabel('Disciplina').selectOption({ label: 'Spinning' });
   await editor.getByLabel('Descripción', { exact: true }).fill('Clase creada desde el panel administrativo y guardada en PostgreSQL.');
-  await editor.getByLabel('Fotografía original').selectOption({ index: 1 });
+  await editor.getByLabel('Fotografía de la clase').selectOption({ index: 1 });
   await editor.getByRole('button', { name: 'Guardar clase' }).click();
   await expect(page.getByRole('status')).toContainText('Cambios guardados');
   await page.getByRole('button', { name: 'Nueva sesión', exact: true }).click();

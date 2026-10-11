@@ -12,3 +12,5 @@ docs/evidencias/google-nexo-*.png
 docs/evidencias/google-oauth-pendiente.png
 docs/evidencias/supabase-url-config.png
 **/*.private.json
+# Referencia local facilitada por el propietario; no es un recurso de la aplicación.
+/image.png

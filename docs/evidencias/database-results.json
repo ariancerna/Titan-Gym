@@ -1,5 +1,5 @@
 {
-  "executedAt": "2026-10-11T23:02:25.598Z",
+  "executedAt": "2026-10-11T23:29:46.420Z",
   "engine": "PostgreSQL 17.6 on x86_64-windows, compiled by msvc-19.44.35213, 64-bit",
   "scope": "PostgreSQL real; auth.uid y auth.users mínimos de pruebas. Sin servicio Supabase Auth.",
   "results": [
@@ -9,6 +9,14 @@
     },
     {
       "name": "PF-02: cupos exactos, pocos cupos y clase llena",
+      "passed": true
+    },
+    {
+      "name": "Sede única Qatuna: dirección de la referencia y todas las sesiones coherentes",
+      "passed": true
+    },
+    {
+      "name": "Recursos visuales: seis disciplinas con fotografía existente y aforo intacto",
       "passed": true
     },
     {

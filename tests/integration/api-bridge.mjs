@@ -50,6 +50,8 @@ const server = createServer(async(req,res)=>{
       else if(url.pathname.endsWith('/admin_save_session'))data=(await client.query('select public.admin_save_session($1,$2) value',[args.p_data,args.p_id||null])).rows[0].value;
       else if(url.pathname.endsWith('/admin_set_attendance')){await client.query('select public.admin_set_attendance($1,$2)',[args.p_reservation_id,args.p_status]);data=null;}
       else throw new Error('Unknown test RPC');
+    }else if(req.method==='GET' && url.pathname==='/rest/v1/locations'){
+      data=(await client.query('select id,name,address from public.locations order by name')).rows;
     }else if(req.method==='GET' && url.pathname==='/rest/v1/reservations'){
       const id=url.searchParams.get('id')?.replace(/^eq\./,'');
       data=(await client.query('select id,code,session_id,member_name,member_email,status,created_at from public.reservations where ($1::uuid is null or id=$1) order by created_at desc',[id||null])).rows;

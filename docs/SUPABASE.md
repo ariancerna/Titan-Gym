@@ -2,6 +2,8 @@
 
 Fecha: 11 de octubre de 2026.
 
+Estado actualizado: una única sede **TITAN GYM QATUNA**, dirección proporcionada en `image.png`, ocho sesiones y 89 reservas conservadas. Migraciones adicionales `20261011231555_refresh_visual_assets` y `20261011232425_single_qatuna_location` aplicadas. Las seis clases tienen imágenes nuevas; las dos sedes académicas sobrantes se retiraron tras reasignar sus sesiones. Los roles administrativos no cambiaron. Ver [Sede única](SEDE.md) y [Recursos visuales](RECURSOS_VISUALES.md).
+
 Actualización administrativa: migración `20261011225309_admin_attendance` aplicada y RPC verificadas dentro de una transacción revertida. La versión local se alineó con el historial remoto para evitar duplicar su aplicación. Se conservaron las 89 reservas actuales. No hay todavía una cuenta administradora real asignada; requiere identificarla y autorizarla según [Administración](ADMINISTRACION.md). La asistencia y su historial de prueba no quedaron guardados en el proyecto alojado.
 
 - Proyecto: FitSmart Agenda TITAN GYM.
