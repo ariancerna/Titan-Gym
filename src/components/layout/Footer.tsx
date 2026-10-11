@@ -1,0 +1,2 @@
+import { Link } from 'react-router-dom';
+export function Footer() { return <footer><div className="container footer-inner"><div><strong>TITAN GYM</strong><p>© {new Date().getFullYear()} TITAN GYM. Rendimiento de élite.</p></div><nav aria-label="Navegación del pie de página"><Link to="/">Inicio</Link><Link to="/clases">Horarios y clases</Link><Link to="/mis-reservas">Mis reservas</Link></nav></div></footer>; }

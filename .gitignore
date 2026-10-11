@@ -1,0 +1,14 @@
+node_modules/
+dist/
+.env*
+!.env.example
+test-results/
+playwright-report/
+supabase/.temp/
+supabase/.branches/
+*.tsbuildinfo
+# Capturas administrativas conservadas localmente, no publicadas en GitHub.
+docs/evidencias/google-nexo-*.png
+docs/evidencias/google-oauth-pendiente.png
+docs/evidencias/supabase-url-config.png
+**/*.private.json

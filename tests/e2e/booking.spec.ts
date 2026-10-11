@@ -1,0 +1,81 @@
+import { test, expect, type Page } from '@playwright/test';
+const sessionId='50000000-0000-4000-8000-000000000007';
+async function signInFixture(page: Page) {
+  await page.addInitScript(() => {
+    const user={id:'70000000-0000-4000-8000-000000000001',aud:'authenticated',role:'authenticated',email:'test1@example.com',email_confirmed_at:new Date().toISOString(),app_metadata:{provider:'email'},user_metadata:{},created_at:new Date().toISOString()};
+    const encode=(v: unknown)=>btoa(JSON.stringify(v)).replace(/=/g,'').replace(/\+/g,'-').replace(/\//g,'_');
+    const exp=Math.floor(Date.now()/1000)+3600;
+    const access_token=encode({alg:'HS256',typ:'JWT'})+'.'+encode({sub:user.id,email:user.email,role:'authenticated',exp})+'.fixture-signature';
+    localStorage.setItem('fitsmart-agenda-auth',JSON.stringify({access_token,refresh_token:'fixture-refresh',expires_in:3600,expires_at:exp,token_type:'bearer',user}));
+  });
+}
+test.beforeEach(async({request})=>{await request.post('http://127.0.0.1:54331/__test/reset');});
+test('PF-01–PF-03: catálogo, detalle, reserva guardada, comprobante y Mis reservas',async({page},testInfo)=>{
+  await signInFixture(page);
+  await page.goto('/clases');
+  await expect(page.locator('.class-card')).toHaveCount(8);
+  await page.screenshot({path:testInfo.outputPath('catalogo.png'),fullPage:true});
+  const before=page.locator('.class-card').filter({hasText:'Power Spinning Extreme'}).last();
+  await expect(before.getByText('25 cupos libres')).toBeVisible();
+  await before.getByRole('link',{name:'Ver detalles y reservar'}).click();
+  await expect(page.getByRole('heading',{name:'Power Spinning Extreme',exact:true}).first()).toBeVisible();
+  await expect(page.getByRole('link',{name:'Reservar mi lugar'})).toBeVisible();
+  await expect.poll(()=>page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth)).toBe(true);
+  await page.evaluate(async () => { await document.fonts.ready; await Promise.all(Array.from(document.images).map(img => img.decode().catch(() => {}))); });
+  await page.screenshot({path:testInfo.outputPath('detalle.png'),fullPage:true});
+  await page.getByRole('link',{name:'Reservar mi lugar'}).click();
+  await page.getByRole('textbox',{name:'Nombre completo del socio'}).fill('Ana López');
+  await expect.poll(()=>page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth)).toBe(true);
+  await page.screenshot({path:testInfo.outputPath('formulario.png'),fullPage:true});
+  await page.getByRole('button',{name:'Confirmar reserva',exact:true}).click();
+  await expect(page.getByRole('alert')).toContainText('Confirma tu asistencia');
+  await page.getByRole('checkbox').check();
+  await page.getByRole('button',{name:'Confirmar reserva',exact:true}).click();
+  await expect(page).toHaveURL(/\/reserva-confirmada\/[0-9a-f-]{36}$/);
+  await expect(page.getByRole('heading',{name:'¡Reserva confirmada!'})).toBeVisible();
+  await expect(page.locator('.receipt-member')).toContainText('Ana López');
+  await expect(page.locator('.receipt-code')).toContainText(/TG-[A-F0-9]{32}/);
+  await page.reload();
+  await expect(page.getByRole('heading',{name:'¡Reserva confirmada!'})).toBeVisible();
+  await page.screenshot({path:testInfo.outputPath('confirmacion.png'),fullPage:true});
+  await page.getByRole('link',{name:'Ver mis reservas'}).click();
+  await expect(page.locator('.reservation-card')).toHaveCount(1);
+  await page.screenshot({path:testInfo.outputPath('mis-reservas.png'),fullPage:true});
+  await page.goto('/clases');
+  await expect(page.locator('.class-card').filter({hasText:'Power Spinning Extreme'}).last()).toContainText('24 cupos libres');
+  await expect.poll(()=>page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth)).toBe(true);
+});
+test('PF-04: clase completa y reserva directa bloqueadas',async({page})=>{
+  await signInFixture(page);
+  await page.goto('/clases');
+  const full=page.locator('.class-card').filter({hasText:'Entrenamiento Funcional Élite'});
+  await expect(full.getByRole('button',{name:'Clase completa · sin cupos'})).toBeDisabled();
+  await expect(full).toContainText('0 cupos libres');
+  await page.goto('/reservar/50000000-0000-4000-8000-000000000003');
+  await expect(page.getByRole('heading',{name:'Clase completa',exact:true})).toBeVisible();
+  await expect(page.getByRole('button',{name:'Confirmar reserva'})).toHaveCount(0);
+});
+test('duplicado rechazado y confirmación inexistente no muestra éxito',async({page,request})=>{
+  await signInFixture(page);
+  await page.goto(`/reservar/${sessionId}`);
+  await page.getByRole('textbox',{name:'Nombre completo del socio'}).fill('Ana López');
+  await page.getByRole('checkbox').check();
+  await page.getByRole('button',{name:'Confirmar reserva',exact:true}).click();
+  await expect(page.getByRole('heading',{name:'¡Reserva confirmada!'})).toBeVisible();
+  await page.goto(`/reservar/${sessionId}`);
+  await page.getByRole('textbox',{name:'Nombre completo del socio'}).fill('Ana López');
+  await page.getByRole('checkbox').check();
+  await page.getByRole('button',{name:'Confirmar reserva',exact:true}).click();
+  await expect(page.getByRole('alert')).toContainText('Ya tienes una reserva');
+  await page.goto('/reserva-confirmada/00000000-0000-4000-8000-000000000000');
+  await expect(page.getByRole('heading',{name:'Reserva no encontrada'})).toBeVisible();
+  await expect(page.getByRole('heading',{name:'¡Reserva confirmada!'})).toHaveCount(0);
+});
+test('error de conexión visible y recuperación',async({page})=>{
+  await page.route('**/rest/v1/rpc/list_sessions',route=>route.abort());
+  await page.goto('/clases');
+  await expect(page.getByRole('alert')).toContainText('Comprueba tu conexión');
+  await page.unroute('**/rest/v1/rpc/list_sessions');
+  await page.getByRole('button',{name:'Reintentar'}).click();
+  await expect(page.locator('.class-card')).toHaveCount(8);
+});

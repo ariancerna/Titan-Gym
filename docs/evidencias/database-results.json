@@ -1,0 +1,55 @@
+{
+  "executedAt": "2026-10-11T22:35:57.977Z",
+  "engine": "PostgreSQL 17.6 on x86_64-windows, compiled by msvc-19.44.35213, 64-bit",
+  "scope": "PostgreSQL real; auth.uid y auth.users mínimos de pruebas. Sin servicio Supabase Auth.",
+  "results": [
+    {
+      "name": "PF-01: catálogo público con ocho sesiones y horarios futuros",
+      "passed": true
+    },
+    {
+      "name": "PF-02: cupos exactos, pocos cupos y clase llena",
+      "passed": true
+    },
+    {
+      "name": "PF-03: reserva persistida y disponibilidad actualizada",
+      "passed": true
+    },
+    {
+      "name": "PF-04: aforo completo rechazado por PostgreSQL",
+      "passed": true
+    },
+    {
+      "name": "Reserva duplicada rechazada",
+      "passed": true
+    },
+    {
+      "name": "Campos e identidad falsificados rechazados",
+      "passed": true
+    },
+    {
+      "name": "RLS: otro socio no puede leer la reserva",
+      "passed": true
+    },
+    {
+      "name": "Sin privilegios de inserción directa ni reserva anónima",
+      "passed": true
+    },
+    {
+      "name": "Último cupo: dos transacciones simultáneas, exactamente una reserva",
+      "passed": true
+    },
+    {
+      "name": "Rollback libera el último cupo para otra transacción",
+      "passed": true
+    },
+    {
+      "name": "Trigger protege importaciones y reducción del aforo",
+      "passed": true
+    },
+    {
+      "name": "Sesión pasada o despublicada no acepta reservas",
+      "passed": true
+    }
+  ]
+}
