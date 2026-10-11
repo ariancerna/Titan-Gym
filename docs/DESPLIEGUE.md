@@ -26,7 +26,7 @@ Configúralas en `.env.local` para desarrollo y en Vercel para los entornos Prev
 
 ## Vercel
 
-1. Repositorio destinado al proyecto: https://github.com/ariancerna/Titan-Gym. Se inicializó Git independiente dentro de esta carpeta, sin incluir archivos del repositorio padre del escritorio. El código se prepara para subir por solicitud explícita del propietario. `.env.local`, cachés y capturas administrativas quedan excluidos; esas capturas permanecen solo como evidencia local.
+1. Código subido y verificado en https://github.com/ariancerna/Titan-Gym, rama `main`. Entrega inicial: commit `eb1975df0f54fd0fd33615b6a25c6e1b34bd0db8`, 234 archivos. Se inicializó Git independiente dentro de esta carpeta, sin incluir archivos del repositorio padre del escritorio. `.env.local`, cachés y capturas administrativas se comprobaron ausentes en el árbol remoto; esas capturas permanecen solo como evidencia local. El commit usa correo noreply de GitHub.
 2. Importa el repositorio en Vercel y selecciona el directorio del proyecto como raíz si procede.
 3. Usa preset Vite, `npm run build` y salida `dist`. Selecciona una versión Node compatible (24.x fue la utilizada aquí).
 4. Configura las dos variables antes de generar el build. Vite las incorpora al compilar, por lo que cambiar variables requiere un nuevo despliegue.

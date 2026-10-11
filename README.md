@@ -2,6 +2,8 @@
 
 Aplicación React para consultar sesiones, visualizar cupos y reservar con identidad verificada. Implementa las seis pantallas del MVP APF2 y usa los recursos originales consultados en Figma.
 
+Código disponible en [GitHub · Titan-Gym](https://github.com/ariancerna/Titan-Gym), rama `main`. La subida fue verificada; esto no equivale a un despliegue publicado en Vercel.
+
 ## Estado real de la entrega
 
 Frontend conectado al proyecto Supabase **FitSmart Agenda TITAN GYM**, referencia `cyufnolnnwaeacnyzpfy`, organización Arian Dev, región São Paulo y plan gratuito. Migración, RLS y seed aplicados; ocho sesiones y 88 reservas académicas iniciales. `.env.local` contiene únicamente URL y clave pública y queda excluido de Git. **No publicado en Vercel.** El proyecto incluye `vercel.json`, build de producción y [pasos de despliegue](docs/DESPLIEGUE.md).
