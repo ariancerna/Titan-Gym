@@ -1,0 +1,73 @@
+# Administración y asistencia
+
+El módulo `/admin` permite gestionar clases generales, sesiones, inscritos y asistencia. Mantiene la identidad visual y funciona en escritorio, tablet y móvil. Su acceso solicita correo y contraseña; el permiso se decide en PostgreSQL, no por el método de login.
+
+## Primera cuenta administradora
+
+No hay una cuenta predeterminada ni una contraseña publicada. El seed no asigna roles. La primera cuenta real está pendiente de identificación por el propietario.
+
+1. El responsable indica qué cuenta verificada debe recibir el rol. Si todavía no existe, su titular debe iniciar sesión con Google y configurar su contraseña desde Mis reservas.
+2. Un operador de confianza comprueba la cuenta en el editor SQL de Supabase. Sustituye el correo de ejemplo por el aprobado; no ejecutes estos comandos desde el frontend:
+
+```sql
+select id, email, email_confirmed_at
+from auth.users
+where lower(email) = lower('CORREO_APROBADO')
+  and email_confirmed_at is not null
+  and not coalesce(is_anonymous, false);
+```
+
+3. Tras verificar el resultado y su titular, asigna el UUID exacto aprobado:
+
+```sql
+insert into private.administrators(user_id)
+values ('UUID_VERIFICADO')
+on conflict (user_id) do nothing;
+```
+
+4. El titular accede a `/admin` con su correo y contraseña. No comparta la contraseña con el agente ni la guarde en el repositorio.
+5. Para revocar el permiso desde el mismo entorno privilegiado:
+
+```sql
+delete from private.administrators where user_id = 'UUID_VERIFICADO';
+```
+
+La siguiente operación administrativa se rechaza inmediatamente; no depende de renovar claims del JWT. La interfaz puede conservar contenido ya visto hasta la próxima consulta o cambio de identidad, pero no puede ejecutar nuevas operaciones autorizadas.
+
+## Gestión del catálogo
+
+- **Nueva clase:** nombre, descripción, disciplina y fotografía original del catálogo. No se implementó carga de imágenes nuevas.
+- **Nueva sesión:** clase, instructor, sede, sala, fecha/hora de Lima, duración de 10–240 minutos, capacidad de 1–500 y publicación.
+- Las sesiones futuras publicadas aparecen en el catálogo con aforo calculado por SQL. Los borradores solo aparecen en administración.
+- Las sesiones con reservas conservan clase, instructor, sede, sala, horario, duración y publicación. Solo se admite modificar la capacidad de una sesión futura, sin reducirla por debajo de las reservas activas.
+- No se implementó borrado ni cancelación de sesiones. La interfaz no permite editar sesiones pasadas.
+- La restricción de sala/horario evita inicios idénticos en una sala; no detecta solapamiento de intervalos.
+
+## Inscritos y asistencia
+
+**Ver inscritos** consulta las reservas de una sesión, no un padrón general de membresías. Devuelve nombre, correo, código y estado exclusivamente al administrador autorizado.
+
+La asistencia se habilita al comenzar la sesión: **Pendiente**, **Presente** o **Ausente**. No se admite para reservas canceladas. Cada corrección agrega estado anterior, nuevo estado, `auth.uid()` del administrador y timestamp al historial. Repetir el mismo estado no duplica el historial.
+
+La asistencia se guarda en `public.attendance`, separada de `reservations.status`: una ausencia no cancela reservas ni libera artificialmente cupos. El historial vive en `private.attendance_history`. No se implementaron recordatorios ni estadísticas de inasistencia.
+
+## Seguridad
+
+La migración `20261011225309_admin_attendance.sql` incorpora:
+
+- `private.administrators`, sin privilegios del navegador; verificación de usuario confirmado y no anónimo en `private.is_admin()`.
+- RPC `admin_snapshot`, `admin_roster`, `admin_save_class`, `admin_save_session` y `admin_set_attendance`. Sus implementaciones privilegiadas viven en `private`, con `search_path=''`, verificación de rol en cada llamada y fachadas públicas invoker.
+- RLS en las nuevas tablas y prohibición de escrituras directas del cliente. El actor se obtiene del servidor.
+- Caché administrativa por usuario, eliminada al cambiar la identidad.
+
+No se autoriza mediante `user_metadata`, roles enviados por React ni claves service_role del frontend. Un socio con contraseña sigue siendo socio. Un administrador autorizado que ya tenga una sesión Google conserva su rol: el proveedor no reemplaza la autorización.
+
+## Verificación
+
+Se ejecutaron 31 unitarias, 23 comprobaciones PostgreSQL y 72 de navegador en tres tamaños, además de build y auditoría de producción. Se verifican creación/publicación/persistencia, rechazo de socios y anónimos, metadata falsificada, aforo, asistencia futura bloqueada, historial, actor, revocación y cierre de sesión sin datos privados visibles.
+
+La migración se aplicó al Supabase alojado. Una transacción sobre una identidad académica comprobó rol, clase/sesión/reserva, inscritos, dos cambios de asistencia, actor y revocación. Tras rollback quedaron 89 reservas, ningún administrador, ningún registro de asistencia ni historial de prueba. No se cambiaron credenciales ni reservas reales.
+
+El navegador utiliza Auth de fixture y SQL real independiente; no acredita un login administrativo real por contraseña. Ese control queda pendiente de autorizar la cuenta elegida y de que su titular introduzca sus credenciales.
+
+Advisors alojados: sin errores; advertencia existente de [protección de contraseñas filtradas deshabilitada](https://supabase.com/docs/guides/auth/password-security#password-strength-and-leaked-password-protection). Dos [avisos informativos de RLS sin políticas](https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy) corresponden deliberadamente a tablas privadas sin acceso del navegador. Los índices iniciales sin uso se conservan para claves foráneas e historial.

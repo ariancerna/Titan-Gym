@@ -6,13 +6,23 @@ Fecha de ejecución: 11 de octubre de 2026, America/Lima. Entorno: Windows, Node
 
 | Comprobación | Resultado | Alcance |
 | --- | --- | --- |
-| `npm test` | 26 pruebas aprobadas | Filtros, zona horaria, ocupación, Zod, accesibilidad, retorno seguro, Google y validación de contraseñas. |
-| `npm run test:db` | 12 comprobaciones aprobadas | Migración y seed ejecutados contra PostgreSQL real; persistencia, aforo, duplicados, concurrencia, rollback y RLS. |
-| `npm run test:e2e` | 51 pruebas aprobadas | Diecisiete escenarios en 1440, 768 y 390 px; reservas con PostgreSQL real, enlace/Google, contraseña y jerarquía del acceso con respuestas Auth de fixture. |
+| `npm test` | 31 pruebas aprobadas | Validaciones, fechas, filtros, accesibilidad, Auth y administración. |
+| `npm run test:db` | 23 comprobaciones aprobadas | Migraciones y seed sobre PostgreSQL real; reservas, concurrencia, RLS, permisos administrativos y asistencia auditada. |
+| `npm run test:e2e` | 72 pruebas aprobadas | Veinticuatro escenarios en 1440, 768 y 390 px; SQL real independiente y Auth de fixture. |
 | `npm run build` | Aprobado | TypeScript estricto y bundle de producción. |
 | `npm audit --omit=dev` | 0 vulnerabilidades reportadas | Dependencias de producción instaladas. |
 
-## Matriz obligatoria
+## Ampliación administrativa · ejecución final
+
+Se ejecutaron nuevamente 31 unitarias, 23 comprobaciones SQL, build y **72 pruebas de navegador aprobadas sin retries**. Los nuevos casos verifican acceso por contraseña y rol, cierre de sesión, negación a socios con metadata falsificada, creación y publicación de clases/sesiones con persistencia, consulta de inscritos, asistencia presente/ausente con historial, futura deshabilitada, sesión reservada protegida y errores de conexión.
+
+La primera ejecución del módulo tuvo 69 pruebas aprobadas y una advertencia React de claves repetidas al abrir edición e inscritos de la misma sesión. Se diferenciaron las claves de los componentes y se añadió el caso de contraseña/cierre de sesión. La suite completa final pasó con 72 casos y sin esa advertencia. No se alteraron resultados para ocultarla.
+
+La migración administrativa alojada pasó una verificación transaccional de rol, clase/sesión/reserva, roster, cambios auditados y revocación. Se hizo rollback: 89 reservas existentes, cero administradores reales asignados y ningún registro de asistencia/historial de prueba persistido. La cuenta administradora real y su login positivo permanecen pendientes de elección y credenciales del titular. La prueba Auth positiva del navegador utiliza fixtures, no credenciales reales.
+
+Capturas locales del módulo: `admin-asistencia-{desktop,tablet,mobile}.png`. Documentación y avisos de advisors: [Administración](ADMINISTRACION.md).
+
+## Matriz APF2
 
 | Caso | Procedimiento ejecutado | Resultado observado |
 | --- | --- | --- |

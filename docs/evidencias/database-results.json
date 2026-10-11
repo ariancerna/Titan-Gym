@@ -1,5 +1,5 @@
 {
-  "executedAt": "2026-10-11T22:35:57.977Z",
+  "executedAt": "2026-10-11T23:02:25.598Z",
   "engine": "PostgreSQL 17.6 on x86_64-windows, compiled by msvc-19.44.35213, 64-bit",
   "scope": "PostgreSQL real; auth.uid y auth.users mínimos de pruebas. Sin servicio Supabase Auth.",
   "results": [
@@ -49,6 +49,50 @@
     },
     {
       "name": "Sesión pasada o despublicada no acepta reservas",
+      "passed": true
+    },
+    {
+      "name": "Admin: socio y anónimo no pueden acceder al panel ni al roster",
+      "passed": true
+    },
+    {
+      "name": "Admin: no se puede autoasignar el rol ni falsificar metadata",
+      "passed": true
+    },
+    {
+      "name": "Admin: creación y edición de clase persistidas; socio rechazado",
+      "passed": true
+    },
+    {
+      "name": "Admin: nueva sesión publicada aparece en catálogo con cupos reales",
+      "passed": true
+    },
+    {
+      "name": "Admin: roster autorizado y sesión reservada conserva datos y aforo",
+      "passed": true
+    },
+    {
+      "name": "Admin: validación SQL de clase y sesión inválidas",
+      "passed": true
+    },
+    {
+      "name": "Asistencia: futuro y socio rechazados sin insertar filas",
+      "passed": true
+    },
+    {
+      "name": "Asistencia: presencia y corrección con auditoría real e identidad del actor",
+      "passed": true
+    },
+    {
+      "name": "Asistencia: idempotencia y aislamiento de historial",
+      "passed": true
+    },
+    {
+      "name": "Asistencia: estado inválido y reserva cancelada rechazados",
+      "passed": true
+    },
+    {
+      "name": "Admin: revocación inmediata sin renovar JWT",
       "passed": true
     }
   ]

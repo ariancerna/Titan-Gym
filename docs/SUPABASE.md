@@ -2,6 +2,8 @@
 
 Fecha: 11 de octubre de 2026.
 
+Actualización administrativa: migración `20261011225309_admin_attendance` aplicada y RPC verificadas dentro de una transacción revertida. La versión local se alineó con el historial remoto para evitar duplicar su aplicación. Se conservaron las 89 reservas actuales. No hay todavía una cuenta administradora real asignada; requiere identificarla y autorizarla según [Administración](ADMINISTRACION.md). La asistencia y su historial de prueba no quedaron guardados en el proyecto alojado.
+
 - Proyecto: FitSmart Agenda TITAN GYM.
 - Organización: Arian Dev; referencia `cyufnolnnwaeacnyzpfy`.
 - Región: `sa-east-1`, São Paulo. Plan Free; costo de creación informado y confirmado por el conector: US$0/mes.

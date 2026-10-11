@@ -3,6 +3,15 @@
 import { createServer } from 'node:http';
 import { createHarness } from './harness.mjs';
 const harness = await createHarness();
+// Administrador exclusivamente en el clúster de pruebas; nunca en el seed productivo.
+await harness.admin.query('insert into private.administrators(user_id) values($1)',[harness.users[2]]);
+const pastSession='90000000-0000-4000-8000-000000000001';
+await harness.admin.query(`insert into public.class_sessions(id,class_id,instructor_id,location_id,room,starts_at,duration_minutes,capacity)
+  select $1,class_id,instructor_id,location_id,'Sala asistencia de pruebas',now()-interval '1 hour',45,20 from public.class_sessions limit 1`,[pastSession]);
+await harness.admin.query(`insert into public.reservations(session_id,user_id,member_name,member_email)
+  values($1,'60000000-0000-4000-8000-000000000001','Alumno de asistencia','socio-demo-1@titan.invalid')`,[pastSession]);
+const initialClasses=(await harness.admin.query('select id from public.classes')).rows.map(r=>r.id);
+const initialSessions=(await harness.admin.query('select id from public.class_sessions')).rows.map(r=>r.id);
 const users = harness.users.map((id,i)=>({id,aud:'authenticated',role:'authenticated',email:`test${i+1}@example.com`,email_confirmed_at:new Date().toISOString(),app_metadata:{provider:'email',providers:['email']},user_metadata:{},identities:[],created_at:new Date().toISOString()}));
 function identify(req) {
   try { const token = req.headers.authorization?.replace(/^Bearer /,''); const sub=JSON.parse(Buffer.from(token.split('.')[1],'base64url').toString()).sub; return users.find(u=>u.id===sub); } catch { return null; }
@@ -19,7 +28,11 @@ const server = createServer(async(req,res)=>{
   if(url.pathname==='/auth/v1/user'){const user=identify(req);res.writeHead(user?200:401);res.end(JSON.stringify(user||{msg:'No fixture identity'}));return;}
   if(url.pathname==='/auth/v1/logout'){res.writeHead(204);res.end();return;}
   if(url.pathname==='/__test/reset' && req.method==='POST'){
-    await harness.admin.query('delete from public.reservations where user_id=any($1::uuid[])',[harness.users]);res.end('{"ok":true}');return;
+    await harness.admin.query('delete from private.attendance_history');await harness.admin.query('delete from public.attendance');
+    await harness.admin.query('delete from public.reservations where user_id=any($1::uuid[])',[harness.users]);
+    await harness.admin.query('delete from public.class_sessions where not(id=any($1::uuid[]))',[initialSessions]);
+    await harness.admin.query('delete from public.classes where not(id=any($1::uuid[]))',[initialClasses]);
+    res.end('{"ok":true}');return;
   }
   let client;
   try {
@@ -30,6 +43,12 @@ const server = createServer(async(req,res)=>{
       const args=JSON.parse(body||'{}');
       if(url.pathname.endsWith('/list_sessions'))data=(await client.query('select * from public.list_sessions($1)',[args.p_session_id||null])).rows;
       else if(url.pathname.endsWith('/reserve_session'))data=(await client.query('select public.reserve_session($1,$2,$3) id',[args.p_session_id,args.p_member_name,args.p_email])).rows[0].id;
+      else if(url.pathname.endsWith('/is_admin'))data=(await client.query('select public.is_admin() value')).rows[0].value;
+      else if(url.pathname.endsWith('/admin_snapshot'))data=(await client.query('select public.admin_snapshot() value')).rows[0].value;
+      else if(url.pathname.endsWith('/admin_roster'))data=(await client.query('select public.admin_roster($1) value',[args.p_session_id])).rows[0].value;
+      else if(url.pathname.endsWith('/admin_save_class'))data=(await client.query('select public.admin_save_class($1,$2) value',[args.p_data,args.p_id||null])).rows[0].value;
+      else if(url.pathname.endsWith('/admin_save_session'))data=(await client.query('select public.admin_save_session($1,$2) value',[args.p_data,args.p_id||null])).rows[0].value;
+      else if(url.pathname.endsWith('/admin_set_attendance')){await client.query('select public.admin_set_attendance($1,$2)',[args.p_reservation_id,args.p_status]);data=null;}
       else throw new Error('Unknown test RPC');
     }else if(req.method==='GET' && url.pathname==='/rest/v1/reservations'){
       const id=url.searchParams.get('id')?.replace(/^eq\./,'');

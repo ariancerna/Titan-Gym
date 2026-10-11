@@ -7,10 +7,21 @@
 | US02 | Como socio quiero reservar una clase para asegurar mi lugar. | Must have | Identidad verificada, campos válidos, fila persistida y comprobante real. | RPC, interfaz, RLS y aforo verificados. Propietario informó acceso real por correo y Google; reserva propia anterior sigue guardada. Contraseña implementada y probada con fixtures; prueba positiva alojada pendiente. Acceso externo sujeto a Audience Google y restricciones de correo. |
 | US05 | Como gimnasio quiero validar aforo para evitar sobreocupación. | Must have | Rechazar clases completas y dos solicitudes concurrentes al último cupo. | Implementado; PF-04 y prueba con dos conexiones PostgreSQL aprobados. |
 | US04 | Como socio quiero cancelar mi reserva. | Should have | Cancelación autorizada y liberación de cupo. | Pendiente; no hay interfaz ni RPC de cancelación. |
-| US06 | Como instructor quiero registrar asistencia. | Should have | Registro autorizado y auditable. | Pendiente; no se infiere asistencia por fecha. |
+| US06 | Como instructor quiero registrar asistencia. | Should have | Registro autorizado y auditable. | Implementado mediante administradores autorizados: pendiente/presente/ausente e historial de actor/fecha. SQL y navegador aprobados; primer rol real y login administrativo positivo pendientes del propietario. No se implementó un rol independiente de instructor. |
 | US07 | Como socio quiero recibir recordatorios. | Should have | Envíos programados con preferencias y zona horaria. | Pendiente; no se envían recordatorios ni comprobantes por correo. |
 | US08 | Como socio quiero una lista de espera. | Could have | Cola ordenada y asignación de lugares liberados. | Pendiente. |
 | US09 | Como gimnasio quiero indicadores de uso. | Could have | Dashboard autorizado con métricas definidas. | Pendiente; las barras operativas de aforo corresponden a US03, no a un dashboard. |
 | US10 | Como gimnasio quiero predecir inasistencias mediante ML. | Won't have now | Modelo, evaluación y tratamiento de datos. | Excluido del MVP APF2. |
+
+## Ampliación administrativa solicitada
+
+Estas historias amplían el alcance original; no sustituyen las historias obligatorias APF2.
+
+| ID | Historia | Prioridad de la ampliación | Estado real |
+| --- | --- | --- | --- |
+| ADM01 | Como administrador quiero crear/editar clases y programar sesiones. | Must have | Implementada y probada en SQL/navegador; migración alojada aplicada. Sesiones reservadas conservan sus detalles. |
+| ADM02 | Como administrador quiero consultar los inscritos de cada sesión. | Must have | Implementada mediante RPC con rol protegido; datos privados denegados a socios/anónimos. Primera cuenta real pendiente de autorización. |
+
+La administración no crea ni borra cuentas de socios y no gestiona membresías. US06 registra asistencia mediante el rol administrador, no mediante un rol separado de instructor. Configuración y límites: [Administración](ADMINISTRACION.md).
 
 La demostración local no equivale a una publicación productiva. No existe URL pública del frontend verificada. Las sedes, instructores y reservas del seed son datos académicos. La cuenta real del propietario y su reserva no se borraron; una cuenta Google con otro correo es independiente. Completar pruebas de acceso externo y contraseña antes de declarar esos flujos terminados de extremo a extremo.

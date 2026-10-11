@@ -2,6 +2,8 @@
 
 Estado: Supabase creado, migrado y conectado; Vercel preparado, **no publicado**. El proyecto dedicado es `cyufnolnnwaeacnyzpfy`. Consulta [el registro real de configuración](SUPABASE.md). No se ha verificado una URL pública del frontend.
 
+La migración administrativa también está aplicada. En otra instalación, aplica todas las migraciones en orden. Antes de demostrar `/admin`, autoriza una cuenta verificada siguiendo [Administración](ADMINISTRACION.md). No existe administrador por defecto ni contraseña publicada. Verifica desde una ventana privada el acceso permitido y el rechazo de una cuenta de socio.
+
 ## Supabase
 
 1. Ya existe un proyecto dedicado en Arian Dev: FitSmart Agenda TITAN GYM. Los pasos de migración y seed siguientes son solo para otro proyecto nuevo; no repetirlos en el existente.

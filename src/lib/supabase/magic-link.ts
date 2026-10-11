@@ -1,7 +1,7 @@
 const returnKey = 'fitsmart-agenda-auth-return';
 
 export function safeReturnPath(path: string | null): string {
-  return path && /^\/reservar\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(path)
+  return path && (path === '/admin' || /^\/reservar\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(path))
     ? path : '/mis-reservas';
 }
 

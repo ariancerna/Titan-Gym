@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -47,7 +47,7 @@ export function AuthGate() {
   return <section className="panel auth-panel">
     <ShieldCheck className="yellow"/><p className="eyebrow yellow">Acceso seguro del socio</p>
     <h2>Accede a tu cuenta</h2>
-    <p>Inicia sesión con tu correo y contraseña. También puedes elegir otro método de acceso.</p>
+    <p>Como socio puedes continuar con Google o usar tu contraseña existente. Para gestionar el gimnasio, utiliza el <Link className="yellow" to="/admin">acceso de administradores</Link>.</p>
     <div className="flex flex-wrap gap-2 mb-6" aria-label="Método de acceso por correo">
       <button type="button" className={`chip ${mode === 'password' ? 'selected' : ''}`} aria-pressed={mode === 'password'} disabled={googleLoading || passwordBusy || mailForm.formState.isSubmitting} onClick={() => { setMode('password'); setError(''); }}>Correo y contraseña</button>
       <button type="button" className={`chip ${mode === 'link' ? 'selected' : ''}`} aria-pressed={mode === 'link'} disabled={googleLoading || passwordBusy || mailForm.formState.isSubmitting} onClick={() => { setMode('link'); setError(''); }}>Enlace por correo</button>

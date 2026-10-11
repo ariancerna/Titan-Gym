@@ -4,7 +4,7 @@ Aplicación web para consultar clases, conocer los cupos disponibles y reservar 
 
 ![Inicio de FitSmart Agenda](docs/evidencias/desktop-inicio.png)
 
-> Estado: MVP de reservas implementado y conectado a Supabase. Preparado para Vercel, sin despliegue público verificado. El panel de administración es una propuesta para la siguiente etapa; todavía no está implementado.
+> Estado: reservas y panel de administración implementados y conectados a Supabase. Preparado para Vercel, sin despliegue público verificado. La primera cuenta administradora debe ser autorizada explícitamente; no se asignan roles automáticamente.
 
 ## Funcionalidades
 
@@ -17,6 +17,7 @@ Aplicación web para consultar clases, conocer los cupos disponibles y reservar 
 - Acceso con correo y contraseña, Google como segunda opción y enlace por correo.
 - Creación de contraseña desde una cuenta ya autenticada, conservando su identidad y reservas.
 - Diseño responsive para escritorio, tablet y móvil, con recursos originales de TITAN GYM.
+- Panel administrativo para crear/editar clases, programar sesiones, consultar inscritos y registrar asistencia con historial.
 
 ## Tecnologías
 
@@ -63,7 +64,7 @@ Abre <http://127.0.0.1:5173>. Sin configurar Supabase, la aplicación informa el
 Para una instalación independiente:
 
 1. Crea un proyecto Supabase dedicado.
-2. Aplica [la migración inicial](supabase/migrations/20261011213832_initial_schema.sql) desde el editor SQL o mediante la CLI vinculada al proyecto.
+2. Aplica las migraciones de [supabase/migrations](supabase/migrations) en orden de nombre desde el editor SQL o mediante la CLI vinculada al proyecto. Incluyen el esquema inicial y el módulo administrativo.
 3. Solo en una base vacía de demostración, ejecuta [seed.sql](supabase/seed.sql). Genera seis disciplinas, tres sedes, seis instructores y ocho sesiones con fechas relativas a su ejecución. La ocupación utiliza reservas académicas de identidades `.invalid`, sin contraseñas.
 4. Configura Auth, Site URL y la redirección exacta `http://127.0.0.1:5173/auth/confirm`. Mantén deshabilitado el acceso anónimo.
 5. Configura Google siguiendo [Google Auth](docs/GOOGLE_AUTH.md). Para enlaces por correo destinados a socios externos, configura SMTP propio.
@@ -90,6 +91,7 @@ Consulta [Acceso con contraseña](docs/ACCESO_CONTRASENA.md) y [Google Auth](doc
 | `/reserva-confirmada/:id` | Comprobante de una reserva propia |
 | `/mis-reservas` | Reservas propias y creación de contraseña |
 | `/auth/confirm` | Retorno de autenticación mediante PKCE |
+| `/admin` | Acceso administrativo por correo/contraseña y panel protegido |
 
 Los identificadores de detalle y reserva corresponden a `class_sessions.id`; el de confirmación corresponde a `reservations.id`. Las rutas inexistentes muestran una página de error.
 
@@ -107,9 +109,9 @@ Row Level Security protege las tablas. Los socios solo pueden consultar sus prop
 
 | Comprobación | Resultado |
 | --- | --- |
-| Vitest / pruebas unitarias | 26 aprobadas |
-| Integración SQL en PostgreSQL 17.6 | 12 aprobadas |
-| Playwright en 1440, 768 y 390 px | 51 aprobadas |
+| Vitest / pruebas unitarias | 31 aprobadas |
+| Integración SQL en PostgreSQL 17.6 | 23 aprobadas |
+| Playwright en 1440, 768 y 390 px | 72 aprobadas |
 | Build de producción | Aprobado |
 | Auditoría de dependencias de producción | 0 vulnerabilidades reportadas |
 
@@ -128,18 +130,18 @@ Las pruebas SQL usan PostgreSQL real en un clúster temporal independiente. Play
 
 Resultados, capturas y limitaciones: [Pruebas APF2](docs/PRUEBAS_APF2.md). No se publican credenciales ni capturas de configuración administrativa.
 
-## Próxima etapa: administración
+## Administración
 
-El modelo actual permite incorporar un panel `/admin`, pero **todavía no existen esa ruta, roles de administrador ni un flujo de asistencia**. Propuesta de ampliación:
+El panel `/admin` solicita correo y contraseña y requiere un rol protegido en Supabase. Los métodos de acceso existentes de los socios se mantienen para no bloquear sus cuentas.
 
-- Crear y editar clases generales y sus sesiones: instructor, sede, fecha, duración y capacidad.
+- Crear y editar clases generales con fotografías originales; programar sesiones con instructor, sede, sala, horario de Lima, duración, capacidad y publicación.
 - Consultar los socios inscritos en cada sesión y sus códigos de reserva.
-- Registrar asistencia: pendiente, presente o ausente, con fecha y administrador responsable.
-- Conservar el historial y evitar reducir la capacidad por debajo de las reservas activas.
+- Registrar asistencia desde el comienzo de la sesión: pendiente, presente o ausente, con fecha, administrador e historial de correcciones.
+- Conservar los comprobantes: si una sesión tiene reservas solo puede modificarse su capacidad, nunca por debajo de las reservas activas.
 
-El acceso deberá autorizarse también en la base de datos mediante un rol asignado de forma confiable, no solo ocultando botones ni usando datos editables desde el navegador. Los socios continuarán viendo únicamente sus propias reservas. Iniciar sesión con Google no otorgará permisos de administrador.
+El rol se asigna desde un entorno privilegiado en `private.administrators`. Cada operación verifica `auth.uid()` y ese rol en PostgreSQL; no se confía en metadata editable ni en el navegador. Los socios siguen viendo únicamente sus propias reservas. Google o una contraseña válida no otorgan permisos administrativos por sí solos.
 
-La asistencia corresponde a **US06**, clasificada como **Should have** para una etapa posterior. Cancelaciones, recordatorios, lista de espera e indicadores también permanecen pendientes según el [Product Backlog](docs/PRODUCT_BACKLOG.md).
+Configuración y límites: [Administración](docs/ADMINISTRACION.md). La primera cuenta real está pendiente de que el propietario indique su correo. **US06** conserva la prioridad **Should have**, ahora implementada en esta ampliación. Cancelaciones, recordatorios, lista de espera e indicadores siguen pendientes según el [Product Backlog](docs/PRODUCT_BACKLOG.md).
 
 ## Despliegue en Vercel
 
@@ -157,6 +159,7 @@ Cuando exista la URL definitiva, configura Site URL y su redirección `/auth/con
 - [Configuración de Supabase](docs/SUPABASE.md)
 - [Autenticación con Google](docs/GOOGLE_AUTH.md)
 - [Acceso con contraseña](docs/ACCESO_CONTRASENA.md)
+- [Administración y asistencia](docs/ADMINISTRACION.md)
 - [Despliegue](docs/DESPLIEGUE.md)
 
 ## Identidad visual

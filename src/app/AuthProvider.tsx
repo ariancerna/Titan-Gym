@@ -12,7 +12,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     let active = true;
     supabase.auth.getUser().then(({ data }) => { if (active) { setUser(data.user); setLoading(false); } }).catch(() => { if (active) setLoading(false); });
     const { data } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (active) { setUser(session?.user ?? null); setLoading(false); cache.removeQueries({ queryKey: ['reservations'] }); }
+      if (active) { setUser(session?.user ?? null); setLoading(false); cache.removeQueries({ queryKey: ['reservations'] }); cache.removeQueries({ queryKey: ['admin'] }); }
     });
     return () => { active = false; data.subscription.unsubscribe(); };
   }, [cache]);
