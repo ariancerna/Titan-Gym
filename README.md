@@ -1,61 +1,117 @@
 # FitSmart Agenda · TITAN GYM
 
-Aplicación React para consultar sesiones, visualizar cupos y reservar con identidad verificada. Implementa las seis pantallas del MVP APF2 y usa los recursos originales consultados en Figma.
+Aplicación web para consultar clases, conocer los cupos disponibles y reservar en TITAN GYM. MVP académico APF2 desarrollado con React, TypeScript y Supabase: las reservas se guardan en PostgreSQL y el aforo se valida de forma atómica, incluso ante solicitudes simultáneas.
 
-Código disponible en [GitHub · Titan-Gym](https://github.com/ariancerna/Titan-Gym), rama `main`. La subida fue verificada; esto no equivale a un despliegue publicado en Vercel.
+![Inicio de FitSmart Agenda](docs/evidencias/desktop-inicio.png)
 
-## Estado real de la entrega
+> Estado: MVP de reservas implementado y conectado a Supabase. Preparado para Vercel, sin despliegue público verificado. El panel de administración es una propuesta para la siguiente etapa; todavía no está implementado.
 
-Frontend conectado al proyecto Supabase **FitSmart Agenda TITAN GYM**, referencia `cyufnolnnwaeacnyzpfy`, organización Arian Dev, región São Paulo y plan gratuito. Migración, RLS y seed aplicados; ocho sesiones y 88 reservas académicas iniciales. `.env.local` contiene únicamente URL y clave pública y queda excluido de Git. **No publicado en Vercel.** El proyecto incluye `vercel.json`, build de producción y [pasos de despliegue](docs/DESPLIEGUE.md).
+## Funcionalidades
 
-Acceso: correo y contraseña como primera opción; debajo, Google con logotipo oficial y PKCE. También se conserva enlace mágico. El propietario activó Google con el cliente OAuth de Nexo e informó acceso real exitoso por Google y correo; se verificaron configuración alojada, redirección e identidad Google confirmada. El envío de enlaces gratuitos está restringido al equipo y Audience Google requiere revisión antes de afirmar acceso público. Instrucciones: [Google Auth](docs/GOOGLE_AUTH.md).
+- Inicio con clases destacadas obtenidas del catálogo real.
+- Búsqueda y filtros por disciplina, fecha y disponibilidad.
+- Detalle de sesiones con instructor, sede, horario, capacidad y ocupación.
+- Reserva con validación de datos, identidad verificada y prevención de duplicados.
+- Confirmación que consulta una reserva guardada; sin comprobantes ficticios.
+- Mis reservas: próximas sesiones e historial exclusivos de la cuenta autenticada.
+- Acceso con correo y contraseña, Google como segunda opción y enlace por correo.
+- Creación de contraseña desde una cuenta ya autenticada, conservando su identidad y reservas.
+- Diseño responsive para escritorio, tablet y móvil, con recursos originales de TITAN GYM.
 
-«Crear contraseña» está en Mis reservas para cuentas autenticadas. No se fusionaron cuentas con correos diferentes ni cambiaron credenciales del propietario; la reserva anterior sigue guardada. La prueba real positiva de contraseña requiere su entrada directa en la aplicación; los casos positivos automáticos usan fixtures. Uso y límites: [Acceso con contraseña](docs/ACCESO_CONTRASENA.md).
+## Tecnologías
 
-Las pruebas de integración usan PostgreSQL 17.6 real en un clúster temporal independiente. Las pruebas de navegador usan el mismo SQL mediante un puente REST exclusivo de pruebas, con identidades de fixture. Ese puente no forma parte del build y no reemplaza Supabase Auth en producción. Los tests del enlace usan respuestas Auth controladas; no acreditan entrega real de correo.
+| Área | Herramientas |
+| --- | --- |
+| Interfaz | React, TypeScript estricto, Vite, Tailwind CSS, Lucide |
+| Navegación y datos | React Router, TanStack Query |
+| Formularios | React Hook Form, Zod |
+| Backend | Supabase Auth, PostgreSQL, Supabase JavaScript Client |
+| Pruebas | Vitest, React Testing Library, Playwright, PostgreSQL temporal |
 
-Última ejecución: 26 unitarias, 12 SQL y 51 pruebas de navegador aprobadas; build aprobado y auditoría de producción con 0 vulnerabilidades reportadas. La evidencia pública omite rutas personales; las capturas administrativas se conservan solo localmente. Detalles y límites en `docs/PRUEBAS_APF2.md`.
+Las versiones exactas están fijadas en [package.json](package.json) y [package-lock.json](package-lock.json).
 
-## Inicio rápido
+## Ejecutar localmente
 
-Requiere Node.js compatible con Vite 8 (se verificó con Node 24.18.0) y npm. Las versiones exactas están fijadas en `package.json` y `package-lock.json`.
+Requiere Git, npm y Node.js compatible con Vite 8. Se verificó con Node.js 24.18.0.
 
 ```powershell
+git clone https://github.com/ariancerna/Titan-Gym.git
+cd Titan-Gym
 npm ci
-# Solo en una instalación nueva: copia .env.example a .env.local y configura las variables.
-# En este workspace .env.local ya existe: no lo sobrescribas.
+
+# Crear el archivo únicamente si todavía no existe.
+if (!(Test-Path .env.local)) { Copy-Item .env.example .env.local }
+```
+
+Configura estas variables en `.env.local`:
+
+```dotenv
+VITE_SUPABASE_URL=https://TU_PROYECTO.supabase.co
+VITE_SUPABASE_PUBLISHABLE_KEY=TU_CLAVE_PUBLICA
+```
+
+La clave puede ser publishable o la clave pública anon de un proyecto existente. **Nunca uses una clave secret o service_role en el frontend.** `.env.local` está excluido de Git.
+
+```powershell
 npm run dev
 ```
 
-Abre `http://127.0.0.1:5173`. La clave `VITE_SUPABASE_PUBLISHABLE_KEY` también admite una clave pública anon de un proyecto existente. Nunca uses service_role o una clave secret como variable VITE_.
+Abre <http://127.0.0.1:5173>. Sin configurar Supabase, la aplicación informa el problema: no sustituye la base de datos por reservas simuladas.
 
-## Conectar Supabase
+### Preparar Supabase
 
-1. Elige un proyecto dedicado a este MVP.
-2. En un proyecto nuevo, aplica `supabase/migrations/20261011213832_initial_schema.sql` desde el editor SQL o mediante la CLI vinculada a ese proyecto. Ya está aplicada en el proyecto creado; no repetirla.
-3. En una base de demostración vacía, ejecuta `supabase/seed.sql`. Incluye seis disciplinas, tres sedes, seis instructores, ocho sesiones futuras y ocupación real mediante reservas de identidades `.invalid` sin contraseñas. No ejecutes el seed en una base de socios reales.
-4. Habilita el proveedor de correo y altas de usuarios. Mantén deshabilitado el acceso anónimo.
-5. Mantén la plantilla predeterminada Magic Link. Configura Site URL y redirección exacta `http://127.0.0.1:5173/auth/confirm` (ya guardadas en este proyecto). Para demostrar sin gasto usa únicamente tu correo autorizado del equipo; para socios externos configura SMTP propio. Abre el enlace en el mismo navegador y dispositivo donde lo solicitaste.
-6. Añade la URL y clave pública a `.env.local` y reinicia Vite.
-7. Comprueba el recorrido de reserva y el aislamiento entre cuentas antes de usar datos reales.
+Para una instalación independiente:
 
-Con Docker operativo también puedes ejecutar `npx supabase start` y consultar `npx supabase status`. En esta sesión Docker no pudo iniciar su motor; las pruebas SQL se ejecutaron con PostgreSQL independiente.
+1. Crea un proyecto Supabase dedicado.
+2. Aplica [la migración inicial](supabase/migrations/20261011213832_initial_schema.sql) desde el editor SQL o mediante la CLI vinculada al proyecto.
+3. Solo en una base vacía de demostración, ejecuta [seed.sql](supabase/seed.sql). Genera seis disciplinas, tres sedes, seis instructores y ocho sesiones con fechas relativas a su ejecución. La ocupación utiliza reservas académicas de identidades `.invalid`, sin contraseñas.
+4. Configura Auth, Site URL y la redirección exacta `http://127.0.0.1:5173/auth/confirm`. Mantén deshabilitado el acceso anónimo.
+5. Configura Google siguiendo [Google Auth](docs/GOOGLE_AUTH.md). Para enlaces por correo destinados a socios externos, configura SMTP propio.
+6. Guarda la URL y la clave pública en `.env.local`, reinicia Vite y verifica el flujo completo.
+
+La migración y los datos iniciales **ya se aplicaron al proyecto alojado de esta entrega**. No vuelvas a ejecutar el seed sobre una base con socios o reservas reales. Más información en [Supabase](docs/SUPABASE.md).
+
+### Acceso de los socios
+
+Una cuenta nueva puede entrar con Google y crear una contraseña desde **Mis reservas**. Después puede usar correo y contraseña para acceder a esa misma cuenta.
+
+El formulario de contraseña no incluye registro público ni recuperación de contraseña por correo. El servicio predeterminado de correo de Supabase está restringido a destinatarios autorizados del equipo; para abrir ese acceso a otros socios se necesita SMTP propio. La audiencia OAuth de Google también debe revisarse antes de anunciar acceso público general.
+
+Consulta [Acceso con contraseña](docs/ACCESO_CONTRASENA.md) y [Google Auth](docs/GOOGLE_AUTH.md) para conocer el funcionamiento y las limitaciones.
 
 ## Rutas
 
-| Ruta | Función |
+| Ruta | Pantalla |
 | --- | --- |
-| `/` | Inicio y clases destacadas obtenidas del catálogo |
-| `/clases` | Sesiones, búsqueda, filtros y ocupación |
-| `/clases/:id` | Detalle de una sesión programada |
-| `/reservar/:id` | Acceso verificado y formulario de reserva |
-| `/reserva-confirmada/:id` | Comprobante consultado bajo RLS |
-| `/mis-reservas` | Reservas propias y sección de historial |
-| `/auth/confirm` | Intercambio PKCE y retorno seguro a reserva o cuenta |
+| `/` | Inicio |
+| `/clases` | Catálogo de sesiones |
+| `/clases/:id` | Detalle de una sesión |
+| `/reservar/:id` | Acceso y formulario de reserva |
+| `/reserva-confirmada/:id` | Comprobante de una reserva propia |
+| `/mis-reservas` | Reservas propias y creación de contraseña |
+| `/auth/confirm` | Retorno de autenticación mediante PKCE |
 
-Los parámetros `:id` de clases/reservar corresponden a **class_sessions.id**. El identificador de confirmación corresponde a **reservations.id**. Las clases generales están separadas de sus sesiones.
+Los identificadores de detalle y reserva corresponden a `class_sessions.id`; el de confirmación corresponde a `reservations.id`. Las rutas inexistentes muestran una página de error.
 
-## Comprobaciones
+## Datos y seguridad
+
+El esquema separa `disciplines`, `locations`, `instructors`, `classes`, `class_sessions` y `reservations`, con UUID, claves foráneas, índices y fechas con zona horaria.
+
+La reserva se crea mediante una operación transaccional en PostgreSQL que verifica la identidad autenticada, bloquea la sesión, rechaza duplicados, comprueba el aforo e inserta la reserva. Las reservas activas no pueden superar la capacidad, aunque dos usuarios intenten ocupar el último lugar simultáneamente.
+
+Row Level Security protege las tablas. Los socios solo pueden consultar sus propias reservas; conocer el correo o identificador de otro socio no concede acceso. Las claves privilegiadas no se usan en el navegador.
+
+## Pruebas y evidencia
+
+Última ejecución documentada: **11 de octubre de 2026**.
+
+| Comprobación | Resultado |
+| --- | --- |
+| Vitest / pruebas unitarias | 26 aprobadas |
+| Integración SQL en PostgreSQL 17.6 | 12 aprobadas |
+| Playwright en 1440, 768 y 390 px | 51 aprobadas |
+| Build de producción | Aprobado |
+| Auditoría de dependencias de producción | 0 vulnerabilidades reportadas |
 
 ```powershell
 npm test
@@ -66,15 +122,45 @@ npm run build
 npm audit --omit=dev
 ```
 
-`test:db` inicializa su propio clúster temporal y no modifica proyectos alojados. `test:e2e` inicia un puente de pruebas en 54331 y Vite en 5173; ambos puertos deben estar libres. Las identidades de fixture son exclusivas de esas pruebas y nunca se usan al ejecutar `npm run dev` normalmente.
+Se prueban los casos APF2 de consulta, cupos, reserva válida y rechazo de clase completa, además de validación de campos, duplicados y concurrencia por el último cupo.
 
-Resultados y límites: [Pruebas APF2](docs/PRUEBAS_APF2.md). Diseño y decisiones: [Arquitectura](docs/ARQUITECTURA.md). Alcance: [Product Backlog](docs/PRODUCT_BACKLOG.md). Configuración y publicación: [Despliegue](docs/DESPLIEGUE.md).
+Las pruebas SQL usan PostgreSQL real en un clúster temporal independiente. Playwright utiliza ese SQL mediante un puente REST exclusivo de pruebas y respuestas Auth controladas; **no acredita una autenticación positiva real con Google, una contraseña real ni la entrega de correo**. El puente no forma parte del build. Los puertos 5173 y 54331 deben estar libres para las pruebas de navegador.
 
-Comprobaciones públicas alojadas, sin escrituras ni envío de correo: `node tests/integration/hosted-public.mjs`. La prueba espera el seed original de ocho sesiones. Detalles de configuración: [Supabase alojado](docs/SUPABASE.md).
+Resultados, capturas y limitaciones: [Pruebas APF2](docs/PRUEBAS_APF2.md). No se publican credenciales ni capturas de configuración administrativa.
 
-## Referencias visuales inspeccionadas
+## Próxima etapa: administración
 
-- [Figma original](https://www.figma.com/design/IdpjhkmQsR4wAKCOLNcfpG/Sin-t%C3%ADtulo?node-id=0-1): seis pantallas, logotipo, Oswald y Space Grotesk; fotografías y vectores descargados localmente.
-- [Stitch](https://stitch.withgoogle.com/projects/2251858017399190487): siete recursos consultados, incluyendo las seis pantallas y el logo.
+El modelo actual permite incorporar un panel `/admin`, pero **todavía no existen esa ruta, roles de administrador ni un flujo de asistencia**. Propuesta de ampliación:
 
-Las fotografías se mantienen en `public/assets`. `tools/assets-local.json` registra su procedencia y `tools/download-assets.mjs` permite repetir la descarga mientras las URLs temporales sigan vigentes. El sitio utiliza rutas locales, sin depender de esas URLs temporales.
+- Crear y editar clases generales y sus sesiones: instructor, sede, fecha, duración y capacidad.
+- Consultar los socios inscritos en cada sesión y sus códigos de reserva.
+- Registrar asistencia: pendiente, presente o ausente, con fecha y administrador responsable.
+- Conservar el historial y evitar reducir la capacidad por debajo de las reservas activas.
+
+El acceso deberá autorizarse también en la base de datos mediante un rol asignado de forma confiable, no solo ocultando botones ni usando datos editables desde el navegador. Los socios continuarán viendo únicamente sus propias reservas. Iniciar sesión con Google no otorgará permisos de administrador.
+
+La asistencia corresponde a **US06**, clasificada como **Should have** para una etapa posterior. Cancelaciones, recordatorios, lista de espera e indicadores también permanecen pendientes según el [Product Backlog](docs/PRODUCT_BACKLOG.md).
+
+## Despliegue en Vercel
+
+El repositorio incluye [vercel.json](vercel.json) para las rutas SPA. Importa este repositorio en Vercel, selecciona Vite y configura las dos variables públicas de Supabase. Build: `npm run build`. Directorio de salida: `dist`.
+
+Cuando exista la URL definitiva, configura Site URL y su redirección `/auth/confirm` en Supabase. Comprueba desde una ventana privada el acceso, la reserva, el comprobante y el aislamiento entre usuarios. Pasos completos: [Despliegue](docs/DESPLIEGUE.md).
+
+**Todavía no hay una URL de producción verificada.**
+
+## Documentación
+
+- [Arquitectura y decisiones técnicas](docs/ARQUITECTURA.md)
+- [Product Backlog · MoSCoW](docs/PRODUCT_BACKLOG.md)
+- [Pruebas y evidencia APF2](docs/PRUEBAS_APF2.md)
+- [Configuración de Supabase](docs/SUPABASE.md)
+- [Autenticación con Google](docs/GOOGLE_AUTH.md)
+- [Acceso con contraseña](docs/ACCESO_CONTRASENA.md)
+- [Despliegue](docs/DESPLIEGUE.md)
+
+## Identidad visual
+
+El diseño se basa en las pantallas inspeccionadas de [Figma](https://www.figma.com/design/IdpjhkmQsR4wAKCOLNcfpG/Sin-t%C3%ADtulo?node-id=0-1) y [Stitch](https://stitch.withgoogle.com/projects/2251858017399190487): modo oscuro, amarillo TITAN GYM, tipografías Oswald y Space Grotesk, logotipo y fotografías originales.
+
+Los recursos se sirven desde `public/assets`. Su procedencia está registrada en [tools/assets-local.json](tools/assets-local.json); la aplicación no depende de URLs temporales de Figma. La captura de este README procede de la evidencia de pruebas, no de un despliegue público.
