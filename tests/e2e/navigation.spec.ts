@@ -27,6 +27,9 @@ test('nuevo logo, favicon y seis fotografías de disciplinas cargan correctament
   await expect(page.locator('.brand img')).toHaveAttribute('src', '/assets/brands/titan-mark.png');
   await expect.poll(() => page.locator('.brand img').evaluate((img: HTMLImageElement) => img.naturalWidth)).toBe(128);
   await expect(page.locator('link[rel="icon"]')).toHaveAttribute('href', '/favicon.png');
+  await expect(page.locator('link[rel="apple-touch-icon"]')).toHaveAttribute('href', '/apple-touch-icon.png');
+  await expect(page.locator('meta[property="og:image"]')).toHaveAttribute('content', /\/og-image\.png$/);
+  for (const asset of ['/apple-touch-icon.png', '/og-image.png']) expect((await request.get(asset)).status()).toBe(200);
   const icon = await request.get('/favicon.png');
   expect(icon.status()).toBe(200); expect(icon.headers()['content-type']).toContain('image/png');
   const dimensions = await page.evaluate(async () => { const i = new Image(); i.src = '/favicon.png'; await i.decode(); return [i.naturalWidth, i.naturalHeight]; });

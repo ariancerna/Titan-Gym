@@ -15,9 +15,13 @@ Se utilizó la herramienta integrada de generación de imágenes, no la CLI ni u
 | Zumba | `public/assets/generated/zumba.jpg` | 1672 × 941 |
 | Yoga | `public/assets/generated/yoga.jpg` | 1672 × 941 |
 | Cross Training | `public/assets/generated/cross-training.jpg` | 1672 × 941 |
-| Logo transparente fuente | `public/assets/brands/titan-mark-transparent-source.png` | 1280 × 1280 |
-| Logo de navegación/pie | `public/assets/brands/titan-mark.png` | 128 × 128 |
+| Logo original de TITAN GYM | `branding/titan-logo-original.png` (no se publica) | 1083 × 1452 |
+| Logo de navegación, pie y correos | `public/assets/brands/titan-mark.png` | 128 × 128 |
 | Favicon | `public/favicon.png` | 48 × 48 |
+| Icono de pantalla de inicio (iPhone) | `public/apple-touch-icon.png` | 180 × 180 |
+| Imagen para compartir el enlace | `public/og-image.png` | 1200 × 630 |
+
+Actualización: el logo generado con IA (casco amarillo) se reemplazó por el logo de TITAN GYM proporcionado por el equipo. Los recursos se generan con `tools/build-brand.py` (ver `branding/LEEME.md`) y los archivos fuente del logo anterior se retiraron de `public/`.
 
 Los fondos anteriores de inicio/detalle tenían 512 × 279 px. No se ampliaron artificialmente: fueron reemplazados por generaciones nuevas de mayor resolución. Aunque los prompts solicitaron tamaños mayores, la salida real fue 1672 × 941; no se presenta como 4K.
 
