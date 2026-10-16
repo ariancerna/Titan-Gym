@@ -67,7 +67,7 @@ try {
     const snapshot=(await manager.query('select public.admin_snapshot() data')).rows[0].data;
     assert(snapshot.classes.some(c=>c.id===classId&&c.name==='Clase editada de integración'));
   });
-  const sessionData={class_id:null,instructor_id:'30000000-0000-4000-8000-000000000001',location_id:'20000000-0000-4000-8000-000000000001',room:'Sala de integración',starts_at:new Date(Date.now()+86400000*10).toISOString(),duration_minutes:45,capacity:2,published:true};
+  const sessionData={class_id:null,instructor_id:'30000000-0000-4000-8000-000000000001',location_id:'20000000-0000-4000-8000-000000000001',room:'Sala de integración',starts_at:new Date(Date.now()+86400000*3).toISOString(),duration_minutes:45,capacity:2,published:true};
   await check('Admin: nueva sesión publicada aparece en catálogo con cupos reales',async()=>{
     sessionData.class_id=classId;
     sessionId=(await manager.query('select public.admin_save_session($1) id',[sessionData])).rows[0].id;
@@ -202,6 +202,19 @@ try {
     assert.equal((await admin.query('select count(*)::int n from private.attendance_history where reservation_id=$1',[id])).rows[0].n,1);
     await admin.query("update public.class_sessions set starts_at=now()-interval '2 hours' where id=$1",[qrSession]);
     await assert.rejects(manager.query('select public.admin_check_in($1)',[code]),/CHECKIN_CLOSED/);
+  });
+  await check('Ventana de reservas: el catálogo muestra 7 días y no se reserva antes de tiempo',async()=>{
+    const later='93000000-0000-4000-8000-000000000001';
+    await admin.query(`insert into public.class_sessions(id,class_id,instructor_id,location_id,room,starts_at,duration_minutes,capacity)
+      select $1,class_id,instructor_id,location_id,'Sala ventana',now()+interval '10 days',45,10 from public.class_sessions where id=$2`,[later,s(1)]);
+    const catalog=(await anonymous.query('select id,starts_at from public.list_sessions()')).rows;
+    assert(!catalog.some(r=>r.id===later),'la sesión a 10 días no debe estar en el catálogo');
+    assert(catalog.every(r=>new Date(r.starts_at)<=new Date(Date.now()+7*86400000)));
+    assert.equal((await anonymous.query('select id from public.list_sessions($1)',[later])).rows.length,1,'el detalle por id sigue disponible');
+    await assert.rejects(reserve(a,later),/BOOKING_NOT_OPEN/);
+    await admin.query("update public.class_sessions set starts_at=now()+interval '6 days' where id=$1",[later]);
+    assert((await anonymous.query('select id from public.list_sessions()')).rows.some(r=>r.id===later),'al entrar en la ventana aparece en el catálogo');
+    assert.ok((await reserve(a,later)).rows[0].id);
   });
   await check('Admin: revocación inmediata sin renovar JWT',async()=>{
     await admin.query('delete from private.administrators where user_id=$1',[users[2]]);

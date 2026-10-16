@@ -6,7 +6,7 @@ import { ReservationSummary } from '../components/reservations/ReservationSummar
 import { ReservationForm } from '../components/reservations/ReservationForm';
 import { AuthGate } from '../components/reservations/AuthGate';
 import { LoadingState, ErrorState, EmptyState } from '../components/ui/States';
-import { isBookable } from '../utils/sessions';
+import { bookingOpensAt, bookingState, formatDate, isBookable } from '../utils/sessions';
 export default function BookingPage() {
   const { id = '' } = useParams();
   const query = useClassSession(id);
@@ -44,8 +44,18 @@ export default function BookingPage() {
         <ReservationSummary session={s} />
         {!isBookable(s) ? (
           <EmptyState
-            title={s.available <= 0 ? 'Clase completa' : 'La sesión ya comenzó'}
-            message="No se puede registrar una reserva para esta sesión. Explora otros horarios."
+            title={
+              bookingState(s) === 'full'
+                ? 'Clase completa'
+                : bookingState(s) === 'not-open'
+                  ? 'Reservas aún no abiertas'
+                  : 'La sesión ya comenzó'
+            }
+            message={
+              bookingState(s) === 'not-open'
+                ? `Las reservas se abren 7 días antes de la clase: desde el ${formatDate(bookingOpensAt(s).toISOString())}.`
+                : 'No se puede registrar una reserva para esta sesión. Explora otros horarios.'
+            }
             action
           />
         ) : user ? (

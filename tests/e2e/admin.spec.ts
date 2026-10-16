@@ -57,7 +57,7 @@ test('administrador crea clase y sesión, publica y conserva al recargar', async
   await session.getByLabel('Instructor').selectOption({ index: 1 });
   await session.getByLabel('Sede').selectOption({ index: 1 });
   await session.getByLabel('Sala', { exact: true }).fill('Sala nueva');
-  const future = new Date(Date.now() + 86400000 * 12).toISOString().slice(0, 16);
+  const future = new Date(Date.now() + 86400000 * 3).toISOString().slice(0, 16);
   await session.getByLabel('Fecha y hora · Lima', { exact: true }).fill(future);
   await session.getByLabel('Capacidad máxima', { exact: true }).fill('12');
   await session.getByRole('button', { name: 'Guardar sesión' }).click();

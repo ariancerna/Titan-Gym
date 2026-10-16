@@ -38,6 +38,7 @@ La siguiente operación administrativa se rechaza inmediatamente; no depende de 
 
 - **Nueva clase:** nombre, descripción, disciplina y fotografía del catálogo. Ahora incluye imágenes ilustrativas generadas a petición del propietario. No se implementó carga de imágenes nuevas desde el formulario.
 - **Nueva sesión:** clase, instructor, sede, sala, fecha/hora de Lima, duración de 10–240 minutos, capacidad de 1–500 y publicación.
+- Las reservas se abren 7 días antes de cada clase: el catálogo muestra solo las sesiones publicadas de los próximos 7 días y la base de datos rechaza reservas anteriores (`BOOKING_NOT_OPEN`). El panel muestra todas, para programar con anticipación.
 - Las sesiones futuras publicadas aparecen en el catálogo con aforo calculado por SQL. Los borradores solo aparecen en administración.
 - Las sesiones con reservas conservan clase, instructor, sede, sala, horario, duración y publicación. Solo se admite modificar la capacidad de una sesión futura, sin reducirla por debajo de las reservas activas.
 - No se implementó borrado ni cancelación de sesiones. La interfaz no permite editar sesiones pasadas.

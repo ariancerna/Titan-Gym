@@ -1,5 +1,5 @@
 {
-  "executedAt": "2026-10-16T03:33:59.865Z",
+  "executedAt": "2026-10-16T04:01:05.246Z",
   "engine": "PostgreSQL 17.6 on x86_64-windows, compiled by msvc-19.44.35213, 64-bit",
   "scope": "PostgreSQL real; auth.uid y auth.users mínimos de pruebas. Sin servicio Supabase Auth.",
   "results": [
@@ -125,6 +125,10 @@
     },
     {
       "name": "QR: recepción registra \"presente\" por código, una sola vez y solo para administradores",
+      "passed": true
+    },
+    {
+      "name": "Ventana de reservas: el catálogo muestra 7 días y no se reserva antes de tiempo",
       "passed": true
     },
     {

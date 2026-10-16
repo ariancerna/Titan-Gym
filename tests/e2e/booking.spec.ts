@@ -106,3 +106,16 @@ test('error de conexión visible y recuperación',async({page})=>{
   await page.getByRole('button',{name:'Reintentar'}).click();
   await expect(page.locator('.class-card')).toHaveCount(8);
 });
+
+test('ventana de 7 días: una clase lejana no se lista y su detalle dice cuándo abre',async({page,request})=>{
+  const encode=(v: unknown)=>Buffer.from(JSON.stringify(v)).toString('base64url');
+  const token=`${encode({alg:'HS256',typ:'JWT'})}.${encode({sub:'70000000-0000-4000-8000-000000000003',exp:Math.floor(Date.now()/1000)+3600,role:'authenticated'})}.fixture`;
+  const sessionLater=await (await request.post('http://127.0.0.1:54331/rest/v1/rpc/admin_save_session',{headers:{Authorization:`Bearer ${token}`},data:{p_data:{class_id:'40000000-0000-4000-8000-000000000005',instructor_id:'30000000-0000-4000-8000-000000000005',location_id:'20000000-0000-4000-8000-000000000001',room:'Sala lejana',starts_at:new Date(Date.now()+10*86400000).toISOString(),capacity:10,duration_minutes:60,published:true},p_id:null}})).json();
+  await page.goto('/clases');
+  await expect(page.locator('.class-card')).toHaveCount(8);
+  await expect(page.getByText('Sala lejana')).toHaveCount(0);
+  await page.goto(`/clases/${sessionLater}`);
+  await expect(page.getByRole('button',{name:'Reservas aún no abiertas'})).toBeDisabled();
+  await expect(page.getByText(/Las reservas se abren 7 días antes/)).toBeVisible();
+  await expect(page.getByRole('link',{name:'Reservar mi lugar'})).toHaveCount(0);
+});

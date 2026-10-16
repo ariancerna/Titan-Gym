@@ -135,7 +135,8 @@ export default function CatalogPage() {
             />
           )}
           <p className="catalog-note">
-            Los cupos se actualizan cada 15 segundos. El lugar se asegura al confirmar la reserva.
+            Mostramos las clases de los próximos 7 días: las reservas se abren una semana antes de
+            cada clase. Los cupos se actualizan cada 15 segundos.
           </p>
         </>
       )}

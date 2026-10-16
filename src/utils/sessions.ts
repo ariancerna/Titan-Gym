@@ -37,8 +37,19 @@ export const timeRange = (s: ClassSession) =>
   `${formatTime(s.starts_at)} – ${formatTime(new Date(new Date(s.starts_at).getTime() + s.duration_minutes * 60000).toISOString())}`;
 export const occupancy = (s: Pick<ClassSession, 'capacity' | 'reserved'>) =>
   Math.min(100, Math.max(0, Math.round((s.reserved / s.capacity) * 100)));
-export const isBookable = (s: ClassSession) =>
-  s.available > 0 && new Date(s.starts_at).getTime() > Date.now();
+/** Las reservas se abren 7 días antes de la clase. Debe coincidir con private.booking_window(). */
+export const bookingWindowDays = 7;
+const dayMs = 86400000;
+export const bookingOpensAt = (s: Pick<ClassSession, 'starts_at'>) =>
+  new Date(new Date(s.starts_at).getTime() - bookingWindowDays * dayMs);
+
+export type BookingState = 'open' | 'full' | 'started' | 'not-open';
+export function bookingState(s: ClassSession, now = Date.now()): BookingState {
+  if (new Date(s.starts_at).getTime() <= now) return 'started';
+  if (bookingOpensAt(s).getTime() > now) return 'not-open';
+  return s.available > 0 ? 'open' : 'full';
+}
+export const isBookable = (s: ClassSession) => bookingState(s) === 'open';
 export function filterSessions(
   sessions: ClassSession[],
   search: string,

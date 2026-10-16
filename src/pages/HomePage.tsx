@@ -76,7 +76,7 @@ export default function HomePage() {
                   ? `${sessions.length} ${sessions.length === 1 ? 'sesión' : 'sesiones'}`
                   : '—'}
               </dd>
-              <small>Programadas desde hoy</small>
+              <small>En los próximos 7 días</small>
             </div>
             <div>
               <dt>Cupos libres</dt>

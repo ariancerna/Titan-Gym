@@ -5,7 +5,7 @@ import { ReservationSummary } from '../components/reservations/ReservationSummar
 import { AvailabilityBadge } from '../components/classes/AvailabilityBadge';
 import { Button, ButtonLink } from '../components/ui/Button';
 import { LoadingState, ErrorState, EmptyState } from '../components/ui/States';
-import { isBookable } from '../utils/sessions';
+import { bookingOpensAt, bookingState, formatDate, formatTime } from '../utils/sessions';
 export default function DetailPage() {
   const { id = '' } = useParams();
   const query = useClassSession(id);
@@ -20,6 +20,7 @@ export default function DetailPage() {
         action
       />
     );
+  const state = bookingState(s);
   return (
     <div className="container page">
       <div className="breadcrumbs">
@@ -95,20 +96,25 @@ export default function DetailPage() {
         <aside className="detail-aside">
           <ReservationSummary session={s}>
             <div className="summary-action">
-              {isBookable(s) ? (
+              {state === 'open' ? (
                 <ButtonLink to={`/reservar/${s.id}`} className="btn-block">
                   Reservar mi lugar <ArrowRight size={18} />
                 </ButtonLink>
               ) : (
                 <>
                   <Button disabled className="btn-block">
-                    {s.available <= 0 ? 'Clase completa' : 'Sesión finalizada'}
+                    {state === 'full'
+                      ? 'Clase completa'
+                      : state === 'not-open'
+                        ? 'Reservas aún no abiertas'
+                        : 'Sesión finalizada'}
                   </Button>
                   <p>
-                    No es posible reservar:{' '}
-                    {s.available <= 0
-                      ? 'la capacidad máxima ha sido alcanzada.'
-                      : 'la clase ya comenzó.'}
+                    {state === 'full'
+                      ? 'No es posible reservar: la capacidad máxima ha sido alcanzada.'
+                      : state === 'not-open'
+                        ? `Las reservas se abren 7 días antes: desde el ${formatDate(bookingOpensAt(s).toISOString())} a las ${formatTime(bookingOpensAt(s).toISOString())}.`
+                        : 'No es posible reservar: la clase ya comenzó.'}
                   </p>
                 </>
               )}

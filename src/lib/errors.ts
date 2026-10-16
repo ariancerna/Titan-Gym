@@ -31,6 +31,8 @@ export function errorMessage(error: unknown): string {
     return 'Esta sesión tiene reservas. Solo puede modificarse su capacidad; los datos de los comprobantes deben conservarse.';
   if (raw.includes('ATTENDANCE_TOO_EARLY'))
     return 'La asistencia puede registrarse cuando comienza la sesión.';
+  if (raw.includes('BOOKING_NOT_OPEN'))
+    return 'Las reservas para esta clase todavía no están abiertas: se abren 7 días antes del inicio.';
   if (raw.includes('CODE_NOT_FOUND'))
     return 'No existe una reserva con ese código. Revisa que esté bien escrito.';
   if (raw.includes('CHECKIN_TOO_EARLY'))
