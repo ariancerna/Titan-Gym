@@ -27,3 +27,14 @@ describe('retorno seguro del enlace mágico', () => {
     expect(errorMessage(new Error('Invalid login credentials'))).toContain('No pudimos iniciar sesión');
   });
 });
+
+describe('errores no previstos del servidor', () => {
+  it('muestran su código técnico sin el mensaje interno', () => {
+    const message = errorMessage({ message: 'relation "public.privacy_consents" does not exist', code: '42P01' });
+    expect(message).toContain('código 42P01');
+    expect(message).not.toContain('privacy_consents');
+  });
+  it('un fallo de red sigue pidiendo revisar la conexión', () => {
+    expect(errorMessage(new TypeError('Failed to fetch'))).toContain('Comprueba tu conexión');
+  });
+});

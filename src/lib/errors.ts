@@ -81,5 +81,9 @@ export function errorMessage(error: unknown): string {
     return 'El enlace no es válido o ha vencido. Solicita uno nuevo.';
   if (/rate limit|too many/i.test(raw))
     return 'Pediste varios correos seguidos. Espera unos minutos antes de intentarlo otra vez.';
+  // Error del servidor no previsto: se muestra su código técnico (p. ej. 42P01 o PGRST202) para
+  // poder diagnosticarlo. El código no revela datos; el mensaje interno nunca se muestra.
+  if (/^(?:[0-9A-Z]{5}|PGRST\d{3})$/.test(code))
+    return `No pudimos completar la operación por un error del servidor (código ${code}). Inténtalo de nuevo o avisa a recepción.`;
   return 'No pudimos conectar con la agenda. Comprueba tu conexión e inténtalo de nuevo.';
 }
