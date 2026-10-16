@@ -33,6 +33,7 @@ test('contraseña administrativa verifica rol y cerrar sesión oculta datos priv
   await page.getByLabel('Contraseña', { exact: true }).fill('contraseña-administrativa-fixture');
   await page.getByRole('button', { name: 'Iniciar sesión', exact: true }).click();
   await expect(page.getByRole('button', { name: 'Nueva clase', exact: true })).toBeVisible();
+  await page.getByRole('button', { name: 'Pasadas', exact: true }).click();
   await page.locator('.admin-session').filter({ hasText: 'Sala asistencia de pruebas' }).getByRole('button', { name: 'Ver inscritos' }).click();
   await expect(page.getByText('socio-demo-1@titan.invalid', { exact: true })).toBeVisible();
   await page.getByRole('button', { name: 'Cerrar sesión', exact: true }).click();
@@ -70,6 +71,7 @@ test('administrador crea clase y sesión, publica y conserva al recargar', async
 test('inscritos y asistencia se guardan con historial en tres tamaños', async ({ page }, testInfo) => {
   await signIn(page); await page.goto('/admin');
   await expect(page.getByRole('button', { name: 'Nueva clase', exact: true })).toBeVisible();
+  await page.getByRole('button', { name: 'Pasadas', exact: true }).click();
   const past = page.locator('.admin-session').filter({ hasText: 'Sala asistencia de pruebas' });
   await past.getByRole('button', { name: 'Ver inscritos' }).click();
   const roster = page.getByRole('region', { name: 'Inscritos y asistencia' });
@@ -80,7 +82,7 @@ test('inscritos y asistencia se guardan con historial en tres tamaños', async (
   await expect(roster.getByText('Historial de asistencia (1)', { exact: true })).toBeVisible();
   await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
   await page.screenshot({ path: testInfo.outputPath('admin-asistencia.png'), fullPage: true });
-  await page.reload(); await past.getByRole('button', { name: 'Ver inscritos' }).click();
+  await page.reload(); await page.getByRole('button', { name: 'Pasadas', exact: true }).click(); await past.getByRole('button', { name: 'Ver inscritos' }).click();
   await expect(roster.getByLabel('Asistencia de Alumno de asistencia')).toHaveValue('present');
   await roster.getByLabel('Asistencia de Alumno de asistencia').selectOption('absent');
   await expect(roster.getByText('Historial de asistencia (2)', { exact: true })).toBeVisible();
@@ -91,6 +93,7 @@ test('HU09: indicador de no-shows y exportación del dataset seudonimizado', asy
   const indicators = page.getByRole('region', { name: 'Asistencia e inasistencias' });
   await expect(indicators.getByText('Tasa de no-shows')).toBeVisible();
   await expect(indicators.getByText('1 reservas sin registrar')).toBeVisible();
+  await page.getByRole('button', { name: 'Pasadas', exact: true }).click();
   const past = page.locator('.admin-session').filter({ hasText: 'Sala asistencia de pruebas' });
   await past.getByRole('button', { name: 'Ver inscritos' }).click();
   await page.getByLabel('Asistencia de Alumno de asistencia').selectOption('absent');
@@ -138,4 +141,31 @@ test('acceso administrativo ofrece Google y regresa a /admin sin conceder el rol
   await page.goto('/admin');
   expect(await page.evaluate(() => localStorage.getItem('fitsmart-agenda-auth-return'))).toBe('/admin');
   await expect(page.getByRole('button', { name: 'Nueva clase', exact: true })).toHaveCount(0);
+});
+
+test('recepción registra la llegada con el código del QR, una sola vez', async ({ page, request }) => {
+  const api = 'http://127.0.0.1:54331/rest/v1';
+  const admin = { Authorization: `Bearer ${identity(3).access_token}` };
+  const member = { Authorization: `Bearer ${identity(1).access_token}` };
+  const sessionId = await (await request.post(`${api}/rpc/admin_save_session`, { headers: admin, data: { p_data: { class_id: '40000000-0000-4000-8000-000000000001', instructor_id: '30000000-0000-4000-8000-000000000001', location_id: '20000000-0000-4000-8000-000000000001', room: 'Sala QR de pruebas', starts_at: new Date(Date.now() + 20 * 60000).toISOString(), capacity: 10, duration_minutes: 45, published: true }, p_id: null } })).json();
+  const reservationId = await (await request.post(`${api}/rpc/reserve_session`, { headers: member, data: { p_session_id: sessionId, p_member_name: 'Ana López', p_email: 'test1@example.com' } })).json();
+  const [{ code }] = await (await request.get(`${api}/reservations?id=eq.${reservationId}`, { headers: member })).json();
+  expect(code).toMatch(/^TG-[ABCDEFGHJKLMNPQRSTUVWXYZ23456789]{6}$/);
+
+  await signIn(page); await page.goto('/admin');
+  const panel = page.getByRole('region', { name: 'Registrar llegada' });
+  await expect(panel.getByRole('button', { name: 'Escanear QR' })).toBeVisible();
+  const input = panel.getByLabel('Código de reserva');
+  await input.fill('ABC');
+  await panel.getByRole('button', { name: 'Registrar llegada' }).click();
+  await expect(panel.getByRole('alert')).toContainText('TG- seguido de 6 caracteres');
+  await input.fill('TG-ZZZZZZ');
+  await panel.getByRole('button', { name: 'Registrar llegada' }).click();
+  await expect(panel.getByRole('alert')).toContainText('No existe una reserva con ese código');
+  await input.fill(code.toLowerCase());
+  await panel.getByRole('button', { name: 'Registrar llegada' }).click();
+  await expect(panel.getByRole('status')).toContainText('Llegada registrada: Ana López');
+  await panel.getByRole('button', { name: 'Registrar llegada' }).click();
+  await expect(panel.getByRole('status')).toContainText('Ya estaba registrado: Ana López');
+  await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
 });

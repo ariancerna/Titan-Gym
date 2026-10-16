@@ -52,6 +52,7 @@ const server = createServer(async(req,res)=>{
       else if(url.pathname.endsWith('/cancel_reservation')){await client.query('select public.cancel_reservation($1)',[args.p_reservation_id]);data=null;}
       else if(url.pathname.endsWith('/admin_dataset'))data=(await client.query('select * from public.admin_dataset()')).rows;
       else if(url.pathname.endsWith('/accept_privacy_policy')){await client.query('select public.accept_privacy_policy($1)',[args.p_version]);data=null;}
+      else if(url.pathname.endsWith('/admin_check_in'))data=(await client.query('select public.admin_check_in($1) value',[args.p_code])).rows[0].value;
       else throw new Error('Unknown test RPC');
     }else if(req.method==='GET' && url.pathname==='/rest/v1/privacy_consents'){
       const version=url.searchParams.get('policy_version')?.replace(/^eq\./,'');

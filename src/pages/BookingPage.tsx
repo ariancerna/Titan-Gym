@@ -1,5 +1,5 @@
 import { Link, useParams } from 'react-router-dom';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Check } from 'lucide-react';
 import { useAuth } from '../app/AuthProvider';
 import { useClassSession } from '../features/classes/queries';
 import { ReservationSummary } from '../components/reservations/ReservationSummary';
@@ -21,13 +21,25 @@ export default function BookingPage() {
         <ArrowLeft size={16} />
         Regresar al detalle de la clase
       </Link>
-      <section className="booking-progress panel">
-        <p className="eyebrow yellow">FitSmart Agenda · Validación</p>
-        <h1>Paso 1 de 2: confirmación de datos</h1>
-        <div className="bar bar-low">
-          <span style={{ width: '50%' }} />
-        </div>
-      </section>
+      <div className="booking-header">
+        <h1>Reserva tu lugar</h1>
+        <ol className="stepper" aria-label="Pasos de la reserva">
+          <li className="done">
+            <span aria-hidden="true">
+              <Check size={14} />
+            </span>
+            Elegir clase
+          </li>
+          <li aria-current="step">
+            <span aria-hidden="true">2</span>
+            {user ? 'Confirmar datos' : 'Ingresar'}
+          </li>
+          <li>
+            <span aria-hidden="true">3</span>
+            Comprobante
+          </li>
+        </ol>
+      </div>
       <div className="booking-layout">
         <ReservationSummary session={s} />
         {!isBookable(s) ? (

@@ -1,16 +1,23 @@
+import type { ReactNode } from 'react';
 import { CalendarDays, Clock, MapPin, UserRound } from 'lucide-react';
 import type { ClassSession } from '../../types/domain';
 import { formatDate, timeRange } from '../../utils/sessions';
 import { AvailabilityBadge } from '../classes/AvailabilityBadge';
 import { OccupancyBar } from '../classes/OccupancyBar';
-export function ReservationSummary({ session: s }: { session: ClassSession }) {
+export function ReservationSummary({
+  session: s,
+  children,
+}: {
+  session: ClassSession;
+  /** Acción principal (p. ej. el botón de reservar). Si no hay, se muestra la nota de aforo. */
+  children?: ReactNode;
+}) {
   return (
     <section className="panel summary">
       <div className="section-top">
         <span className="eyebrow">Detalle de sesión</span>
         <AvailabilityBadge available={s.available} capacity={s.capacity} />
       </div>
-      <p className="eyebrow">Clase programada</p>
       <h2>{s.name}</h2>
       <dl className="detail-list">
         <div>
@@ -49,7 +56,11 @@ export function ReservationSummary({ session: s }: { session: ClassSession }) {
         </div>
       </dl>
       <OccupancyBar capacity={s.capacity} reserved={s.reserved} />
-      <p className="notice">Tu cupo se asigna al confirmar la reserva, sujeto a disponibilidad.</p>
+      {children ?? (
+        <p className="notice">
+          Tu cupo se asigna al confirmar la reserva, sujeto a disponibilidad.
+        </p>
+      )}
     </section>
   );
 }

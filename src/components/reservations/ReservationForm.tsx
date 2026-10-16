@@ -64,7 +64,7 @@ export function ReservationForm({
   }
   return (
     <section className="panel form-panel">
-      <p className="eyebrow yellow">Último paso</p>
+      <p className="eyebrow yellow">Datos del socio</p>
       <h2>Confirma tus datos</h2>
       <p>Con estos datos te reconocerán en recepción y recibirás tu código de reserva.</p>
       <form onSubmit={form.handleSubmit(submit)} noValidate>

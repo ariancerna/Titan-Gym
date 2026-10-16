@@ -53,7 +53,8 @@ test('sede única Qatuna incluso sin sesiones y sin avisos de IA en la interfaz'
   await page.route('**/rest/v1/rpc/list_sessions', route => route.fulfill({ status: 200, contentType: 'application/json', body: '[]' }));
   await page.goto('/');
   await expect(page.getByRole('heading', { name: 'Nuestra sede', exact: true })).toBeVisible();
-  await expect(page.getByText('Isabel Chimpu Ocllo cdra 10, Carabayllo 15318', { exact: false })).toBeVisible();
+  await expect(page.getByRole('main').getByText('Isabel Chimpu Ocllo cdra 10, Carabayllo 15318', { exact: false })).toBeVisible();
+  await expect(page.getByRole('contentinfo')).toContainText('Isabel Chimpu Ocllo cdra 10, Carabayllo 15318');
   await expect(page.getByText('Sede Norte', { exact: false })).toHaveCount(0);
   await expect(page.getByText('Sede Financiera', { exact: false })).toHaveCount(0);
   await expect(page.getByText('Imágenes de entrenamiento ilustrativas.', { exact: true })).toHaveCount(0);

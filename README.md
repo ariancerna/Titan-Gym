@@ -19,6 +19,7 @@ Aplicación web para consultar clases, conocer los cupos disponibles y reservar 
 - Diseño responsive para escritorio, tablet y móvil, con recursos originales de TITAN GYM.
 - Panel administrativo para crear/editar clases, programar sesiones, consultar inscritos y registrar asistencia con historial.
 - Indicador de no-shows y exportación CSV del dataset seudonimizado para el componente de Machine Learning (APF3).
+- Comprobante con código QR y registro de llegada en recepción escaneando el QR desde el panel.
 
 ## Tecnologías
 

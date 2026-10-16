@@ -41,3 +41,21 @@ export function EmptyState({
     </div>
   );
 }
+
+/** Siluetas de tarjetas mientras carga el catálogo: anticipan la forma del contenido. */
+export function CardGridSkeleton({ count = 3 }: { count?: number }) {
+  return (
+    <div className="class-grid" role="status" aria-label="Cargando clases">
+      {Array.from({ length: count }, (_, i) => (
+        <div key={i} className="class-card skeleton-card" aria-hidden="true">
+          <span className="skeleton line short" />
+          <span className="skeleton line title" />
+          <span className="skeleton line" />
+          <span className="skeleton line" />
+          <span className="skeleton block" />
+          <span className="skeleton button" />
+        </div>
+      ))}
+    </div>
+  );
+}

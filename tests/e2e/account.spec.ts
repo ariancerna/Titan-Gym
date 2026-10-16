@@ -133,7 +133,7 @@ test('Ley 29733: quien entró con Google acepta la privacidad en su primera rese
   await page.getByRole('button', { name: 'Confirmar reserva', exact: true }).click();
   await expect(page.getByRole('alert').filter({ hasText: 'política de privacidad' })).toBeVisible();
   expect(accepted).toEqual([]);
-  await expect(page.getByRole('link', { name: 'Política de privacidad' })).toHaveAttribute('href', '/privacidad');
+  await expect(page.getByRole('main').getByRole('link', { name: 'Política de privacidad' })).toHaveAttribute('href', '/privacidad');
   await page.getByRole('checkbox', { name: /Política de privacidad/ }).check();
   await page.getByRole('button', { name: 'Confirmar reserva', exact: true }).click();
   await expect(page.getByRole('heading', { name: '¡Reserva confirmada!' })).toBeVisible();

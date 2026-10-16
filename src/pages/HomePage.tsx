@@ -4,7 +4,7 @@ import { dayLabel, formatTime } from '../utils/sessions';
 import { useSessions, useGymLocations } from '../features/classes/queries';
 import { ClassCard } from '../components/classes/ClassCard';
 import { ButtonLink } from '../components/ui/Button';
-import { EmptyState, ErrorState, LoadingState } from '../components/ui/States';
+import { CardGridSkeleton, EmptyState, ErrorState } from '../components/ui/States';
 
 const steps = [
   {
@@ -98,7 +98,7 @@ export default function HomePage() {
           </ButtonLink>
         </div>
         {query.isPending ? (
-          <LoadingState />
+          <CardGridSkeleton />
         ) : query.isError ? (
           <ErrorState error={query.error} retry={() => void query.refetch()} />
         ) : sessions.length ? (

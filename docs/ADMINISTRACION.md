@@ -43,6 +43,20 @@ La siguiente operación administrativa se rechaza inmediatamente; no depende de 
 - No se implementó borrado ni cancelación de sesiones. La interfaz no permite editar sesiones pasadas.
 - La restricción de sala/horario evita inicios idénticos en una sala; no detecta solapamiento de intervalos.
 
+## Registro de llegada con QR
+
+Cada comprobante muestra un QR con el código corto de la reserva (`TG-` + 6 caracteres, sin 0/O ni 1/I). El QR no contiene nombre ni correo.
+
+En `/admin`, la sección **Registrar llegada** abre la cámara del dispositivo (requiere HTTPS y permiso del navegador) o acepta el código escrito a mano. La función `admin_check_in`:
+
+- solo funciona para administradores;
+- acepta la llegada desde 1 hora antes del inicio hasta el final de la sesión;
+- marca la asistencia como **Presente** con el mismo historial auditado que la lista de inscritos;
+- si se escanea dos veces, responde "Ya estaba registrado" sin duplicar el historial;
+- rechaza reservas canceladas y códigos inexistentes.
+
+Fuera de ese horario, o para marcar **Ausente**, se usa **Ver inscritos**.
+
 ## Inscritos y asistencia
 
 **Ver inscritos** consulta las reservas de una sesión, no un padrón general de membresías. Devuelve nombre, correo, código y estado exclusivamente al administrador autorizado.

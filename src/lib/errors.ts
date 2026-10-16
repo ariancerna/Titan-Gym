@@ -31,6 +31,12 @@ export function errorMessage(error: unknown): string {
     return 'Esta sesión tiene reservas. Solo puede modificarse su capacidad; los datos de los comprobantes deben conservarse.';
   if (raw.includes('ATTENDANCE_TOO_EARLY'))
     return 'La asistencia puede registrarse cuando comienza la sesión.';
+  if (raw.includes('CODE_NOT_FOUND'))
+    return 'No existe una reserva con ese código. Revisa que esté bien escrito.';
+  if (raw.includes('CHECKIN_TOO_EARLY'))
+    return 'Todavía es pronto: la llegada se registra desde 1 hora antes del inicio de la clase.';
+  if (raw.includes('CHECKIN_CLOSED'))
+    return 'La clase ya terminó. Corrige la asistencia desde «Ver inscritos».';
   if (raw.includes('CANCEL_TOO_LATE'))
     return 'La clase ya comenzó. Solo puedes cancelar antes de la hora de inicio.';
   if (raw.includes('RESERVATION_NOT_FOUND'))

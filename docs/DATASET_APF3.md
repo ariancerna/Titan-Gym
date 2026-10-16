@@ -18,7 +18,7 @@ Una fila por **reserva de una sesión que ya comenzó**. Las sesiones futuras no
 
 | Valor | Significado |
 | --- | --- |
-| `true` | El personal marcó al socio como presente. |
+| `true` | El socio fue registrado como presente: al escanear su QR en recepción o desde la lista de inscritos. |
 | `false` | Ausente sin cancelar: **no-show** (inasistencia no avisada). |
 | vacío | Reserva cancelada con aviso, o asistencia aún sin registrar. No se usa para entrenar. |
 

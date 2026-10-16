@@ -26,7 +26,7 @@ try {
     assert.equal(rows.find(r=>r.id===s(3)).available,0);
   });
   let reservationId;
-  await check('PF-03: reserva persistida y disponibilidad actualizada',async()=>{reservationId=(await reserve(a,s(2))).rows[0].id;const {rows}=await a.query('select * from public.reservations where id=$1',[reservationId]);assert.equal(rows.length,1);assert.equal(rows[0].user_id,users[0]);assert.match(rows[0].code,/^TG-[A-F0-9]{32}$/);assert.equal((await anonymous.query('select available from public.list_sessions($1)',[s(2)])).rows[0].available,8);});
+  await check('PF-03: reserva persistida y disponibilidad actualizada',async()=>{reservationId=(await reserve(a,s(2))).rows[0].id;const {rows}=await a.query('select * from public.reservations where id=$1',[reservationId]);assert.equal(rows.length,1);assert.equal(rows[0].user_id,users[0]);assert.match(rows[0].code,/^TG-[ABCDEFGHJKLMNPQRSTUVWXYZ23456789]{6}$/);assert.equal((await anonymous.query('select available from public.list_sessions($1)',[s(2)])).rows[0].available,8);});
   await check('PF-04: aforo completo rechazado por PostgreSQL',async()=>{await assert.rejects(reserve(a,s(3)),/SESSION_FULL/);assert.equal((await admin.query('select count(*) n from public.reservations where session_id=$1',[s(3)])).rows[0].n,'18');});
   await check('Reserva duplicada rechazada',async()=>{await assert.rejects(reserve(a,s(2)),/DUPLICATE_RESERVATION/);});
   await check('Campos e identidad falsificados rechazados',async()=>{await assert.rejects(reserve(a,s(4),'otro@example.com'),/EMAIL_MISMATCH/);await assert.rejects(reserve(a,s(4),'test1@example.com','Ana'),/INVALID_MEMBER/);});
@@ -175,6 +175,33 @@ try {
     const forged='70000000-0000-4000-8000-00000000000a';
     await admin.query("insert into auth.users(id,email,raw_user_meta_data) values($1,'antigua@example.com','{\"privacy_version\":\"2020-01-01\"}')",[forged]);
     assert.equal((await admin.query('select count(*)::int n from public.privacy_consents where user_id=$1',[forged])).rows[0].n,0);
+  });
+  await check('QR: el código corto es único, legible y sin caracteres ambiguos',async()=>{
+    const {rows}=await admin.query('select code from public.reservations');
+    assert(rows.length>50);
+    assert(rows.every(r=>/^TG-[ABCDEFGHJKLMNPQRSTUVWXYZ23456789]{6}$/.test(r.code)));
+    assert.equal(new Set(rows.map(r=>r.code)).size,rows.length);
+    await assert.rejects(admin.query("update public.reservations set code='TG-0OI1AB' where id=$1",[rows.length&&(await admin.query('select id from public.reservations limit 1')).rows[0].id]),/reservations_code_format/);
+  });
+  await check('QR: recepción registra "presente" por código, una sola vez y solo para administradores',async()=>{
+    const qrSession='92000000-0000-4000-8000-000000000001';
+    await admin.query(`insert into public.class_sessions(id,class_id,instructor_id,location_id,room,starts_at,duration_minutes,capacity)
+      select $1,class_id,instructor_id,location_id,'Sala QR',now()+interval '2 days',45,10 from public.class_sessions where id=$2`,[qrSession,s(1)]);
+    const id=(await reserve(b,qrSession,'test2@example.com','Beto Ruiz')).rows[0].id;
+    const code=(await b.query('select code from public.reservations where id=$1',[id])).rows[0].code;
+    await assert.rejects(manager.query('select public.admin_check_in($1)',[code]),/CHECKIN_TOO_EARLY/);
+    await admin.query("update public.class_sessions set starts_at=now()+interval '10 minutes' where id=$1",[qrSession]);
+    await assert.rejects(b.query('select public.admin_check_in($1)',[code]),/ADMIN_REQUIRED/);
+    await assert.rejects(anonymous.query('select public.admin_check_in($1)',[code]),/permission denied/);
+    await assert.rejects(manager.query('select public.admin_check_in($1)',['TG-ZZZZZZ']),/CODE_NOT_FOUND/);
+    const first=(await manager.query('select public.admin_check_in($1) data',[` ${code.toLowerCase()} `])).rows[0].data;
+    assert.equal(first.member_name,'Beto Ruiz');assert.equal(first.already_present,false);
+    const second=(await manager.query('select public.admin_check_in($1) data',[code])).rows[0].data;
+    assert.equal(second.already_present,true);
+    assert.equal((await admin.query('select status from public.attendance where reservation_id=$1',[id])).rows[0].status,'present');
+    assert.equal((await admin.query('select count(*)::int n from private.attendance_history where reservation_id=$1',[id])).rows[0].n,1);
+    await admin.query("update public.class_sessions set starts_at=now()-interval '2 hours' where id=$1",[qrSession]);
+    await assert.rejects(manager.query('select public.admin_check_in($1)',[code]),/CHECKIN_CLOSED/);
   });
   await check('Admin: revocación inmediata sin renovar JWT',async()=>{
     await admin.query('delete from private.administrators where user_id=$1',[users[2]]);

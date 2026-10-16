@@ -1,13 +1,5 @@
 import { useParams, Link } from 'react-router-dom';
-import {
-  ArrowLeft,
-  ArrowRight,
-  ShieldCheck,
-  Clock,
-  UsersRound,
-  Droplets,
-  Dumbbell,
-} from 'lucide-react';
+import { ArrowLeft, ArrowRight, ShieldCheck, Clock, UsersRound, MapPin } from 'lucide-react';
 import { useClassSession } from '../features/classes/queries';
 import { ReservationSummary } from '../components/reservations/ReservationSummary';
 import { AvailabilityBadge } from '../components/classes/AvailabilityBadge';
@@ -70,26 +62,6 @@ export default function DetailPage() {
               </div>
             </div>
           </article>
-          <section className="panel includes">
-            <h2>
-              <ShieldCheck size={20} />
-              Prepara tu entrenamiento
-            </h2>
-            <div className="includes-grid">
-              <div>
-                <Dumbbell />
-                <h3>Entrena con propósito</h3>
-                <p>
-                  Escoge una sesión acorde a tu nivel y sigue las indicaciones de tu instructor.
-                </p>
-              </div>
-              <div>
-                <Droplets />
-                <h3>Hidratación y equipo</h3>
-                <p>Trae agua, una toalla y ropa deportiva cómoda.</p>
-              </div>
-            </div>
-          </section>
           <div className="coach-grid">
             <section className="panel">
               <p className="eyebrow">Instructor</p>
@@ -104,42 +76,48 @@ export default function DetailPage() {
               </div>
               <p>{s.instructor_bio}</p>
             </section>
-            <section className="panel">
-              <p className="eyebrow yellow">Requisitos previos</p>
-              <h2>Normas de acceso</h2>
-              <p>
-                Llega 10 minutos antes para prepararte y consulta al instructor si necesitas adaptar
-                el entrenamiento.
+            <section className="panel before-class">
+              <p className="eyebrow yellow">Antes de la clase</p>
+              <h2>Qué tener en cuenta</h2>
+              <ul>
+                <li>Llega 10 minutos antes y presenta tu código en recepción.</li>
+                <li>Trae agua, una toalla y ropa deportiva cómoda.</li>
+                <li>Si tienes una lesión, avísale al instructor para adaptar los ejercicios.</li>
+                <li>¿No podrás venir? Cancela desde Mis reservas para liberar tu cupo.</li>
+              </ul>
+              <p className="meta">
+                <MapPin size={15} />
+                {s.location} · {s.address}
               </p>
-              <p>{s.address}</p>
             </section>
           </div>
         </div>
         <aside className="detail-aside">
-          <ReservationSummary session={s} />
-          <div className="panel booking-panel">
-            {isBookable(s) ? (
-              <ButtonLink to={`/reservar/${s.id}`}>
-                Reservar mi lugar <ArrowRight size={18} />
-              </ButtonLink>
-            ) : (
-              <>
-                <Button disabled>
-                  {s.available <= 0 ? 'Clase completa' : 'Sesión finalizada'}
-                </Button>
-                <p>
-                  No es posible reservar:{' '}
-                  {s.available <= 0
-                    ? 'la capacidad máxima ha sido alcanzada.'
-                    : 'la clase ya comenzó.'}
-                </p>
-              </>
-            )}
-            <p className="meta">
-              <ShieldCheck size={16} />
-              El sistema verifica el aforo al confirmar.
-            </p>
-          </div>
+          <ReservationSummary session={s}>
+            <div className="summary-action">
+              {isBookable(s) ? (
+                <ButtonLink to={`/reservar/${s.id}`} className="btn-block">
+                  Reservar mi lugar <ArrowRight size={18} />
+                </ButtonLink>
+              ) : (
+                <>
+                  <Button disabled className="btn-block">
+                    {s.available <= 0 ? 'Clase completa' : 'Sesión finalizada'}
+                  </Button>
+                  <p>
+                    No es posible reservar:{' '}
+                    {s.available <= 0
+                      ? 'la capacidad máxima ha sido alcanzada.'
+                      : 'la clase ya comenzó.'}
+                  </p>
+                </>
+              )}
+              <p className="meta">
+                <ShieldCheck size={16} />
+                El aforo se vuelve a comprobar al confirmar.
+              </p>
+            </div>
+          </ReservationSummary>
         </aside>
       </div>
     </div>

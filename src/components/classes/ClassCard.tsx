@@ -3,7 +3,7 @@ import type { ClassSession } from '../../types/domain';
 import { dayLabel, formatDate, timeRange, isBookable } from '../../utils/sessions';
 import { AvailabilityBadge } from './AvailabilityBadge';
 import { OccupancyBar } from './OccupancyBar';
-import { Button, ButtonLink } from '../ui/Button';
+import { ButtonLink } from '../ui/Button';
 export function ClassCard({
   session: s,
   featured = false,
@@ -55,7 +55,7 @@ export function ClassCard({
             </ButtonLink>
           ) : (
             <>
-              <Button disabled>Clase completa · sin cupos</Button>
+              <p className="card-full-note">Sin cupos. Revisa otro horario o vuelve más tarde.</p>
               <ButtonLink to={`/clases/${s.id}`} variant="secondary">
                 Ver detalles
               </ButtonLink>

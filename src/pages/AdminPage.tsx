@@ -8,6 +8,7 @@ import { getAdminSnapshot, type ManagedClass, type ManagedSession } from '../fea
 import { ClassEditor, SessionEditor } from '../components/admin/AdminForms';
 import { AttendanceRoster } from '../components/admin/AttendanceRoster';
 import { AttendanceIndicators } from '../components/admin/AttendanceIndicators';
+import { CheckInPanel } from '../components/admin/CheckInPanel';
 import { PasswordSignInForm } from '../components/reservations/PasswordSignInForm';
 import { EmailRequestForm } from '../components/reservations/EmailRequestForm';
 import { GoogleSignInButton } from '../components/reservations/GoogleSignInButton';
@@ -30,6 +31,7 @@ function AdminDashboard() {
   const [rosterId, setRosterId] = useState<string>();
   const [tab, setTab] = useState<'sessions' | 'classes'>('sessions');
   const [filter, setFilter] = useState('');
+  const [period, setPeriod] = useState<'upcoming' | 'past' | 'all'>('upcoming');
   const [saved, setSaved] = useState(false);
   const refresh = () => {
     setEditor(null);
@@ -61,6 +63,7 @@ function AdminDashboard() {
           <span>Clases en el catálogo</span>
         </div>
       </div>
+      <CheckInPanel />
       <AttendanceIndicators />
       <div className="admin-actions">
         <Button
@@ -135,6 +138,27 @@ function AdminDashboard() {
               Clases generales
             </button>
           </div>
+          {tab === 'sessions' && (
+            <div className="admin-period" role="group" aria-label="Mostrar sesiones">
+              {(
+                [
+                  ['upcoming', 'Próximas'],
+                  ['past', 'Pasadas'],
+                  ['all', 'Todas'],
+                ] as const
+              ).map(([value, label]) => (
+                <button
+                  key={value}
+                  type="button"
+                  className={`chip ${period === value ? 'selected' : ''}`}
+                  aria-pressed={period === value}
+                  onClick={() => setPeriod(value)}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
+          )}
           <label className="admin-search">
             Buscar en administración
             <input value={filter} onChange={(e) => setFilter(e.target.value)} type="search" />
@@ -143,6 +167,17 @@ function AdminDashboard() {
         <div className="admin-list">
           {tab === 'sessions'
             ? data.sessions
+                .filter((s) => {
+                  if (period === 'all') return true;
+                  const isUpcoming = new Date(s.starts_at).getTime() > Date.now();
+                  return period === 'upcoming' ? isUpcoming : !isUpcoming;
+                })
+                // Las próximas, de la más cercana a la más lejana; las pasadas, de la más reciente.
+                .sort((a, b) =>
+                  period === 'upcoming'
+                    ? a.starts_at.localeCompare(b.starts_at)
+                    : b.starts_at.localeCompare(a.starts_at),
+                )
                 .filter((s) =>
                   `${s.name} ${s.instructor} ${s.location}`
                     .toLowerCase()

@@ -1,5 +1,6 @@
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
+import { QRCodeSVG } from 'qrcode.react';
 import { Check, CalendarCheck, ArrowRight, X } from 'lucide-react';
 import { useAuth } from '../app/AuthProvider';
 import { getReservation } from '../features/reservations/api';
@@ -54,11 +55,27 @@ function Receipt({ id }: { id: string }) {
       <p>
         {cancelled
           ? 'Cancelaste esta reserva y el cupo quedó libre. El código ya no es válido para ingresar.'
-          : 'Tu reserva está guardada en TITAN GYM. Conserva tu código para presentarlo en recepción.'}
+          : 'Tu reserva está guardada. En recepción escanearán tu QR para registrar tu asistencia.'}
       </p>
       <article className="receipt panel">
         <div className="receipt-code">
-          <small>Código único de reserva</small>
+          {!cancelled && (
+            <figure className="receipt-qr">
+              {/* El QR solo contiene el código: sin nombre ni correo del socio. */}
+              <QRCodeSVG
+                value={r.code}
+                size={176}
+                level="M"
+                marginSize={2}
+                bgColor="#ffffff"
+                fgColor="#101114"
+                role="img"
+                aria-label={`Código QR de la reserva ${r.code}`}
+              />
+              <figcaption>Muestra este QR en recepción</figcaption>
+            </figure>
+          )}
+          <small>Código de reserva</small>
           <strong>{r.code}</strong>
           <span className={`badge ${cancelled ? 'full' : 'available'}`}>
             {cancelled
@@ -77,8 +94,8 @@ function Receipt({ id }: { id: string }) {
       </article>
       {!cancelled && (
         <div className="notice">
-          Llega 10 minutos antes y presenta tu código. Si no puedes asistir, cancela desde Mis
-          reservas para liberar el cupo.
+          Llega 10 minutos antes y muestra el QR desde Mis reservas; no necesitas imprimirlo. Si no
+          puedes asistir, cancela para liberar el cupo.
         </div>
       )}
       <div className="hero-buttons">

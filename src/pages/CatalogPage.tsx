@@ -3,7 +3,7 @@ import { Search, SlidersHorizontal } from 'lucide-react';
 import { useSessions } from '../features/classes/queries';
 import { filterSessions, dateKey, dayLabel, formatShortDate } from '../utils/sessions';
 import { ClassCard } from '../components/classes/ClassCard';
-import { LoadingState, ErrorState, EmptyState } from '../components/ui/States';
+import { CardGridSkeleton, ErrorState, EmptyState } from '../components/ui/States';
 import { Button } from '../components/ui/Button';
 export default function CatalogPage() {
   const query = useSessions();
@@ -111,7 +111,7 @@ export default function CatalogPage() {
         )}
       </section>
       {query.isPending ? (
-        <LoadingState />
+        <CardGridSkeleton count={6} />
       ) : query.isError ? (
         <ErrorState error={query.error} retry={() => void query.refetch()} />
       ) : (

@@ -84,6 +84,16 @@ export const saveSession = (data: Record<string, unknown>, id?: string) =>
 export const setAttendance = (id: string, status: AttendanceStatus) =>
   rpc<null>('admin_set_attendance', { p_reservation_id: id, p_status: status });
 export const getDataset = () => rpc<DatasetRow[]>('admin_dataset');
+export interface CheckInResult {
+  reservation_id: string;
+  code: string;
+  member_name: string;
+  class_name: string;
+  starts_at: string;
+  room: string;
+  already_present: boolean;
+}
+export const checkIn = (code: string) => rpc<CheckInResult>('admin_check_in', { p_code: code });
 export const attendanceLabel: Record<AttendanceStatus, string> = {
   pending: 'Pendiente',
   present: 'Presente',

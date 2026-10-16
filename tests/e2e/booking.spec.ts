@@ -34,7 +34,9 @@ test('PF-01–PF-03: catálogo, detalle, reserva guardada, comprobante y Mis res
   await expect(page).toHaveURL(/\/reserva-confirmada\/[0-9a-f-]{36}$/);
   await expect(page.getByRole('heading',{name:'¡Reserva confirmada!'})).toBeVisible();
   await expect(page.locator('.receipt-member')).toContainText('Ana López');
-  await expect(page.locator('.receipt-code')).toContainText(/TG-[A-F0-9]{32}/);
+  await expect(page.locator('.receipt-code')).toContainText(/TG-[ABCDEFGHJKLMNPQRSTUVWXYZ23456789]{6}/);
+  const shown=(await page.locator('.receipt-code strong').textContent())!;
+  await expect(page.getByRole('img',{name:`Código QR de la reserva ${shown}`})).toBeVisible();
   await page.reload();
   await expect(page.getByRole('heading',{name:'¡Reserva confirmada!'})).toBeVisible();
   await page.screenshot({path:testInfo.outputPath('confirmacion.png'),fullPage:true});
@@ -73,7 +75,8 @@ test('PF-04: clase completa y reserva directa bloqueadas',async({page})=>{
   await signInFixture(page);
   await page.goto('/clases');
   const full=page.locator('.class-card').filter({hasText:'Entrenamiento Funcional Élite'});
-  await expect(full.getByRole('button',{name:'Clase completa · sin cupos'})).toBeDisabled();
+  await expect(full).toContainText('Sin cupos');
+  await expect(full.getByRole('link',{name:'Ver detalles y reservar'})).toHaveCount(0);
   await expect(full).toContainText('0 cupos libres');
   await page.goto('/reservar/50000000-0000-4000-8000-000000000003');
   await expect(page.getByRole('heading',{name:'Clase completa',exact:true})).toBeVisible();

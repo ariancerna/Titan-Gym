@@ -1,6 +1,6 @@
 import { lazy, Suspense, useEffect } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
-import { LoadingState, EmptyState } from '../components/ui/States';
+import { LoadingState } from '../components/ui/States';
 const Home = lazy(() => import('../pages/HomePage'));
 const Catalog = lazy(() => import('../pages/CatalogPage'));
 const Detail = lazy(() => import('../pages/DetailPage'));
@@ -11,6 +11,7 @@ const AuthCallback = lazy(() => import('../pages/AuthCallbackPage'));
 const Admin = lazy(() => import('../pages/AdminPage'));
 const ResetPassword = lazy(() => import('../pages/ResetPasswordPage'));
 const Privacy = lazy(() => import('../pages/PrivacyPage'));
+const NotFound = lazy(() => import('../pages/NotFoundPage'));
 export function AppRoutes() {
   const location = useLocation();
   useEffect(() => {
@@ -30,16 +31,7 @@ export function AppRoutes() {
         <Route path="/restablecer-contrasena" element={<ResetPassword />} />
         <Route path="/privacidad" element={<Privacy />} />
         <Route path="/admin" element={<Admin />} />
-        <Route
-          path="*"
-          element={
-            <EmptyState
-              title="Página no encontrada"
-              message="Esta dirección no existe en FitSmart Agenda."
-              action
-            />
-          }
-        />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </Suspense>
   );

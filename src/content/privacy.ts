@@ -1,3 +1,5 @@
+import { gym } from './gym';
+
 // Versión vigente de la política. Si cambia el texto de forma relevante, actualiza esta fecha
 // y la de private.current_privacy_version() en una migración: los socios deberán aceptarla de nuevo.
 export const privacyPolicyVersion = '2026-10-16';
@@ -6,9 +8,9 @@ export const privacyPolicyVersion = '2026-10-16';
 export const privacyContactEmail = '';
 
 export const gymOwner = {
-  name: 'TITAN GYM',
-  ruc: '20602718931',
-  address: 'TITAN GYM QATUNA · Isabel Chimpu Ocllo cdra 10, Carabayllo',
+  name: gym.name,
+  ruc: gym.ruc,
+  address: `${gym.branch} · ${gym.address}`,
 };
 
 export interface PrivacySection {
