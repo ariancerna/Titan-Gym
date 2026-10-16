@@ -3,11 +3,10 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import type QrScanner from 'qr-scanner';
 import { Camera, CircleCheck, CircleAlert, ScanLine, X } from 'lucide-react';
 import { checkIn } from '../../features/admin/api';
+import { classifyScannedCode, reservationCodePattern } from '../../features/admin/checkin';
 import { errorMessage } from '../../lib/errors';
 import { formatTime } from '../../utils/sessions';
 import { Button } from '../ui/Button';
-
-const codePattern = /^TG-[ABCDEFGHJKLMNPQRSTUVWXYZ23456789]{6}$/;
 
 /** Recepción: registra la llegada del socio escaneando el QR de su comprobante o escribiendo el código. */
 export function CheckInPanel() {
@@ -16,6 +15,7 @@ export function CheckInPanel() {
   const [inputError, setInputError] = useState('');
   const [cameraOn, setCameraOn] = useState(false);
   const [cameraError, setCameraError] = useState('');
+  const [scanError, setScanError] = useState('');
   const video = useRef<HTMLVideoElement>(null);
   const scanner = useRef<QrScanner | null>(null);
 
@@ -28,15 +28,29 @@ export function CheckInPanel() {
     },
   });
 
-  function register(value: string) {
+  function register(value: string, source: 'manual' | 'camera' = 'manual') {
     const normalized = value.trim().toUpperCase();
-    if (!codePattern.test(normalized)) {
+    setInputError('');
+    setScanError('');
+    if (source === 'camera') {
+      const scanned = classifyScannedCode(value);
+      // Lo leído por la cámara se muestra para que el personal vea qué se escaneó.
+      setCode(scanned.code.slice(0, 40));
+      if (scanned.kind !== 'code') {
+        mutation.reset();
+        setScanError(
+          scanned.kind === 'foreign'
+            ? 'Este QR no es un comprobante de TITAN GYM.'
+            : 'Es un comprobante con el formato anterior. Pide al socio que recargue su comprobante en Mis reservas para mostrar el QR nuevo.',
+        );
+        return;
+      }
+    } else if (!reservationCodePattern.test(normalized)) {
       setInputError(
         'El código tiene el formato TG- seguido de 6 caracteres, por ejemplo TG-7K4M2Q.',
       );
       return;
     }
-    setInputError('');
     setCode(normalized);
     mutation.mutate(normalized);
   }
@@ -60,7 +74,7 @@ export function CheckInPanel() {
         video.current,
         (result) => {
           stopCamera();
-          register(result.data);
+          register(result.data, 'camera');
         },
         {
           preferredCamera: 'environment',
@@ -164,6 +178,15 @@ export function CheckInPanel() {
             <span>
               {result.class_name} · {formatTime(result.starts_at)} · {result.room} · {result.code}
             </span>
+          </div>
+        </div>
+      )}
+      {scanError && (
+        <div className="checkin-result error" role="alert">
+          <CircleAlert aria-hidden="true" />
+          <div>
+            <strong>No se registró la llegada</strong>
+            <span>{scanError}</span>
           </div>
         </div>
       )}
