@@ -16,4 +16,14 @@ describe('retorno seguro del enlace mágico', () => {
   it('explica la restricción de destinatarios del plan gratuito', () => {
     expect(errorMessage(new Error('Email address not authorized'))).toContain('no está autorizado');
   });
+  it('permite volver a la página de nueva contraseña tras el enlace de recuperación', () => {
+    expect(safeReturnPath('/restablecer-contrasena')).toBe('/restablecer-contrasena');
+    expect(safeReturnPath('/restablecer-contrasena?next=//evil.invalid')).toBe('/mis-reservas');
+  });
+  it('distingue un fallo de envío de correo de un problema de conexión', () => {
+    expect(errorMessage({ message: 'Error sending confirmation email', code: 'unexpected_failure' })).toContain('No pudimos enviar el correo');
+    expect(errorMessage({ message: 'email rate limit exceeded', code: 'over_email_send_rate_limit' })).toContain('Espera unos minutos');
+    expect(errorMessage({ message: 'User already registered', code: 'user_already_exists' })).toContain('Ya existe una cuenta');
+    expect(errorMessage(new Error('Invalid login credentials'))).toContain('No pudimos iniciar sesión');
+  });
 });

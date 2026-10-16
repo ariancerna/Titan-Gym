@@ -1,6 +1,6 @@
 # Administración y asistencia
 
-El módulo `/admin` permite gestionar clases generales, sesiones, inscritos y asistencia. Mantiene la identidad visual y funciona en escritorio, tablet y móvil. Su acceso solicita correo y contraseña; el permiso se decide en PostgreSQL, no por el método de login.
+El módulo `/admin` permite gestionar clases generales, sesiones, inscritos y asistencia. Mantiene la identidad visual y funciona en escritorio, tablet y móvil. Su acceso admite correo y contraseña o Google; el permiso se decide en PostgreSQL, no por el método de login.
 
 ## Primera cuenta administradora
 

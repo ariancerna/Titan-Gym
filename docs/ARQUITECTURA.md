@@ -64,7 +64,7 @@ RLS está habilitado en las tablas originales y en attendance. Las tablas privad
 
 `admin_set_attendance` bloquea la reserva y solo admite sesiones que comenzaron y reservas no canceladas. Calcula el actor con auth.uid, actualiza attendance e inserta un cambio inmutable desde el navegador en `private.attendance_history`, en la misma transacción. El estado repetido es idempotente. La caché administrativa incluye el UUID de la cuenta y se limpia al cambiar la identidad.
 
-La ruta `/admin` ofrece correo/contraseña. Se preservan los métodos existentes de los socios: el proveedor de login no concede el rol. La primera cuenta real aún requiere identificación y autorización del propietario; ver [Administración](ADMINISTRACION.md).
+La ruta `/admin` ofrece correo/contraseña, recuperación de contraseña y Google. Se preservan los métodos existentes de los socios: el proveedor de login no concede el rol. La primera cuenta real aún requiere identificación y autorización del propietario; ver [Administración](ADMINISTRACION.md).
 
 ## Flujo de identidad
 

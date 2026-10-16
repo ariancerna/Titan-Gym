@@ -1,5 +1,5 @@
 {
-  "executedAt": "2026-10-11T23:29:46.420Z",
+  "executedAt": "2026-10-16T01:37:58.046Z",
   "engine": "PostgreSQL 17.6 on x86_64-windows, compiled by msvc-19.44.35213, 64-bit",
   "scope": "PostgreSQL real; auth.uid y auth.users mínimos de pruebas. Sin servicio Supabase Auth.",
   "results": [
@@ -93,6 +93,18 @@
     },
     {
       "name": "Asistencia: idempotencia y aislamiento de historial",
+      "passed": true
+    },
+    {
+      "name": "APF3 dataset: solo administradores, seudonimizado y con no-show etiquetado",
+      "passed": true
+    },
+    {
+      "name": "HU05: el socio cancela su reserva futura, libera el cupo y puede volver a reservar",
+      "passed": true
+    },
+    {
+      "name": "HU05: no se cancela una clase que ya comenzó ni se reescribe su asistencia",
       "passed": true
     },
     {

@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="dark" />
+    <title>Confirma tu correo en TITAN GYM</title>
+  </head>
+  <body style="margin:0;padding:0;background:#101114;">
+    <div style="display:none;max-height:0;overflow:hidden;">
+      Confirma tu correo para empezar a reservar clases en TITAN GYM.
+    </div>
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#101114;">
+      <tr>
+        <td align="center" style="padding:32px 16px;">
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;">
+            <tr>
+              <td style="padding:0 0 20px;">
+                <img src="https://titan-gym-tau.vercel.app/assets/brands/titan-mark.png" width="40" height="40" alt="" style="vertical-align:middle;border:0;" />
+                <span style="font:bold 20px Arial,Helvetica,sans-serif;letter-spacing:2px;color:#ffffff;vertical-align:middle;padding-left:8px;">TITAN <span style="color:#facc15;">GYM</span></span>
+              </td>
+            </tr>
+            <tr>
+              <td style="background:#1b1b1f;border:1px solid #2a2b31;border-top:4px solid #facc15;border-radius:8px;padding:32px;font-family:Arial,Helvetica,sans-serif;color:#d4d4d8;">
+                <p style="margin:0 0 8px;font-size:12px;font-weight:bold;letter-spacing:1px;text-transform:uppercase;color:#facc15;">FitSmart Agenda</p>
+                <h1 style="margin:0 0 16px;font-size:26px;line-height:1.2;text-transform:uppercase;color:#ffffff;">Confirma tu correo</h1>
+                <p style="margin:0 0 24px;font-size:15px;line-height:1.6;">
+                  Es tu primer acceso a FitSmart Agenda. Confirma que <strong style="color:#ffffff;">{{ .Email }}</strong>
+                  es tu correo y quedarás dentro para reservar tus clases en TITAN GYM.
+                </p>
+                <table role="presentation" cellpadding="0" cellspacing="0">
+                  <tr>
+                    <td style="background:#facc15;border-radius:6px;">
+                      <a href="{{ .ConfirmationURL }}" style="display:inline-block;padding:14px 28px;font:bold 15px Arial,Helvetica,sans-serif;letter-spacing:1px;text-transform:uppercase;color:#101114;text-decoration:none;">Confirmar y entrar</a>
+                    </td>
+                  </tr>
+                </table>
+                <p style="margin:24px 0 0;padding:14px 16px;background:#24231c;border:1px solid #4a4220;border-radius:6px;font-size:13px;line-height:1.5;">
+                  Ábrelo en el <strong style="color:#ffffff;">mismo navegador</strong> donde pediste el enlace.
+                  Si lo abres en otro dispositivo no funcionará y tendrás que pedir uno nuevo.
+                  El enlace vence en 1 hora y solo puede usarse una vez.
+                </p>
+                <p style="margin:24px 0 0;font-size:12px;line-height:1.5;color:#a1a1aa;">
+                  ¿El botón no funciona? Copia este enlace en tu navegador:<br />
+                  <a href="{{ .ConfirmationURL }}" style="color:#facc15;word-break:break-all;">{{ .ConfirmationURL }}</a>
+                </p>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding:20px 8px 0;font:12px/1.6 Arial,Helvetica,sans-serif;color:#71717a;">
+                Si no fuiste tú, ignora este correo: la cuenta no se activa sin abrir el enlace.<br />
+                TITAN GYM QATUNA · Isabel Chimpu Ocllo cdra 10, Carabayllo<br />
+                FitSmart Agenda · proyecto académico UTP
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

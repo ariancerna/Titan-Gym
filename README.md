@@ -13,11 +13,12 @@ Aplicación web para consultar clases, conocer los cupos disponibles y reservar 
 - Detalle de sesiones con instructor, sede, horario, capacidad y ocupación.
 - Reserva con validación de datos, identidad verificada y prevención de duplicados.
 - Confirmación que consulta una reserva guardada; sin comprobantes ficticios.
-- Mis reservas: próximas sesiones e historial exclusivos de la cuenta autenticada.
+- Mis reservas: próximas sesiones e historial exclusivos de la cuenta autenticada, con cancelación antes del inicio de la clase.
 - Acceso con correo y contraseña, Google como segunda opción y enlace por correo.
 - Creación de contraseña desde una cuenta ya autenticada, conservando su identidad y reservas.
 - Diseño responsive para escritorio, tablet y móvil, con recursos originales de TITAN GYM.
 - Panel administrativo para crear/editar clases, programar sesiones, consultar inscritos y registrar asistencia con historial.
+- Indicador de no-shows y exportación CSV del dataset seudonimizado para el componente de Machine Learning (APF3).
 
 ## Tecnologías
 
@@ -156,6 +157,10 @@ Cuando exista la URL definitiva, configura Site URL y su redirección `/auth/con
 - [Arquitectura y decisiones técnicas](docs/ARQUITECTURA.md)
 - [Product Backlog · MoSCoW](docs/PRODUCT_BACKLOG.md)
 - [Pruebas y evidencia APF2](docs/PRUEBAS_APF2.md)
+- [Dataset de asistencia APF3](docs/DATASET_APF3.md)
+- [Auditoría y plan APF3](docs/AUDITORIA_APF3.md)
+- [Cuenta de evaluación y demostración pública APF2](docs/DEMO_VERCEL_APF2.md)
+- [Anexo de prompts de IA y validación](docs/ANEXO_PROMPTS_IA.md)
 - [Configuración de Supabase](docs/SUPABASE.md)
 - [Autenticación con Google](docs/GOOGLE_AUTH.md)
 - [Acceso con contraseña](docs/ACCESO_CONTRASENA.md)

@@ -20,16 +20,39 @@ export default function AuthCallbackPage() {
       const result = await client.auth.exchangeCodeForSession(code);
       if (result.error || !result.data.session) throw new Error('INVALID_LINK');
       const verified = await client.auth.getUser();
-      if (verified.error || !verified.data.user?.email_confirmed_at || verified.data.user.is_anonymous) {
+      if (
+        verified.error ||
+        !verified.data.user?.email_confirmed_at ||
+        verified.data.user.is_anonymous
+      ) {
         await client.auth.signOut();
         throw new Error('INVALID_LINK');
       }
       return consumeReturnPath();
     })();
-    void pending.current.then(path => { if (active) navigate(path, { replace: true }); })
-      .catch(() => { if (active) setError('No pudimos verificar el acceso. Si cancelaste Google, inténtalo de nuevo. Si usaste un enlace, puede haber vencido: solicita uno nuevo y ábrelo en el mismo navegador y dispositivo donde lo pediste.'); });
-    return () => { active = false; };
+    void pending.current
+      .then((path) => {
+        if (active) navigate(path, { replace: true });
+      })
+      .catch(() => {
+        if (active)
+          setError(
+            'No pudimos verificar el acceso. Si cancelaste Google, inténtalo de nuevo. Si usaste un enlace, puede haber vencido: solicita uno nuevo y ábrelo en el mismo navegador y dispositivo donde lo pediste.',
+          );
+      });
+    return () => {
+      active = false;
+    };
   }, [params, navigate]);
-  if (!error) return <LoadingState/>;
-  return <section className="container page panel auth-panel"><p className="eyebrow yellow">Acceso seguro</p><h1>Enlace no válido</h1><p role="alert">{error}</p><Link className="btn btn-primary" to="/mis-reservas">Solicitar otro enlace</Link></section>;
+  if (!error) return <LoadingState />;
+  return (
+    <section className="container page panel auth-panel">
+      <p className="eyebrow yellow">Acceso seguro</p>
+      <h1>Enlace no válido</h1>
+      <p role="alert">{error}</p>
+      <Link className="btn btn-primary" to="/mis-reservas">
+        Solicitar otro enlace
+      </Link>
+    </section>
+  );
 }

@@ -16,10 +16,10 @@ test('contraseña incorrecta no concede acceso ni revela existencia de cuenta', 
   await page.route('**/auth/v1/token*', route => route.fulfill({ status: 400, contentType: 'application/json', body: '{"code":"invalid_credentials","msg":"Invalid login credentials"}' }));
   await page.goto('/mis-reservas');
   await expect(page.getByRole('button', { name: 'Crear contraseña', exact: true })).toHaveCount(0);
-  await page.getByRole('button', { name: 'Correo y contraseña', exact: true }).click();
+  await page.getByRole('tab', { name: 'Iniciar sesión' }).click();
   await page.getByLabel('Correo electrónico', { exact: true }).fill('test1@example.com');
   await page.getByLabel('Contraseña', { exact: true }).fill('contraseña-fixture-incorrecta');
-  await page.getByRole('button', { name: 'Iniciar sesión con contraseña' }).click();
+  await page.getByRole('button', { name: 'Iniciar sesión', exact: true }).click();
   await expect(page.getByRole('alert')).toContainText('No pudimos iniciar sesión');
   await expect(page.getByLabel('Contraseña', { exact: true })).toHaveValue('');
   await expect(page.getByRole('button', { name: 'Crear contraseña', exact: true })).toHaveCount(0);
@@ -32,10 +32,10 @@ test('contraseña válida verifica identidad y permite continuar la reserva', as
     await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(identity()) });
   });
   await page.goto('/reservar/50000000-0000-4000-8000-000000000007');
-  await page.getByRole('button', { name: 'Correo y contraseña', exact: true }).click();
+  await page.getByRole('tab', { name: 'Iniciar sesión' }).click();
   await page.getByLabel('Correo electrónico', { exact: true }).fill('test1@example.com');
   await page.getByLabel('Contraseña', { exact: true }).fill('contraseña-fixture-valida');
-  await page.getByRole('button', { name: 'Iniciar sesión con contraseña' }).click();
+  await page.getByRole('button', { name: 'Iniciar sesión', exact: true }).click();
   await expect(page.getByRole('textbox', { name: 'Nombre completo del socio' })).toBeVisible();
   await expect(page.getByLabel('Correo electrónico')).toHaveValue('test1@example.com');
 });

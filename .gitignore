@@ -14,3 +14,5 @@ docs/evidencias/supabase-url-config.png
 **/*.private.json
 # Referencia local facilitada por el propietario; no es un recurso de la aplicación.
 /image.png
+# Informe académico local: contiene credenciales de la cuenta de evaluación.
+/proyecto.md

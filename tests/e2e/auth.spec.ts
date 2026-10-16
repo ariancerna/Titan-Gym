@@ -4,11 +4,11 @@ const target = '/reservar/50000000-0000-4000-8000-000000000007';
 test('correo primero y Google debajo con logotipo oficial sin desbordamiento', async ({ page }, testInfo) => {
   await page.route('**/auth/v1/settings', route => route.fulfill({ status: 200, contentType: 'application/json', body: '{"external":{"google":true,"email":true}}' }));
   await page.goto('/mis-reservas');
-  const primary = page.getByRole('button', { name: 'Iniciar sesión con contraseña' });
+  const primary = page.getByRole('button', { name: 'Iniciar sesión', exact: true });
   const google = page.getByRole('button', { name: 'Continuar con Google' });
   await expect(primary).toBeVisible();
   await expect(google).toBeEnabled();
-  await expect(page.getByRole('button', { name: 'Correo y contraseña', exact: true })).toHaveAttribute('aria-pressed', 'true');
+  await expect(page.getByRole('tab', { name: 'Iniciar sesión' })).toHaveAttribute('aria-selected', 'true');
   const first = await primary.boundingBox();
   const second = await google.boundingBox();
   expect(second!.y).toBeGreaterThan(first!.y + first!.height);
@@ -43,7 +43,7 @@ test('Google sin configurar permanece deshabilitado y no simula acceso', async (
   await page.goto('/mis-reservas');
   await expect(page.getByText('El acceso con Google está pendiente de configuración por el administrador.')).toBeVisible();
   await expect(page.getByRole('button', { name: 'Continuar con Google' })).toBeDisabled();
-  await page.getByRole('button', { name: 'Enlace por correo', exact: true }).click();
+  await page.getByRole('button', { name: 'Prefiero recibir un enlace por correo' }).click();
   await expect(page.getByRole('button', { name: 'Enviar enlace de acceso' })).toBeEnabled();
 });
 
@@ -66,7 +66,7 @@ test('enlace mágico: solicitud PKCE, retorno y formulario privado', async ({ pa
     await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ access_token, refresh_token: 'fixture', expires_in: 3600, token_type: 'bearer', user }) });
   });
   await page.goto(target);
-  await page.getByRole('button', { name: 'Enlace por correo', exact: true }).click();
+  await page.getByRole('button', { name: 'Prefiero recibir un enlace por correo' }).click();
   await page.getByRole('textbox', { name: 'Correo electrónico', exact: true }).fill('test1@example.com');
   await page.getByRole('button', { name: 'Enviar enlace de acceso' }).click();
   await expect(page.getByRole('status')).toContainText('Solicitud aceptada');
@@ -84,7 +84,7 @@ test('enlace vencido o de otro navegador no concede acceso', async ({ page }) =>
   await expect(page).toHaveURL(/\/auth\/confirm$/);
   await expect(page.getByRole('alert')).toContainText('mismo navegador');
   await page.getByRole('link', { name: 'Solicitar otro enlace' }).click();
-  await page.getByRole('button', { name: 'Enlace por correo', exact: true }).click();
+  await page.getByRole('button', { name: 'Prefiero recibir un enlace por correo' }).click();
   await expect(page.getByRole('button', { name: 'Enviar enlace de acceso' })).toBeVisible();
 });
 
@@ -98,7 +98,7 @@ test('retorno sin código no muestra autenticación exitosa', async ({ page }) =
 test('correo no autorizado muestra la limitación sin afirmar envío', async ({ page }) => {
   await page.route('**/auth/v1/otp*', route => route.fulfill({ status: 403, contentType: 'application/json', body: '{"code":"email_address_not_authorized","msg":"Email address not authorized"}' }));
   await page.goto('/mis-reservas');
-  await page.getByRole('button', { name: 'Enlace por correo', exact: true }).click();
+  await page.getByRole('button', { name: 'Prefiero recibir un enlace por correo' }).click();
   await page.getByRole('textbox', { name: 'Correo electrónico', exact: true }).fill('test@example.invalid');
   await page.getByRole('button', { name: 'Enviar enlace de acceso' }).click();
   await expect(page.getByRole('alert')).toContainText('no está autorizado');

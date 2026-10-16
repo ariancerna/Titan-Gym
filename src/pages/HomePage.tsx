@@ -1,14 +1,182 @@
 import { Link } from 'react-router-dom';
-import { ArrowRight, CalendarDays, Dumbbell, UsersRound, SlidersHorizontal, ShieldCheck, Ticket } from 'lucide-react';
-import { formatTime } from '../utils/sessions';
+import { ArrowRight, CalendarX2, MapPin, Ticket } from 'lucide-react';
+import { dayLabel, formatTime } from '../utils/sessions';
 import { useSessions, useGymLocations } from '../features/classes/queries';
 import { ClassCard } from '../components/classes/ClassCard';
 import { ButtonLink } from '../components/ui/Button';
 import { EmptyState, ErrorState, LoadingState } from '../components/ui/States';
+
+const steps = [
+  {
+    title: 'Elige la clase',
+    text: 'Filtra por disciplina, día o instructor y revisa la duración y la sala.',
+  },
+  {
+    title: 'Revisa los cupos',
+    text: 'Cada sesión muestra cuántos lugares quedan. El aforo se vuelve a comprobar al confirmar.',
+  },
+  {
+    title: 'Confirma y guarda tu código',
+    text: 'Ingresa con tu cuenta, confirma tus datos y presenta el código en recepción.',
+  },
+];
+
 export default function HomePage() {
   const query = useSessions();
   const sessions = query.data ?? [];
   const locationQuery = useGymLocations();
   const locations = locationQuery.data ?? [];
-  return <><section className="hero"><img className="hero-photo" src="/assets/generated/hero.jpg" alt="Sala de entrenamiento con iluminación amarilla" fetchPriority="high"/><div className="hero-overlay"/><div className="container hero-content"><span className="hero-badge"><Dumbbell size={15}/>Plataforma oficial de reservas TITAN GYM</span><h1>SUPERA TUS <span>LÍMITES</span></h1><p>Organiza tus entrenamientos, reserva tus clases y alcanza tus objetivos con precisión técnica y control total de tu rendimiento diario.</p><div className="hero-buttons"><ButtonLink to="/clases">Explorar clases <ArrowRight size={18}/></ButtonLink><ButtonLink to="/clases?vista=horarios" variant="secondary"><CalendarDays size={18}/>Ver horarios</ButtonLink></div><div className="hero-metrics"><div><Dumbbell/><span><strong>{query.isSuccess ? sessions.length : '—'} sesiones</strong><small>Programadas en la agenda</small></span></div><div><UsersRound/><span><strong>100% control</strong><small>Aforo transparente</small></span></div><div><ShieldCheck/><span><strong>Tu lugar</strong><small>Reserva con acceso seguro</small></span></div></div></div></section><section className="container section"><div className="section-heading"><div><p className="eyebrow yellow">Agenda semanal en directo</p><h2>Clases destacadas de la semana</h2></div><ButtonLink to="/clases" variant="secondary">Ver todas <ArrowRight size={16}/></ButtonLink></div>{query.isPending ? <LoadingState/> : query.isError ? <ErrorState error={query.error} retry={() => void query.refetch()}/> : sessions.length ? <div className="class-grid">{sessions.slice(0, 3).map(s => <ClassCard key={s.id} session={s} featured/>)}</div> : <EmptyState title="Próximamente nuevas sesiones" message="Todavía no hay sesiones publicadas en la agenda."/>}</section><section className="how-section"><div className="container section"><div className="center"><p className="eyebrow yellow">Paso a paso</p><h2>¿Cómo funciona FitSmart Agenda?</h2><p>Gestiona tus entrenamientos sin fricción. Diseñado para darte agilidad, claridad y seguridad en cada sesión.</p></div><div className="steps">{[{Icon: SlidersHorizontal, title: 'Elige tu disciplina', text: 'Explora horarios de Spinning, HIIT, Funcional, Yoga y más. Encuentra la sesión que encaja con tus objetivos.'}, {Icon: CalendarDays, title: 'Valida tu cupo en tiempo real', text: 'Consulta los lugares disponibles y la ocupación de cada sesión antes de reservar.'}, {Icon: Ticket, title: 'Confirma tu reserva y asegura tu cupo', text: 'Verifica tu correo, completa tus datos y obtén tu código único de reserva.'}].map(({ Icon, title, text }, index) => <article className="panel step" key={title}><div className="step-top"><span className="icon-tile"><Icon/></span><span>0{index + 1}</span></div><h3>{title}</h3><p>{text}</p></article>)}</div></div></section><section className="container section"><div className="commitment"><div><p className="eyebrow yellow">No dejes tu progreso al azar</p><h2>El compromiso se<br/>demuestra en la cancha</h2><p>Las metas se consiguen con constancia. Asegura tus sesiones y mantén la racha viva.</p></div><ButtonLink to="/clases">Ver catálogo completo <ArrowRight size={18}/></ButtonLink></div></section><section className="container home-info"><article className="panel"><h3><CalendarDays size={20}/>Horarios de clases</h3>{sessions.slice(0, 3).map(s => <p key={s.id}>{s.name} · {formatTime(s.starts_at)}</p>)}<Link to="/clases">Consultar la programación <ArrowRight size={14}/></Link></article><article className="panel"><h3><UsersRound size={20}/>Nuestra sede</h3>{locationQuery.isPending ? <p role="status">Consultando la dirección…</p> : locationQuery.isError ? <p>No pudimos consultar la dirección. Inténtalo de nuevo.</p> : locations.map(l => <p key={l.id}><strong>{l.name}:</strong> {l.address}</p>)}</article><article className="panel"><h3><ShieldCheck size={20}/>Atención al socio</h3><p>Tu agenda y tus comprobantes, siempre a mano. Accede con tu correo verificado.</p><Link to="/mis-reservas">Consultar mis reservas <ArrowRight size={14}/></Link></article></section></>;
+  const next = sessions[0];
+  const freeSpots = sessions.reduce((total, s) => total + Math.max(0, s.available), 0);
+  const ready = query.isSuccess;
+
+  return (
+    <>
+      <section className="hero">
+        <img
+          className="hero-photo"
+          src="/assets/generated/hero.jpg"
+          alt="Sala de entrenamiento con iluminación amarilla"
+          fetchPriority="high"
+        />
+        <div className="hero-overlay" />
+        <div className="container hero-content">
+          <p className="hero-kicker">TITAN GYM · Reserva de clases grupales</p>
+          <h1>
+            SUPERA TUS <span>LÍMITES</span>
+          </h1>
+          <p>
+            Consulta los horarios, mira cuántos cupos quedan y reserva tu lugar sin escribir por
+            WhatsApp ni esperar a recepción.
+          </p>
+          <div className="hero-buttons">
+            <ButtonLink to="/clases">
+              Explorar clases <ArrowRight size={18} />
+            </ButtonLink>
+            <ButtonLink to="/mis-reservas" variant="secondary">
+              Mis reservas
+            </ButtonLink>
+          </div>
+          <dl className="hero-metrics" aria-live="polite">
+            <div>
+              <dt>Próxima clase</dt>
+              <dd>
+                {ready
+                  ? next
+                    ? `${dayLabel(next.starts_at)} ${formatTime(next.starts_at)}`
+                    : 'Sin horarios'
+                  : '—'}
+              </dd>
+              <small>{next?.name ?? 'Pronto se publicarán nuevas sesiones'}</small>
+            </div>
+            <div>
+              <dt>En la agenda</dt>
+              <dd>
+                {ready
+                  ? `${sessions.length} ${sessions.length === 1 ? 'sesión' : 'sesiones'}`
+                  : '—'}
+              </dd>
+              <small>Programadas desde hoy</small>
+            </div>
+            <div>
+              <dt>Cupos libres</dt>
+              <dd>{ready ? freeSpots : '—'}</dd>
+              <small>Sumando todas las sesiones</small>
+            </div>
+          </dl>
+        </div>
+      </section>
+
+      <section className="container section">
+        <div className="section-heading">
+          <div>
+            <p className="eyebrow yellow">Agenda</p>
+            <h2>Próximas clases</h2>
+          </div>
+          <ButtonLink to="/clases" variant="secondary">
+            Ver todos los horarios <ArrowRight size={16} />
+          </ButtonLink>
+        </div>
+        {query.isPending ? (
+          <LoadingState />
+        ) : query.isError ? (
+          <ErrorState error={query.error} retry={() => void query.refetch()} />
+        ) : sessions.length ? (
+          <div className="class-grid">
+            {sessions.slice(0, 3).map((s) => (
+              <ClassCard key={s.id} session={s} featured />
+            ))}
+          </div>
+        ) : (
+          <EmptyState
+            title="Próximamente nuevas sesiones"
+            message="Todavía no hay sesiones publicadas en la agenda."
+          />
+        )}
+      </section>
+
+      <section className="how-section">
+        <div className="container section how-layout">
+          <div>
+            <p className="eyebrow yellow">Cómo reservar</p>
+            <h2>Tres pasos, sin llamadas</h2>
+            <p>
+              Antes las reservas se anotaban en un cuaderno o por mensaje. Ahora cada cupo queda
+              registrado y nadie puede reservar por encima del aforo de la sala.
+            </p>
+          </div>
+          <ol className="steps">
+            {steps.map((step) => (
+              <li key={step.title}>
+                <h3>{step.title}</h3>
+                <p>{step.text}</p>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </section>
+
+      <section className="container home-info">
+        <article className="panel">
+          <h3>
+            <MapPin size={20} />
+            Nuestra sede
+          </h3>
+          {locationQuery.isPending ? (
+            <p role="status">Consultando la dirección…</p>
+          ) : locationQuery.isError ? (
+            <p>No pudimos consultar la dirección. Inténtalo de nuevo.</p>
+          ) : (
+            locations.map((l) => (
+              <p key={l.id}>
+                <strong>{l.name}</strong>
+                <br />
+                {l.address}
+              </p>
+            ))
+          )}
+        </article>
+        <article className="panel">
+          <h3>
+            <CalendarX2 size={20} />
+            ¿No puedes asistir?
+          </h3>
+          <p>
+            Cancela desde Mis reservas antes de que empiece la clase. Tu cupo queda libre para otro
+            socio.
+          </p>
+        </article>
+        <article className="panel">
+          <h3>
+            <Ticket size={20} />
+            Tus comprobantes
+          </h3>
+          <p>Cada reserva tiene un código único que puedes consultar desde tu cuenta.</p>
+          <Link to="/mis-reservas">
+            Ir a Mis reservas <ArrowRight size={14} />
+          </Link>
+        </article>
+      </section>
+    </>
+  );
 }

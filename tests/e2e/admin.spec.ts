@@ -31,7 +31,7 @@ test('contraseña administrativa verifica rol y cerrar sesión oculta datos priv
   await page.goto('/admin');
   await page.getByLabel('Correo electrónico', { exact: true }).fill('test3@example.com');
   await page.getByLabel('Contraseña', { exact: true }).fill('contraseña-administrativa-fixture');
-  await page.getByRole('button', { name: 'Iniciar sesión con contraseña' }).click();
+  await page.getByRole('button', { name: 'Iniciar sesión', exact: true }).click();
   await expect(page.getByRole('button', { name: 'Nueva clase', exact: true })).toBeVisible();
   await page.locator('.admin-session').filter({ hasText: 'Sala asistencia de pruebas' }).getByRole('button', { name: 'Ver inscritos' }).click();
   await expect(page.getByText('socio-demo-1@titan.invalid', { exact: true })).toBeVisible();
@@ -86,6 +86,26 @@ test('inscritos y asistencia se guardan con historial en tres tamaños', async (
   await expect(roster.getByText('Historial de asistencia (2)', { exact: true })).toBeVisible();
 });
 
+test('HU09: indicador de no-shows y exportación del dataset seudonimizado', async ({ page }) => {
+  await signIn(page); await page.goto('/admin');
+  const indicators = page.getByRole('region', { name: 'Asistencia e inasistencias' });
+  await expect(indicators.getByText('Tasa de no-shows')).toBeVisible();
+  await expect(indicators.getByText('1 reservas sin registrar')).toBeVisible();
+  const past = page.locator('.admin-session').filter({ hasText: 'Sala asistencia de pruebas' });
+  await past.getByRole('button', { name: 'Ver inscritos' }).click();
+  await page.getByLabel('Asistencia de Alumno de asistencia').selectOption('absent');
+  await expect(indicators.locator('.indicator-main dd')).toHaveText('100%');
+  await expect(indicators.getByText('1 de 1 asistencias registradas')).toBeVisible();
+  const [download] = await Promise.all([page.waitForEvent('download'), indicators.getByRole('button', { name: 'Exportar dataset CSV' }).click()]);
+  expect(download.suggestedFilename()).toMatch(/^fitsmart-dataset-\d{4}-\d{2}-\d{2}\.csv$/);
+  const content = await (await download.createReadStream()).toArray().then(chunks => Buffer.concat(chunks).toString('utf8'));
+  expect(content).toContain('reserva_id,socio_ref,sesion_id');
+  expect(content).toContain(',absent,false');
+  expect(content).not.toContain('Alumno de asistencia');
+  expect(content).not.toContain('@titan.invalid');
+  await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+});
+
 test('error de conexión no muestra un panel ni éxito ficticios', async ({ page }) => {
   await signIn(page);
   await page.route('**/rest/v1/rpc/admin_snapshot', route => route.abort('failed'));
@@ -103,4 +123,19 @@ test('asistencia futura deshabilitada y sesión reservada protegida', async ({ p
   await future.getByRole('button', { name: 'Editar sesión' }).click();
   await expect(page.getByLabel('Sala', { exact: true })).toHaveAttribute('readonly', '');
   await expect(page.getByLabel('Capacidad máxima', { exact: true })).toHaveAttribute('min', '21');
+});
+
+test('acceso administrativo ofrece Google y regresa a /admin sin conceder el rol', async ({ page }) => {
+  await page.route('**/auth/v1/settings', route => route.fulfill({ status: 200, contentType: 'application/json', body: '{"external":{"google":true,"email":true}}' }));
+  await page.route('**/auth/v1/authorize*', async route => {
+    expect(new URL(route.request().url()).searchParams.get('provider')).toBe('google');
+    await route.fulfill({ status: 200, contentType: 'text/html', body: '<h1>Proveedor Google de prueba</h1>' });
+  });
+  await page.goto('/admin');
+  await expect(page.getByRole('heading', { name: 'Acceso de administradores' })).toBeVisible();
+  await page.getByRole('button', { name: 'Continuar con Google' }).click();
+  await expect(page.getByRole('heading', { name: 'Proveedor Google de prueba' })).toBeVisible();
+  await page.goto('/admin');
+  expect(await page.evaluate(() => localStorage.getItem('fitsmart-agenda-auth-return'))).toBe('/admin');
+  await expect(page.getByRole('button', { name: 'Nueva clase', exact: true })).toHaveCount(0);
 });

@@ -234,6 +234,14 @@ otp_length = 6
 # Number of seconds before the email OTP expires (defaults to 1 hour).
 otp_expiry = 3600
 
+[auth.email.template.confirmation]
+subject = "Confirma tu correo en TITAN GYM"
+content_path = "./supabase/templates/confirmation.html"
+
+[auth.email.template.recovery]
+subject = "Restablece tu contraseña de TITAN GYM"
+content_path = "./supabase/templates/recovery.html"
+
 [auth.email.template.magic_link]
 subject = "Tu enlace de acceso a TITAN GYM"
 content_path = "./supabase/templates/magic_link.html"

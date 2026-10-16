@@ -45,6 +45,30 @@ test('PF-01–PF-03: catálogo, detalle, reserva guardada, comprobante y Mis res
   await expect(page.locator('.class-card').filter({hasText:'Power Spinning Extreme'}).last()).toContainText('24 cupos libres');
   await expect.poll(()=>page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth)).toBe(true);
 });
+test('HU05: el socio cancela desde Mis reservas y el cupo vuelve al catálogo',async({page},testInfo)=>{
+  await signInFixture(page);
+  await page.goto(`/reservar/${sessionId}`);
+  await page.getByRole('textbox',{name:'Nombre completo del socio'}).fill('Ana López');
+  await page.getByRole('checkbox').check();
+  await page.getByRole('button',{name:'Confirmar reserva',exact:true}).click();
+  await expect(page.getByRole('heading',{name:'¡Reserva confirmada!'})).toBeVisible();
+  const receipt=page.url();
+  await page.goto('/mis-reservas');
+  const card=page.locator('.reservation-card').filter({hasText:'Power Spinning Extreme'});
+  await card.getByRole('button',{name:'Cancelar reserva'}).click();
+  await expect(card.getByText('¿Cancelar esta reserva?')).toBeVisible();
+  await expect.poll(()=>page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth)).toBe(true);
+  await page.screenshot({path:testInfo.outputPath('cancelar.png'),fullPage:true});
+  await card.getByRole('button',{name:'Sí, cancelar'}).click();
+  await expect(page.getByRole('status').filter({hasText:'cancelada'})).toBeVisible();
+  await expect(page.locator('.reservation-card')).toHaveCount(0);
+  await page.getByRole('button',{name:'Historial y canceladas'}).click();
+  await expect(page.locator('.reservation-card')).toContainText('Cancelada');
+  await page.goto(receipt);
+  await expect(page.getByRole('heading',{name:'Reserva cancelada'})).toBeVisible();
+  await page.goto('/clases');
+  await expect(page.locator('.class-card').filter({hasText:'Power Spinning Extreme'}).last()).toContainText('25 cupos libres');
+});
 test('PF-04: clase completa y reserva directa bloqueadas',async({page})=>{
   await signInFixture(page);
   await page.goto('/clases');

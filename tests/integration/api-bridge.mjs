@@ -49,6 +49,8 @@ const server = createServer(async(req,res)=>{
       else if(url.pathname.endsWith('/admin_save_class'))data=(await client.query('select public.admin_save_class($1,$2) value',[args.p_data,args.p_id||null])).rows[0].value;
       else if(url.pathname.endsWith('/admin_save_session'))data=(await client.query('select public.admin_save_session($1,$2) value',[args.p_data,args.p_id||null])).rows[0].value;
       else if(url.pathname.endsWith('/admin_set_attendance')){await client.query('select public.admin_set_attendance($1,$2)',[args.p_reservation_id,args.p_status]);data=null;}
+      else if(url.pathname.endsWith('/cancel_reservation')){await client.query('select public.cancel_reservation($1)',[args.p_reservation_id]);data=null;}
+      else if(url.pathname.endsWith('/admin_dataset'))data=(await client.query('select * from public.admin_dataset()')).rows;
       else throw new Error('Unknown test RPC');
     }else if(req.method==='GET' && url.pathname==='/rest/v1/locations'){
       data=(await client.query('select id,name,address from public.locations order by name')).rows;

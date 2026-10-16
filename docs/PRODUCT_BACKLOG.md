@@ -6,12 +6,12 @@
 | US03 | Como socio quiero ver cupos disponibles para elegir una sesión. | Must have | Conteo consistente, porcentaje y clase completa. | Implementado; PF-02 aprobado localmente; datos calculados por PostgreSQL. |
 | US02 | Como socio quiero reservar una clase para asegurar mi lugar. | Must have | Identidad verificada, campos válidos, fila persistida y comprobante real. | RPC, interfaz, RLS y aforo verificados. Propietario informó acceso real por correo y Google; reserva propia anterior sigue guardada. Contraseña implementada y probada con fixtures; prueba positiva alojada pendiente. Acceso externo sujeto a Audience Google y restricciones de correo. |
 | US05 | Como gimnasio quiero validar aforo para evitar sobreocupación. | Must have | Rechazar clases completas y dos solicitudes concurrentes al último cupo. | Implementado; PF-04 y prueba con dos conexiones PostgreSQL aprobados. |
-| US04 | Como socio quiero cancelar mi reserva. | Should have | Cancelación autorizada y liberación de cupo. | Pendiente; no hay interfaz ni RPC de cancelación. |
+| US04 | Como socio quiero cancelar mi reserva. | Should have | Cancelación autorizada y liberación de cupo. | Implementado en APF3: RPC `cancel_reservation` (solo el titular y antes del inicio), fecha `cancelled_at`, botón con confirmación en Mis reservas. Pruebas SQL y de navegador. |
 | US06 | Como instructor quiero registrar asistencia. | Should have | Registro autorizado y auditable. | Implementado mediante administradores autorizados: pendiente/presente/ausente e historial de actor/fecha. SQL y navegador aprobados; primer rol real y login administrativo positivo pendientes del propietario. No se implementó un rol independiente de instructor. |
 | US07 | Como socio quiero recibir recordatorios. | Should have | Envíos programados con preferencias y zona horaria. | Pendiente; no se envían recordatorios ni comprobantes por correo. |
 | US08 | Como socio quiero una lista de espera. | Could have | Cola ordenada y asignación de lugares liberados. | Pendiente. |
-| US09 | Como gimnasio quiero indicadores de uso. | Could have | Dashboard autorizado con métricas definidas. | Pendiente; las barras operativas de aforo corresponden a US03, no a un dashboard. |
-| US10 | Como gimnasio quiero predecir inasistencias mediante ML. | Won't have now | Modelo, evaluación y tratamiento de datos. | Excluido del MVP APF2. |
+| US09 | Como gimnasio quiero indicadores de uso. | Could have | Dashboard autorizado con métricas definidas. | Implementado en APF3 (versión básica): tasa de no-shows, presentes, cancelaciones, cobertura de asistencia y no-shows por clase en `/admin`. |
+| US10 | Como gimnasio quiero predecir inasistencias mediante ML. | Won't have now | Modelo, evaluación y tratamiento de datos. | APF3: dataset seudonimizado y exportable ([DATASET_APF3.md](DATASET_APF3.md)). El modelo queda pendiente hasta contar con asistencia real registrada. |
 
 ## Ampliación administrativa solicitada
 

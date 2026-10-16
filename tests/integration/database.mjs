@@ -109,9 +109,45 @@ try {
     await assert.rejects(a.query('select * from private.attendance_history'),/permission denied/);
     await assert.rejects(manager.query("update public.attendance set recorded_by=$1",[users[0]]),/permission denied/);
   });
+  await check('APF3 dataset: solo administradores, seudonimizado y con no-show etiquetado',async()=>{
+    await assert.rejects(a.query('select * from public.admin_dataset()'),/ADMIN_REQUIRED/);
+    await assert.rejects(anonymous.query('select * from public.admin_dataset()'),/permission denied/);
+    const {rows,fields}=await manager.query('select * from public.admin_dataset()');
+    const names=fields.map(f=>f.name);
+    assert(!names.some(n=>/name|email|nombre|correo|user_id/.test(n)),'el dataset no debe incluir datos personales');
+    const row=rows.find(r=>r.reserva_id===reservationId);
+    assert(row,'la reserva de una sesión iniciada debe estar en el dataset');
+    assert.equal(row.asistencia,'absent');assert.equal(row.asistio,false);
+    assert.match(row.socio_ref,/^[0-9a-f]{16}$/);assert.notEqual(row.socio_ref,users[0]);
+    assert(row.dia_semana>=1&&row.dia_semana<=7);assert.equal(typeof row.anticipacion_horas,'number');
+    assert(rows.every(r=>new Date(r.inicio_sesion)<=new Date()),'solo sesiones que ya comenzaron');
+  });
+  await check('HU05: el socio cancela su reserva futura, libera el cupo y puede volver a reservar',async()=>{
+    const cancelSession='91000000-0000-4000-8000-000000000001';
+    await admin.query(`insert into public.class_sessions(id,class_id,instructor_id,location_id,room,starts_at,duration_minutes,capacity)
+      select $1,class_id,instructor_id,location_id,'Sala cancelación',now()+interval '2 days',45,5 from public.class_sessions where id=$2`,[cancelSession,s(1)]);
+    const available=async()=>(await anonymous.query('select available from public.list_sessions($1)',[cancelSession])).rows[0].available;
+    const before=await available();
+    const id=(await reserve(a,cancelSession)).rows[0].id;
+    assert.equal(await available(),before-1);
+    await assert.rejects(b.query('select public.cancel_reservation($1)',[id]),/RESERVATION_NOT_FOUND/);
+    await assert.rejects(anonymous.query('select public.cancel_reservation($1)',[id]),/permission denied/);
+    await a.query('select public.cancel_reservation($1)',[id]);
+    const row=(await a.query('select status,cancelled_at from public.reservations where id=$1',[id])).rows[0];
+    assert.equal(row.status,'cancelled');assert(row.cancelled_at);
+    assert.equal(await available(),before);
+    await a.query('select public.cancel_reservation($1)',[id]);
+    await reserve(a,cancelSession);
+    assert.equal(await available(),before-1);
+  });
+  await check('HU05: no se cancela una clase que ya comenzó ni se reescribe su asistencia',async()=>{
+    await assert.rejects(a.query('select public.cancel_reservation($1)',[reservationId]),/CANCEL_TOO_LATE/);
+    assert.equal((await admin.query('select status from public.reservations where id=$1',[reservationId])).rows[0].status,'confirmed');
+  });
   await check('Asistencia: estado inválido y reserva cancelada rechazados',async()=>{
     await assert.rejects(manager.query('select public.admin_set_attendance($1,$2)',[reservationId,'inventado']),/INVALID_ATTENDANCE/);
     await admin.query("update public.reservations set status='cancelled' where id=$1",[reservationId]);
+    assert((await admin.query('select cancelled_at from public.reservations where id=$1',[reservationId])).rows[0].cancelled_at,'el trigger registra la fecha de cancelación');
     await assert.rejects(manager.query('select public.admin_set_attendance($1,$2)',[reservationId,'present']),/RESERVATION_CANCELLED/);
   });
   await check('Admin: revocación inmediata sin renovar JWT',async()=>{

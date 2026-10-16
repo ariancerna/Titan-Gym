@@ -1,0 +1,89 @@
+import { test, expect } from '@playwright/test';
+const target = '/reservar/50000000-0000-4000-8000-000000000007';
+
+function fixtureSession() {
+  const user = { id: '70000000-0000-4000-8000-000000000001', aud: 'authenticated', role: 'authenticated', email: 'test1@example.com', email_confirmed_at: new Date().toISOString(), app_metadata: {}, user_metadata: {}, created_at: new Date().toISOString() };
+  const exp = Math.floor(Date.now() / 1000) + 3600;
+  const encode = (value: unknown) => Buffer.from(JSON.stringify(value)).toString('base64url');
+  const access_token = `${encode({ alg: 'HS256', typ: 'JWT' })}.${encode({ sub: user.id, exp, role: 'authenticated' })}.fixture`;
+  return { access_token, refresh_token: 'fixture', expires_in: 3600, expires_at: exp, token_type: 'bearer', user };
+}
+
+test('crear cuenta valida contraseñas y pide confirmar el correo sin revelar si ya existía', async ({ page }, testInfo) => {
+  let signups = 0;
+  await page.route('**/auth/v1/signup*', async route => {
+    signups++;
+    expect(new URL(route.request().url()).searchParams.get('redirect_to')).toBe('http://127.0.0.1:5173/auth/confirm');
+    const body = route.request().postDataJSON();
+    expect(body.email).toBe('nuevo@example.com');
+    expect(body.password).toBe('una frase de prueba larga');
+    expect(body.code_challenge).toBeTruthy();
+    await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ id: '70000000-0000-4000-8000-000000000009', aud: 'authenticated', role: 'authenticated', email: 'nuevo@example.com', identities: [], created_at: new Date().toISOString() }) });
+  });
+  await page.goto(target);
+  await page.getByRole('tab', { name: 'Crear cuenta' }).click();
+  await expect(page.getByRole('heading', { name: 'Crea tu cuenta' })).toBeVisible();
+  await page.getByLabel('Correo electrónico', { exact: true }).fill('nuevo@example.com');
+  await page.getByLabel('Contraseña', { exact: true }).fill('corta');
+  await page.getByLabel('Repite la contraseña', { exact: true }).fill('distinta');
+  await page.getByRole('button', { name: 'Crear cuenta', exact: true }).click();
+  await expect(page.getByText('Usa al menos 12 caracteres.')).toBeVisible();
+  await expect(page.getByText('Las contraseñas no coinciden.')).toBeVisible();
+  expect(signups).toBe(0);
+  await page.getByLabel('Contraseña', { exact: true }).fill('una frase de prueba larga');
+  await page.getByLabel('Repite la contraseña', { exact: true }).fill('una frase de prueba larga');
+  await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+  await page.locator('.auth-panel').screenshot({ path: testInfo.outputPath('crear-cuenta.png') });
+  await page.getByRole('button', { name: 'Crear cuenta', exact: true }).click();
+  await expect(page.getByRole('status')).toContainText('Revisa tu correo');
+  expect(signups).toBe(1);
+  expect(await page.evaluate(() => localStorage.getItem('fitsmart-agenda-auth-return'))).toBe(target);
+});
+
+test('olvidé mi contraseña envía el enlace de recuperación con retorno seguro', async ({ page }) => {
+  await page.route('**/auth/v1/recover*', async route => {
+    expect(new URL(route.request().url()).searchParams.get('redirect_to')).toBe('http://127.0.0.1:5173/auth/confirm');
+    expect(route.request().postDataJSON().email).toBe('test1@example.com');
+    await route.fulfill({ status: 200, contentType: 'application/json', body: '{}' });
+  });
+  await page.goto('/mis-reservas');
+  await page.getByRole('button', { name: '¿Olvidaste tu contraseña?' }).click();
+  await expect(page.getByRole('heading', { name: 'Recupera tu contraseña' })).toBeVisible();
+  await page.getByLabel('Correo electrónico', { exact: true }).fill('test1@example.com');
+  await page.getByRole('button', { name: 'Enviar enlace de recuperación' }).click();
+  await expect(page.getByRole('status')).toContainText('Si existe una cuenta');
+  expect(await page.evaluate(() => localStorage.getItem('fitsmart-agenda-auth-return'))).toBe('/restablecer-contrasena');
+  await page.getByRole('button', { name: 'Volver a iniciar sesión' }).click();
+  await expect(page.getByRole('heading', { name: 'Accede a tu cuenta' })).toBeVisible();
+});
+
+test('restablecer contraseña exige la sesión del enlace y guarda la nueva', async ({ page }) => {
+  await page.goto('/restablecer-contrasena');
+  await expect(page.getByRole('heading', { name: 'Enlace no válido o vencido' })).toBeVisible();
+  const session = fixtureSession();
+  await page.addInitScript(s => localStorage.setItem('fitsmart-agenda-auth', JSON.stringify(s)), session);
+  let updates = 0;
+  await page.route('**/auth/v1/user', async route => {
+    if (route.request().method() !== 'PUT') { await route.fallback(); return; }
+    updates++;
+    expect(route.request().postDataJSON().password).toBe('nueva frase segura 2026');
+    await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(session.user) });
+  });
+  await page.goto('/restablecer-contrasena');
+  await expect(page.getByRole('heading', { name: 'Elige una contraseña nueva' })).toBeVisible();
+  await page.getByLabel('Nueva contraseña', { exact: true }).fill('nueva frase segura 2026');
+  await page.getByLabel('Repite la contraseña', { exact: true }).fill('nueva frase segura 2026');
+  await page.getByRole('button', { name: 'Guardar contraseña' }).click();
+  await expect(page.getByRole('heading', { name: 'Contraseña actualizada' })).toBeVisible();
+  expect(updates).toBe(1);
+});
+
+test('fallo del servicio de correo muestra un mensaje claro y no un error de conexión', async ({ page }) => {
+  await page.route('**/auth/v1/otp*', route => route.fulfill({ status: 500, contentType: 'application/json', body: '{"code":"unexpected_failure","msg":"Error sending magic link email"}' }));
+  await page.goto('/mis-reservas');
+  await page.getByRole('button', { name: 'Prefiero recibir un enlace por correo' }).click();
+  await page.getByLabel('Correo electrónico', { exact: true }).fill('test1@example.com');
+  await page.getByRole('button', { name: 'Enviar enlace de acceso' }).click();
+  await expect(page.getByRole('alert')).toContainText('No pudimos enviar el correo');
+  await expect(page.getByRole('alert')).not.toContainText('conexión');
+});

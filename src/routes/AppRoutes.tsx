@@ -9,8 +9,36 @@ const Confirmation = lazy(() => import('../pages/ConfirmationPage'));
 const Reservations = lazy(() => import('../pages/MyReservationsPage'));
 const AuthCallback = lazy(() => import('../pages/AuthCallbackPage'));
 const Admin = lazy(() => import('../pages/AdminPage'));
+const ResetPassword = lazy(() => import('../pages/ResetPasswordPage'));
 export function AppRoutes() {
   const location = useLocation();
-  useEffect(() => { window.scrollTo(0, 0); document.querySelector<HTMLElement>('#main')?.focus({ preventScroll: true }); }, [location.pathname]);
-  return <Suspense fallback={<LoadingState/>}><Routes><Route path="/" element={<Home/>}/><Route path="/clases" element={<Catalog/>}/><Route path="/clases/:id" element={<Detail/>}/><Route path="/reservar/:id" element={<Booking/>}/><Route path="/reserva-confirmada/:id" element={<Confirmation/>}/><Route path="/mis-reservas" element={<Reservations/>}/><Route path="/auth/confirm" element={<AuthCallback/>}/><Route path="/admin" element={<Admin/>}/><Route path="*" element={<EmptyState title="Página no encontrada" message="Esta dirección no existe en FitSmart Agenda." action/>}/></Routes></Suspense>;
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    document.querySelector<HTMLElement>('#main')?.focus({ preventScroll: true });
+  }, [location.pathname]);
+  return (
+    <Suspense fallback={<LoadingState />}>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/clases" element={<Catalog />} />
+        <Route path="/clases/:id" element={<Detail />} />
+        <Route path="/reservar/:id" element={<Booking />} />
+        <Route path="/reserva-confirmada/:id" element={<Confirmation />} />
+        <Route path="/mis-reservas" element={<Reservations />} />
+        <Route path="/auth/confirm" element={<AuthCallback />} />
+        <Route path="/restablecer-contrasena" element={<ResetPassword />} />
+        <Route path="/admin" element={<Admin />} />
+        <Route
+          path="*"
+          element={
+            <EmptyState
+              title="Página no encontrada"
+              message="Esta dirección no existe en FitSmart Agenda."
+              action
+            />
+          }
+        />
+      </Routes>
+    </Suspense>
+  );
 }
