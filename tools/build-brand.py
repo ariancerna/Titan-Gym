@@ -3,13 +3,17 @@
 El original tiene un halo gris irregular alrededor del casco que a tamaño de favicon se ve
 como manchas. Aquí se reconstruye una silueta limpia en blanco y se exportan:
   public/assets/brands/titan-mark.png  128 px, transparente (navegación, pie, correos)
-  public/favicon.png                    48 px, casco blanco sobre cuadrado negro redondeado
+  public/favicon.svg                    casco transparente que cambia de color con el tema
+                                        (blanco en tema oscuro, negro en tema claro)
+  public/favicon.png                    48 px de respaldo: casco blanco con contorno oscuro
   public/apple-touch-icon.png          180 px, fondo negro (pantalla de inicio de iPhone)
   public/og-image.png                  1200 × 630, vista previa al compartir el enlace
   branding/titan-logo-limpio.png       versión grande y limpia para otros usos
 
 Uso: python tools/build-brand.py branding/titan-logo-original.png
 """
+import base64
+import io
 import sys
 from pathlib import Path
 
@@ -59,6 +63,33 @@ def centered(logo: Image.Image, size: int, padding: float, background=None, radi
     return canvas
 
 
+def outlined(logo: Image.Image, size: int, padding: float, outline: int) -> Image.Image:
+    """Casco blanco con contorno oscuro: visible sobre pestañas claras y oscuras."""
+    inner = fit(logo, round(size * (1 - 2 * padding)))
+    alpha = inner.getchannel('A')
+    border = alpha.filter(ImageFilter.MaxFilter(outline * 2 + 1))
+    canvas = Image.new('RGBA', (size, size), (0, 0, 0, 0))
+    offset = ((size - inner.width) // 2, (size - inner.height) // 2)
+    dark = Image.new('RGBA', inner.size, BLACK)
+    dark.putalpha(border)
+    canvas.alpha_composite(dark, offset)
+    canvas.alpha_composite(inner, offset)
+    return canvas
+
+
+def adaptive_svg(logo: Image.Image) -> str:
+    """Favicon SVG transparente: el navegador elige blanco o negro según su tema."""
+    buffer = io.BytesIO()
+    centered(logo, 64, 0.04).save(buffer, format='PNG', optimize=True)
+    data = base64.b64encode(buffer.getvalue()).decode()
+    return (
+        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">'
+        '<style>image{filter:brightness(0)}'
+        '@media (prefers-color-scheme: dark){image{filter:none}}</style>'
+        f'<image width="64" height="64" href="data:image/png;base64,{data}"/></svg>'
+    )
+
+
 def share_image(logo: Image.Image, root: Path) -> Image.Image:
     """Imagen para WhatsApp/Facebook: logo, nombre, lema y sede con las fuentes del sitio."""
     fonts = root / 'node_modules/@fontsource'
@@ -85,8 +116,9 @@ def main():
     logo = white_logo(clean_silhouette(original))
     logo.save(root / 'branding' / 'titan-logo-limpio.png', optimize=True)
     centered(logo, 128, 0.06).save(root / 'public/assets/brands/titan-mark.png', optimize=True)
+    (root / 'public/favicon.svg').write_text(adaptive_svg(logo), encoding='utf-8')
     # Supermuestreo: se dibuja a 4x y se reduce para bordes suaves en tamaños pequeños.
-    centered(logo, 192, 0.16, BLACK, radius=40).resize((48, 48), Image.Resampling.LANCZOS).save(
+    outlined(logo, 192, 0.06, outline=5).resize((48, 48), Image.Resampling.LANCZOS).save(
         root / 'public/favicon.png', optimize=True
     )
     centered(logo, 180, 0.17, BLACK).save(root / 'public/apple-touch-icon.png', optimize=True)
