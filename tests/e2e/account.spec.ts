@@ -150,3 +150,20 @@ test('política de privacidad accesible desde el pie de página', async ({ page 
   await expect(page.getByText(/São Paulo, Brasil/)).toBeVisible();
   await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
 });
+
+test('HU07: el socio puede desactivar y volver a activar los recordatorios por correo', async ({ page, request }) => {
+  await request.post('http://127.0.0.1:54331/__test/reset');
+  await page.addInitScript(s => localStorage.setItem('fitsmart-agenda-auth', JSON.stringify(s)), fixtureSession());
+  await page.goto('/mis-reservas');
+  const toggle = page.getByRole('switch', { name: 'Recibir recordatorios por correo' });
+  await expect(toggle).toBeChecked();
+  const saved = () => page.waitForResponse((r) => r.url().includes('/rpc/set_email_reminders') && r.ok());
+  await Promise.all([saved(), toggle.uncheck()]);
+  await expect(toggle).not.toBeChecked();
+  await page.reload();
+  await expect(page.getByRole('switch', { name: 'Recibir recordatorios por correo' })).not.toBeChecked();
+  await Promise.all([saved(), page.getByRole('switch', { name: 'Recibir recordatorios por correo' }).check()]);
+  await page.reload();
+  await expect(page.getByRole('switch', { name: 'Recibir recordatorios por correo' })).toBeChecked();
+  await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+});

@@ -216,6 +216,39 @@ try {
     assert((await anonymous.query('select id from public.list_sessions()')).rows.some(r=>r.id===later),'al entrar en la ventana aparece en el catálogo');
     assert.ok((await reserve(a,later)).rows[0].id);
   });
+  await check('HU07: recordatorios 3 horas antes, una sola vez, sin cancelados ni socios que los desactivaron',async()=>{
+    const soon='94000000-0000-4000-8000-000000000001', later='94000000-0000-4000-8000-000000000002';
+    for (const [id,offset,room] of [[soon,'2 hours','Sala recordatorio'],[later,'5 hours','Sala recordatorio tarde']])
+      await admin.query(`insert into public.class_sessions(id,class_id,instructor_id,location_id,room,starts_at,duration_minutes,capacity)
+        select $1,class_id,instructor_id,location_id,$3,now()+$2::interval,45,10 from public.class_sessions where id=$4`,[id,offset,room,s(1)]);
+    const mine=(await reserve(a,soon)).rows[0].id;
+    const optedOut=(await reserve(b,soon,'test2@example.com','Beto Ruiz')).rows[0].id;
+    await b.query('select public.set_email_reminders(false)');
+    const tooFar=(await reserve(a,later)).rows[0].id;
+    const cancelled=(await reserve(manager,soon,'test3@example.com','Carla Admin')).rows[0].id;
+    const demo=(await admin.query("insert into public.reservations(session_id,user_id,member_name,member_email) values($1,'60000000-0000-4000-8000-000000000001','Socio Demo 1','socio-demo-1@titan.invalid') returning id",[soon])).rows[0].id;
+    await manager.query('select public.cancel_reservation($1)',[cancelled]);
+    // Socios y visitantes no pueden leer ni marcar recordatorios.
+    await assert.rejects(a.query('select * from public.claim_reminders(3,true)'),/permission denied/);
+    await assert.rejects(anonymous.query('select * from public.claim_reminders(3,true)'),/permission denied/);
+    await admin.query('set role service_role');
+    try{
+      const preview=(await admin.query('select * from public.claim_reminders(3,true)')).rows.map(r=>r.reservation_id);
+      assert(preview.includes(mine));assert(!preview.includes(optedOut));assert(!preview.includes(tooFar));assert(!preview.includes(cancelled));assert(!preview.includes(demo),'los socios de demostración no reciben correos');
+      const first=(await admin.query('select * from public.claim_reminders(3)')).rows;
+      const row=first.find(r=>r.reservation_id===mine);
+      assert(row);assert.equal(row.member_name,'Ana López');assert.equal(row.room,'Sala recordatorio');assert.match(row.code,/^TG-/);
+      assert.equal((await admin.query('select * from public.claim_reminders(3)')).rows.filter(r=>r.reservation_id===mine).length,0,'no se envía dos veces');
+      await admin.query('select public.release_reminder($1)',[mine]);
+      assert((await admin.query('select * from public.claim_reminders(3,true)')).rows.some(r=>r.reservation_id===mine),'tras un fallo vuelve a quedar pendiente');
+      await admin.query('select * from public.claim_reminders(3)');
+    }finally{await admin.query('reset role');}
+    assert.equal((await a.query('select email_reminders from public.member_preferences')).rows.length,0,'cada socio solo ve su preferencia');
+    assert.equal((await b.query('select email_reminders from public.member_preferences')).rows[0].email_reminders,false);
+    await admin.query("update public.class_sessions set starts_at=now()-interval '10 minutes' where id=$1",[soon]);
+    const ds=(await manager.query('select reserva_id,recordatorio_enviado from public.admin_dataset() where reserva_id=$1',[mine])).rows[0];
+    assert.equal(ds.recordatorio_enviado,true);
+  });
   await check('Admin: revocación inmediata sin renovar JWT',async()=>{
     await admin.query('delete from private.administrators where user_id=$1',[users[2]]);
     assert.equal((await manager.query('select public.is_admin() value')).rows[0].value,false);

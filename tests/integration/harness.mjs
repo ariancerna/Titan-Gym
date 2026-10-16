@@ -18,7 +18,7 @@ export async function createHarness() {
   await admin.connect();
   // Solo entorno de pruebas: superficie auth mínima. No es un servicio Supabase Auth.
   await admin.query(`
-    create role anon nologin; create role authenticated nologin;
+    create role anon nologin; create role authenticated nologin; create role service_role nologin;
     create schema auth;
     create table auth.users(id uuid primary key,email text,email_confirmed_at timestamptz,
       is_anonymous boolean default false,raw_app_meta_data jsonb,raw_user_meta_data jsonb);

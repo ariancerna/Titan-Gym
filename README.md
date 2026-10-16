@@ -20,6 +20,7 @@ Aplicación web para consultar clases, conocer los cupos disponibles y reservar 
 - Panel administrativo para crear/editar clases, programar sesiones, consultar inscritos y registrar asistencia con historial.
 - Indicador de no-shows y exportación CSV del dataset seudonimizado para el componente de Machine Learning (APF3).
 - Comprobante con código QR y registro de llegada en recepción escaneando el QR desde el panel.
+- Recordatorio por correo 3 horas antes de cada clase, con opción para desactivarlo.
 
 ## Tecnologías
 
@@ -161,6 +162,7 @@ Cuando exista la URL definitiva, configura Site URL y su redirección `/auth/con
 - [Dataset de asistencia APF3](docs/DATASET_APF3.md)
 - [Auditoría y plan APF3](docs/AUDITORIA_APF3.md)
 - [Privacidad y consentimiento](docs/PRIVACIDAD.md)
+- [Recordatorios por correo](docs/RECORDATORIOS.md)
 - [Cuenta de evaluación y demostración pública APF2](docs/DEMO_VERCEL_APF2.md)
 - [Anexo de prompts de IA y validación](docs/ANEXO_PROMPTS_IA.md)
 - [Configuración de Supabase](docs/SUPABASE.md)

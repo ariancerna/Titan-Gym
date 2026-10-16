@@ -44,6 +44,7 @@ La cancelación (HU05) solo se permite antes del inicio de la clase y la asisten
 | `anticipacion_horas` | decimal | Horas entre la reserva y el inicio de la clase. | Variable. |
 | `reservas_previas` | entero | Reservas del mismo socio en sesiones anteriores. | Variable (historial). |
 | `inasistencias_previas` | entero | No-shows del mismo socio en sesiones anteriores. | Variable (historial). |
+| `recordatorio_enviado` | booleano | Se envió el recordatorio por correo 3 horas antes (HU07). | Variable; permite medir el efecto del recordatorio. |
 | `estado` | texto | `confirmed`, `cancelled` o `attended`. | Filtro. |
 | `cancelada_en` | timestamptz | Cuándo canceló el socio; vacío si no canceló. | Análisis de cancelaciones. |
 | `asistencia` | texto | `pending`, `present`, `absent`; vacío si se canceló. | Control de calidad. |

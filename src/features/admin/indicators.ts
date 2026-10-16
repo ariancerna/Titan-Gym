@@ -18,6 +18,9 @@ export interface AttendanceSummary {
   /** Reservas no canceladas con asistencia registrada. Mide la calidad del dataset. */
   cobertura: number | null;
   porClase: ClassIndicator[];
+  /** Tasa de no-shows de las reservas que recibieron recordatorio y de las que no (HU07). */
+  conRecordatorio: number | null;
+  sinRecordatorio: number | null;
 }
 
 const ratio = (part: number, total: number) => (total > 0 ? part / total : null);
@@ -34,7 +37,13 @@ export function summarizeAttendance(rows: DatasetRow[]): AttendanceSummary {
     if (!row.asistio) entry.ausentes += 1;
     byClass.set(row.clase, entry);
   }
+  const noShowRate = (subset: DatasetRow[]) => {
+    const registered = subset.filter((r) => r.asistio !== null);
+    return ratio(registered.filter((r) => r.asistio === false).length, registered.length);
+  };
   return {
+    conRecordatorio: noShowRate(active.filter((r) => r.recordatorio_enviado)),
+    sinRecordatorio: noShowRate(active.filter((r) => !r.recordatorio_enviado)),
     reservas: rows.length,
     canceladas: rows.length - active.length,
     presentes,
@@ -68,6 +77,7 @@ const columns: (keyof DatasetRow)[] = [
   'anticipacion_horas',
   'reservas_previas',
   'inasistencias_previas',
+  'recordatorio_enviado',
   'estado',
   'cancelada_en',
   'asistencia',

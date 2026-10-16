@@ -79,6 +79,14 @@ export function AttendanceIndicators() {
         </p>
       )}
 
+      {summary.conRecordatorio !== null && (
+        <p className="indicator-compare">
+          No-shows con recordatorio por correo:{' '}
+          <strong>{formatPercent(summary.conRecordatorio)}</strong>
+          {' · '}sin recordatorio: <strong>{formatPercent(summary.sinRecordatorio)}</strong>
+        </p>
+      )}
+
       {summary.porClase.length > 0 && (
         <div className="table-scroll">
           <table className="indicator-table">

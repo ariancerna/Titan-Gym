@@ -64,6 +64,7 @@ export interface DatasetRow {
   anticipacion_horas: number;
   reservas_previas: number;
   inasistencias_previas: number;
+  recordatorio_enviado: boolean;
   estado: 'confirmed' | 'cancelled' | 'attended';
   cancelada_en: string | null;
   asistencia: AttendanceStatus | null;

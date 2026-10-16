@@ -1,5 +1,5 @@
 {
-  "executedAt": "2026-10-16T04:01:05.246Z",
+  "executedAt": "2026-10-16T16:04:20.995Z",
   "engine": "PostgreSQL 17.6 on x86_64-windows, compiled by msvc-19.44.35213, 64-bit",
   "scope": "PostgreSQL real; auth.uid y auth.users mínimos de pruebas. Sin servicio Supabase Auth.",
   "results": [
@@ -129,6 +129,10 @@
     },
     {
       "name": "Ventana de reservas: el catálogo muestra 7 días y no se reserva antes de tiempo",
+      "passed": true
+    },
+    {
+      "name": "HU07: recordatorios 3 horas antes, una sola vez, sin cancelados ni socios que los desactivaron",
       "passed": true
     },
     {

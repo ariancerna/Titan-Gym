@@ -20,6 +20,7 @@ function row(overrides: Partial<DatasetRow>): DatasetRow {
     anticipacion_horas: 33.5,
     reservas_previas: 0,
     inasistencias_previas: 0,
+    recordatorio_enviado: false,
     estado: 'confirmed',
     cancelada_en: null,
     asistencia: 'pending',
@@ -60,11 +61,26 @@ describe('indicadores de asistencia (HU09)', () => {
   });
 });
 
+describe('efecto del recordatorio (HU07)', () => {
+  it('compara la tasa de no-shows con y sin recordatorio', () => {
+    const summary = summarizeAttendance([
+      row({ recordatorio_enviado: true, asistencia: 'present', asistio: true }),
+      row({ recordatorio_enviado: true, asistencia: 'present', asistio: true }),
+      row({ recordatorio_enviado: true, asistencia: 'absent', asistio: false }),
+      row({ recordatorio_enviado: false, asistencia: 'absent', asistio: false }),
+      row({ recordatorio_enviado: false, asistencia: 'present', asistio: true }),
+    ]);
+    expect(summary.conRecordatorio).toBeCloseTo(1 / 3);
+    expect(summary.sinRecordatorio).toBe(0.5);
+  });
+});
+
 describe('exportación del dataset (APF3)', () => {
   it('genera cabecera fija, escapa comas y neutraliza fórmulas', () => {
     const csv = datasetToCsv([row({ clase: '=HYPERLINK("x")', instructor: 'Ruiz, David', asistio: false })]);
     const [header, line] = csv.split('\r\n');
-    expect(header.split(',')).toHaveLength(20);
+    expect(header.split(',')).toHaveLength(21);
+    expect(header).toContain('recordatorio_enviado');
     expect(header).not.toMatch(/nombre|correo|email|user_id/);
     expect(line).toContain(`"'=HYPERLINK(""x"")"`);
     expect(line).toContain('"Ruiz, David"');

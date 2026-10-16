@@ -1,0 +1,37 @@
+# HU07: recordatorio por correo 3 horas antes de cada clase reservada.
+# Se ejecuta cada 15 minutos; GitHub puede retrasar las ejecuciones programadas unos minutos,
+# por eso la ventana de búsqueda es de 3 horas y cada reserva se marca al enviarse.
+name: Recordatorios de clases
+
+on:
+  schedule:
+    - cron: '*/15 * * * *'
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Prueba en seco: solo cuenta los pendientes, sin enviar'
+        type: boolean
+        default: true
+
+concurrency:
+  group: recordatorios
+  cancel-in-progress: false
+
+jobs:
+  enviar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      # Solo las dependencias de producción, sin scripts de instalación (no hace falta Playwright).
+      - run: npm ci --omit=dev --ignore-scripts
+      - name: Enviar recordatorios
+        run: node tools/send-reminders.mjs ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run && '--dry-run' || '' }}
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASS: ${{ secrets.SMTP_PASS }}

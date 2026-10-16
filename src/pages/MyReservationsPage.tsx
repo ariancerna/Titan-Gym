@@ -11,6 +11,7 @@ import { errorMessage } from '../lib/errors';
 import type { Reservation } from '../types/domain';
 import { AuthGate } from '../components/reservations/AuthGate';
 import { CreatePasswordForm } from '../components/reservations/CreatePasswordForm';
+import { ReminderPreference } from '../components/reservations/ReminderPreference';
 import { Button } from '../components/ui/Button';
 import { LoadingState, ErrorState, EmptyState } from '../components/ui/States';
 
@@ -206,6 +207,7 @@ export default function MyReservationsPage() {
       ) : user ? (
         <>
           <ReservationList />
+          <ReminderPreference />
           <CreatePasswordForm key={user.id} />
           <PrivacySummary />
         </>

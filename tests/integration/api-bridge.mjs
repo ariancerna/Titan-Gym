@@ -31,6 +31,7 @@ const server = createServer(async(req,res)=>{
     await harness.admin.query('delete from private.attendance_history');await harness.admin.query('delete from public.attendance');
     await harness.admin.query('delete from public.reservations where user_id=any($1::uuid[])',[harness.users]);
     await harness.admin.query('delete from public.class_sessions where not(id=any($1::uuid[]))',[initialSessions]);
+    await harness.admin.query('delete from public.member_preferences');
     await harness.admin.query('delete from public.classes where not(id=any($1::uuid[]))',[initialClasses]);
     res.end('{"ok":true}');return;
   }
@@ -53,10 +54,13 @@ const server = createServer(async(req,res)=>{
       else if(url.pathname.endsWith('/admin_dataset'))data=(await client.query('select * from public.admin_dataset()')).rows;
       else if(url.pathname.endsWith('/accept_privacy_policy')){await client.query('select public.accept_privacy_policy($1)',[args.p_version]);data=null;}
       else if(url.pathname.endsWith('/admin_check_in'))data=(await client.query('select public.admin_check_in($1) value',[args.p_code])).rows[0].value;
+      else if(url.pathname.endsWith('/set_email_reminders')){await client.query('select public.set_email_reminders($1)',[args.p_enabled]);data=null;}
       else throw new Error('Unknown test RPC');
     }else if(req.method==='GET' && url.pathname==='/rest/v1/privacy_consents'){
       const version=url.searchParams.get('policy_version')?.replace(/^eq\./,'');
       data=(await client.query('select accepted_at,source from public.privacy_consents where policy_version=$1',[version])).rows;
+    }else if(req.method==='GET' && url.pathname==='/rest/v1/member_preferences'){
+      data=(await client.query('select email_reminders from public.member_preferences')).rows;
     }else if(req.method==='GET' && url.pathname==='/rest/v1/locations'){
       data=(await client.query('select id,name,address from public.locations order by name')).rows;
     }else if(req.method==='GET' && url.pathname==='/rest/v1/reservations'){

@@ -120,9 +120,9 @@ El orden importa: si se despliega el frontend sin la migración, Mis reservas y 
 | Comando | Antes de los cambios | Después |
 | --- | --- | --- |
 | `npm run build` | Aprobado | Aprobado |
-| `npm test` | 31 aprobadas | 43 aprobadas |
-| `npm run test:db` | 25 aprobadas | 33 aprobadas (incluye cancelación, dataset, privacidad, código QR y ventana de 7 días) |
-| `npm run test:e2e` | 78 aprobadas (registro del 11/10) | 117 aprobadas, 0 fallidas, 0 inestables, en 3 tamaños de pantalla |
+| `npm test` | 31 aprobadas | 46 aprobadas |
+| `npm run test:db` | 25 aprobadas | 34 aprobadas (incluye cancelación, dataset, privacidad, código QR, ventana de 7 días y recordatorios) |
+| `npm run test:e2e` | 78 aprobadas (registro del 11/10) | 120 aprobadas, 0 fallidas, 0 inestables, en 3 tamaños de pantalla |
 | `npm audit` | 0 vulnerabilidades | 0 vulnerabilidades |
 | `npm run format:check` | — | Sin diferencias |
 
