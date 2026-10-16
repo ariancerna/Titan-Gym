@@ -57,7 +57,7 @@ function ReservationCard({
   return (
     <article className="reservation-card panel">
       <div className="reservation-date">
-        <span className="eyebrow yellow">{dayLabel(s.starts_at)}</span>
+        <span className="eyebrow accent">{dayLabel(s.starts_at)}</span>
         <strong>{formatDate(s.starts_at)}</strong>
         <span>{timeRange(s)}</span>
       </div>
@@ -197,7 +197,7 @@ export default function MyReservationsPage() {
   return (
     <div className="container page">
       <div className="page-heading">
-        <p className="eyebrow yellow">FitSmart Agenda</p>
+        <p className="eyebrow accent">FitSmart Agenda</p>
         <h1>Mis reservas</h1>
         <p>Tus próximas clases, el historial y los comprobantes de cada reserva.</p>
       </div>

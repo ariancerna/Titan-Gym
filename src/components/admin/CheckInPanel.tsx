@@ -106,7 +106,7 @@ export function CheckInPanel() {
     <section className="panel checkin-panel" aria-labelledby="checkin-title">
       <div className="admin-section-heading">
         <div>
-          <p className="eyebrow yellow">Recepción</p>
+          <p className="eyebrow accent">Recepción</p>
           <h2 id="checkin-title">Registrar llegada</h2>
           <p>Escanea el QR del comprobante del socio. Se acepta desde 1 hora antes de la clase.</p>
         </div>

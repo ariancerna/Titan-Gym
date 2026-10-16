@@ -78,6 +78,8 @@ También se admite signInWithPassword, con verificación getUser. Una cuenta con
 
 ## Diseño y accesibilidad
 
+Actualización APF3: la paleta pasó del amarillo propuesto en el prototipo a **negro, blanco y morado neón**, los colores reales de la sede (letrero blanco sobre negro e iluminación morada), y la portada usa el lema real del gimnasio, "WAKE THE BEST". Los colores están centralizados en variables CSS (`--accent`, `--accent-text`, `--warning`) al inicio de `src/styles/index.css`; el morado de los botones mantiene contraste AA con texto blanco. Verde, ámbar y rojo se conservan solo como estados de cupos.
+
 Referencias Figma consultadas: logo `1:2`; inicio `1:11`; catálogo `1:367`; detalle `1:758`; formulario `1:1017`; confirmación `1:1226`; reservas `1:1426`.
 
 Se conservan Oswald, Space Grotesk, colores solicitados, hero centrado, tarjetas de ocupación, formulario de dos columnas y comprobante central. Por petición del propietario se sustituyeron los fondos y fotografías pixeladas por recursos nuevos y se añadieron logo/favicón transparentes. Los originales siguen disponibles; su procedencia se documenta en RECURSOS_VISUALES.md. Hay adaptaciones a 768 y 390 px, menú móvil, botones táctiles, foco visible, labels y errores asociados. Las fotografías cargan diferidas cuando corresponde y las fuentes están empaquetadas localmente.

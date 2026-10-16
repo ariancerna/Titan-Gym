@@ -91,7 +91,7 @@ export function SignUpForm({ onSignIn }: { onSignIn: () => void }) {
           />
           <span>
             He leído y acepto la{' '}
-            <Link to="/privacidad" target="_blank" rel="noopener" className="yellow">
+            <Link to="/privacidad" target="_blank" rel="noopener" className="accent">
               Política de privacidad
             </Link>
             .

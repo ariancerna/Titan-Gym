@@ -40,7 +40,7 @@ export function CreatePasswordForm() {
   }
   return (
     <section className="panel auth-panel mt-8" aria-label="Seguridad de tu cuenta">
-      <p className="eyebrow yellow">Seguridad de tu cuenta</p>
+      <p className="eyebrow accent">Seguridad de tu cuenta</p>
       <h2>Correo y contraseña</h2>
       <p>
         Configura una contraseña para esta cuenta verificada. Se mantienen tus accesos y reservas;

@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 test('navegación, identidad visual TITAN y responsive sin desbordamiento', async ({ page }, testInfo) => {
   await page.goto('/');
-  await expect(page.getByRole('heading', { name: 'SUPERA TUS LÍMITES' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'WAKE THE BEST' })).toBeVisible();
   await expect(page.locator('.brand img')).toBeVisible();
   await expect(page.getByRole('link', { name: 'Explorar clases', exact: true })).toBeVisible();
   await expect(page.locator('.class-card')).toHaveCount(3);

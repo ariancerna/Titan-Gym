@@ -33,7 +33,7 @@ export function AttendanceIndicators() {
     <section className="panel admin-indicators" aria-labelledby="indicators-title">
       <div className="admin-section-heading">
         <div>
-          <p className="eyebrow yellow">Indicador del proyecto</p>
+          <p className="eyebrow accent">Indicador del proyecto</p>
           <h2 id="indicators-title">Asistencia e inasistencias</h2>
           <p>Calculado sobre las sesiones que ya comenzaron.</p>
         </div>

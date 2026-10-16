@@ -39,7 +39,7 @@ export function AttendanceRoster({
     <section className="panel admin-roster" aria-label="Inscritos y asistencia">
       <div className="admin-section-heading">
         <div>
-          <p className="eyebrow yellow">Control de asistencia</p>
+          <p className="eyebrow accent">Control de asistencia</p>
           <h2>{session.name}</h2>
           <p>
             {new Date(session.starts_at).toLocaleString('es-PE', { timeZone: 'America/Lima' })} ·{' '}

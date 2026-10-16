@@ -36,7 +36,7 @@ export default function DetailPage() {
               </div>
             )}
             <div className="detail-content">
-              <p className="eyebrow yellow">{s.discipline}</p>
+              <p className="eyebrow accent">{s.discipline}</p>
               <h1>{s.name}</h1>
               <p>{s.description}</p>
             </div>
@@ -50,13 +50,13 @@ export default function DetailPage() {
                 )}
                 <div>
                   <h2>{s.instructor}</h2>
-                  <p className="eyebrow yellow">{s.discipline}</p>
+                  <p className="eyebrow accent">{s.discipline}</p>
                 </div>
               </div>
               <p>{s.instructor_bio}</p>
             </section>
             <section className="panel before-class">
-              <p className="eyebrow yellow">Antes de la clase</p>
+              <p className="eyebrow accent">Antes de la clase</p>
               <h2>Qué tener en cuenta</h2>
               <ul>
                 <li>Llega 10 minutos antes y presenta tu código en recepción.</li>

@@ -29,7 +29,7 @@ export default function CatalogPage() {
     <div className="container page">
       <div className="section-heading page-heading">
         <div>
-          <p className="eyebrow yellow">Agenda de clases</p>
+          <p className="eyebrow accent">Agenda de clases</p>
           <h1>Horarios y clases disponibles</h1>
           <p>Elige una sesión, revisa los cupos y reserva tu lugar en TITAN GYM.</p>
         </div>

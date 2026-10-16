@@ -63,7 +63,7 @@ export default function AuthCallbackPage() {
   if (!error) return <LoadingState />;
   return (
     <section className="container page panel auth-panel">
-      <p className="eyebrow yellow">Acceso seguro</p>
+      <p className="eyebrow accent">Acceso seguro</p>
       <h1>Enlace no válido</h1>
       <p role="alert">{error}</p>
       <Link className="btn btn-primary" to="/mis-reservas">

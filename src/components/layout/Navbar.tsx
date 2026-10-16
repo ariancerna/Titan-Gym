@@ -23,7 +23,7 @@ export function Navbar() {
         >
           <img src="/assets/brands/titan-mark.png" alt="" width="36" height="36" />
           <span>
-            TITAN <span className="yellow">GYM</span>
+            TITAN <span className="accent">GYM</span>
           </span>
         </Link>
         <nav aria-label="Navegación principal" className={open ? 'nav-links open' : 'nav-links'}>

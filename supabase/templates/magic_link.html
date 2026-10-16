@@ -17,12 +17,12 @@
             <tr>
               <td style="padding:0 0 20px;">
                 <img src="https://titan-gym-tau.vercel.app/assets/brands/titan-mark.png" width="40" height="40" alt="" style="vertical-align:middle;border:0;" />
-                <span style="font:bold 20px Arial,Helvetica,sans-serif;letter-spacing:2px;color:#ffffff;vertical-align:middle;padding-left:8px;">TITAN <span style="color:#facc15;">GYM</span></span>
+                <span style="font:bold 20px Arial,Helvetica,sans-serif;letter-spacing:2px;color:#ffffff;vertical-align:middle;padding-left:8px;">TITAN <span style="color:#a78bfa;">GYM</span></span>
               </td>
             </tr>
             <tr>
-              <td style="background:#1b1b1f;border:1px solid #2a2b31;border-top:4px solid #facc15;border-radius:8px;padding:32px;font-family:Arial,Helvetica,sans-serif;color:#d4d4d8;">
-                <p style="margin:0 0 8px;font-size:12px;font-weight:bold;letter-spacing:1px;text-transform:uppercase;color:#facc15;">FitSmart Agenda</p>
+              <td style="background:#1b1b1f;border:1px solid #2a2b31;border-top:4px solid #7c3aed;border-radius:8px;padding:32px;font-family:Arial,Helvetica,sans-serif;color:#d4d4d8;">
+                <p style="margin:0 0 8px;font-size:12px;font-weight:bold;letter-spacing:1px;text-transform:uppercase;color:#a78bfa;">FitSmart Agenda</p>
                 <h1 style="margin:0 0 16px;font-size:26px;line-height:1.2;text-transform:uppercase;color:#ffffff;">Tu enlace de acceso</h1>
                 <p style="margin:0 0 24px;font-size:15px;line-height:1.6;">
                   Recibimos una solicitud para entrar a tu cuenta con <strong style="color:#ffffff;">{{ .Email }}</strong>.
@@ -30,18 +30,18 @@
                 </p>
                 <table role="presentation" cellpadding="0" cellspacing="0">
                   <tr>
-                    <td style="background:#facc15;border-radius:6px;">
-                      <a href="{{ .RedirectTo }}?token_hash={{ .TokenHash }}&amp;type=email" style="display:inline-block;padding:14px 28px;font:bold 15px Arial,Helvetica,sans-serif;letter-spacing:1px;text-transform:uppercase;color:#101114;text-decoration:none;">Entrar a mis reservas</a>
+                    <td style="background:#7c3aed;border-radius:6px;">
+                      <a href="{{ .RedirectTo }}?token_hash={{ .TokenHash }}&amp;type=email" style="display:inline-block;padding:14px 28px;font:bold 15px Arial,Helvetica,sans-serif;letter-spacing:1px;text-transform:uppercase;color:#ffffff;text-decoration:none;">Entrar a mis reservas</a>
                     </td>
                   </tr>
                 </table>
-                <p style="margin:24px 0 0;padding:14px 16px;background:#24231c;border:1px solid #4a4220;border-radius:6px;font-size:13px;line-height:1.5;">
+                <p style="margin:24px 0 0;padding:14px 16px;background:#1f1a2e;border:1px solid #3b2f63;border-radius:6px;font-size:13px;line-height:1.5;">
                   El enlace vence en <strong style="color:#ffffff;">1 hora</strong> y solo puede usarse una vez.
                   Puedes abrirlo desde el celular o la computadora.
                 </p>
                 <p style="margin:24px 0 0;font-size:12px;line-height:1.5;color:#a1a1aa;">
                   ¿El botón no funciona? Copia este enlace en tu navegador:<br />
-                  <a href="{{ .RedirectTo }}?token_hash={{ .TokenHash }}&amp;type=email" style="color:#facc15;word-break:break-all;">{{ .RedirectTo }}?token_hash={{ .TokenHash }}&amp;type=email</a>
+                  <a href="{{ .RedirectTo }}?token_hash={{ .TokenHash }}&amp;type=email" style="color:#a78bfa;word-break:break-all;">{{ .RedirectTo }}?token_hash={{ .TokenHash }}&amp;type=email</a>
                 </p>
               </td>
             </tr>

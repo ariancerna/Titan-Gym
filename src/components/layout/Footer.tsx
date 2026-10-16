@@ -12,7 +12,7 @@ export function Footer() {
           <Link to="/" className="footer-brand" aria-label="TITAN GYM, inicio">
             <img src="/assets/brands/titan-mark.png" width="40" height="40" alt="" loading="lazy" />
             <strong>
-              TITAN <span className="yellow">GYM</span>
+              TITAN <span className="accent">GYM</span>
             </strong>
           </Link>
           <p>

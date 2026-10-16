@@ -44,7 +44,7 @@ function Receipt({ id }: { id: string }) {
       <div className={cancelled ? 'success-icon cancelled' : 'success-icon'}>
         {cancelled ? <X size={32} /> : <Check size={32} />}
       </div>
-      <p className="eyebrow yellow">Comprobante de reserva</p>
+      <p className="eyebrow accent">Comprobante de reserva</p>
       <h1>
         {cancelled
           ? 'Reserva cancelada'

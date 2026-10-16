@@ -200,7 +200,7 @@ function AdminDashboard() {
                         {s.instructor} · {s.room}
                       </p>
                       <p>
-                        <strong className="yellow">
+                        <strong className="accent">
                           {s.reserved}/{s.capacity}
                         </strong>{' '}
                         reservas activas · {s.capacity - s.reserved} cupos
@@ -269,7 +269,7 @@ export default function AdminPage() {
   return (
     <div className="container page admin-page">
       <div className="page-heading">
-        <p className="eyebrow yellow">TITAN GYM · Gestión</p>
+        <p className="eyebrow accent">TITAN GYM · Gestión</p>
         <h1>Administración</h1>
         <p>Gestiona clases, sesiones, alumnos inscritos y asistencia.</p>
       </div>

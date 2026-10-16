@@ -64,7 +64,7 @@ export function ReservationForm({
   }
   return (
     <section className="panel form-panel">
-      <p className="eyebrow yellow">Datos del socio</p>
+      <p className="eyebrow accent">Datos del socio</p>
       <h2>Confirma tus datos</h2>
       <p>Con estos datos te reconocerán en recepción y recibirás tu código de reserva.</p>
       <form onSubmit={form.handleSubmit(submit)} noValidate>
@@ -117,7 +117,7 @@ export function ReservationForm({
               />
               <span>
                 He leído y acepto la{' '}
-                <Link to="/privacidad" target="_blank" rel="noopener" className="yellow">
+                <Link to="/privacidad" target="_blank" rel="noopener" className="accent">
                   Política de privacidad
                 </Link>{' '}
                 para el registro de mis reservas y asistencia.

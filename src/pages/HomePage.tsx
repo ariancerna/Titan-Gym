@@ -43,7 +43,7 @@ export default function HomePage() {
         <div className="container hero-content">
           <p className="hero-kicker">TITAN GYM · Reserva de clases grupales</p>
           <h1>
-            SUPERA TUS <span>LÍMITES</span>
+            WAKE THE <span>BEST</span>
           </h1>
           <p>
             Consulta los horarios, mira cuántos cupos quedan y reserva tu lugar sin escribir por
@@ -90,7 +90,7 @@ export default function HomePage() {
       <section className="container section">
         <div className="section-heading">
           <div>
-            <p className="eyebrow yellow">Agenda</p>
+            <p className="eyebrow accent">Agenda</p>
             <h2>Próximas clases</h2>
           </div>
           <ButtonLink to="/clases" variant="secondary">
@@ -118,7 +118,7 @@ export default function HomePage() {
       <section className="how-section">
         <div className="container section how-layout">
           <div>
-            <p className="eyebrow yellow">Cómo reservar</p>
+            <p className="eyebrow accent">Cómo reservar</p>
             <h2>Tres pasos, sin llamadas</h2>
             <p>
               Antes las reservas se anotaban en un cuaderno o por mensaje. Ahora cada cupo queda
