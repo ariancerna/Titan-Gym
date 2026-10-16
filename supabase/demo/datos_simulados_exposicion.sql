@@ -5,7 +5,10 @@
 -- Crea un horario semanal desde el 21/09/2026 hasta el 31/12/2026:
 --   · sesiones ya pasadas con reservas, cancelaciones y asistencia (presente/ausente);
 --   · sesiones futuras con reservas (algunas llenas).
--- Las reservas usan los socios de demostración del seed (socio-demo-N@titan.invalid).
+-- Las reservas usan los 30 socios de demostración del seed (id '60000000-…'). Antes de crear
+-- las sesiones, el script les da nombres peruanos y correos que son subdirecciones del Gmail
+-- del administrador (admin+nombre.apellido@gmail.com): se ven reales, pero cualquier correo
+-- que se envíe por error llega al administrador y nunca a una persona desconocida.
 -- Las sesiones simuladas tienen id 'de000000-…' para poder identificarlas y borrarlas.
 --
 -- Las inasistencias siguen patrones (madrugada, lunes, socios con faltas frecuentes,
@@ -15,6 +18,20 @@
 do $$
 declare
   admin_id uuid;
+  admin_email text;
+  mail_user text;
+  mail_domain text;
+  member_names constant text[] := array[
+    'María Fernanda Quispe', 'Luis Alberto Huamán', 'Carmen Rosa Flores', 'José Antonio Mamani',
+    'Ana Lucía Torres', 'Jorge Luis Castillo', 'Rosa Elena Vargas', 'Carlos Eduardo Ramírez',
+    'Patricia Salazar', 'Miguel Ángel Chávez', 'Lucía Paredes', 'Diego Alonso Sánchez',
+    'Valeria Gutiérrez', 'Renzo Díaz', 'Daniela Espinoza', 'Kevin Alvarado',
+    'Milagros Ccori', 'Jhonatan Medina', 'Fiorella Navarro', 'Christian Aguilar',
+    'Andrea Herrera', 'Bryan Cárdenas', 'Katherine Ríos', 'Junior Romero',
+    'Gianella Cruz', 'Piero García', 'Mariela Silva', 'Franco Loayza',
+    'Sandra Huanca', 'Erick Palomino'];
+  full_name text;
+  name_parts text[];
   demo_members int;
   d date;
   slot record;
@@ -39,10 +56,32 @@ begin
   if exists(select 1 from public.class_sessions where id::text like 'de000000-%') then
     raise exception 'Los datos simulados ya existen. Ejecuta primero borrar_datos_simulados.sql.';
   end if;
-  select count(*) into demo_members from auth.users where email like 'socio-demo-%@titan.invalid';
+  select count(*) into demo_members from auth.users where id::text like '60000000-0000-4000-8000-%';
   if demo_members < 10 then
-    raise exception 'Faltan socios de demostración (socio-demo-N@titan.invalid). Hay %.', demo_members;
+    raise exception 'Faltan los socios de demostración del seed (id 60000000-…). Hay %.', demo_members;
   end if;
+
+  -- Identidades realistas: subdirecciones del correo del administrador.
+  select email into admin_email from auth.users where id = admin_id;
+  mail_user := split_part(split_part(admin_email, '@', 1), '+', 1);
+  mail_domain := split_part(admin_email, '@', 2);
+  for member in
+    select id, right(id::text, 12)::int as member_no
+    from auth.users where id::text like '60000000-0000-4000-8000-%'
+  loop
+    full_name := member_names[(member.member_no - 1) % array_length(member_names, 1) + 1];
+    name_parts := string_to_array(full_name, ' ');
+    update auth.users
+    set email = mail_user || '+' ||
+          translate(lower(name_parts[1] || '.' || name_parts[array_length(name_parts, 1)]), 'áéíóúñü', 'aeiounu')
+          || '@' || mail_domain,
+        raw_user_meta_data = coalesce(raw_user_meta_data, '{}'::jsonb) || jsonb_build_object('full_name', full_name)
+    where id = member.id;
+    -- Las reservas del seed de estos socios también pasan a su nombre nuevo.
+    update public.reservations r
+    set member_name = full_name, member_email = (select email from auth.users where id = member.id)
+    where r.user_id = member.id;
+  end loop;
 
   perform setseed(0.2026); -- mismos resultados cada vez que se ejecuta
 
@@ -85,15 +124,15 @@ begin
       target := least(target, demo_members);
 
       for member in
-        select id, substring(email from 'socio-demo-([0-9]+)@')::int as member_no
-        from auth.users where email like 'socio-demo-%@titan.invalid'
+        select id, email, raw_user_meta_data ->> 'full_name' as full_name,
+          right(id::text, 12)::int as member_no
+        from auth.users where id::text like '60000000-0000-4000-8000-%'
         order by random() limit target
       loop
         booked_at := starts - make_interval(hours => 2 + floor(random() * 118)::int);
         cancelled := starts < now() and random() < 0.07;
         insert into public.reservations(session_id, user_id, member_name, member_email, status, cancelled_at, created_at, updated_at)
-        values (session_id, member.id, 'Socio Demo ' || member.member_no,
-          'socio-demo-' || member.member_no || '@titan.invalid',
+        values (session_id, member.id, member.full_name, member.email,
           case when cancelled then 'cancelled' else 'confirmed' end,
           case when cancelled then booked_at + (starts - booked_at) * random() end,
           booked_at, booked_at)
