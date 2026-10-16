@@ -25,6 +25,12 @@ Las fotos se codificaron a JPEG con calidad 90 conservando dimensiones y composi
 
 La migración `refresh_visual_assets` actualiza únicamente las imágenes conocidas de las seis clases académicas. Si un operador ya personalizó una imagen, la conserva. El seed incorpora las nuevas rutas para instalaciones vacías; nunca se volvió a ejecutar sobre la base alojada. Las reservas y los roles no se modificaron.
 
+## Ajuste de color a la identidad de la sede
+
+Las seis fotografías de disciplinas tenían iluminación amarilla, el color del prototipo. Para alinearlas con la sede real (iluminación morada), `tools/recolor-photos.py` cambia a morado solo los píxeles de tono amarillo/ámbar y alta saturación (luces LED y franjas de equipos). La piel, el cabello y la ropa no se modifican. Tamaño (1672 × 941 px) y nombres de archivo se conservan, así que no hace falta cambiar la base de datos; los originales están en el historial de Git. La foto de la portada no tiene personas y usa un filtro CSS (`hue-rotate`).
+
+Uso: `python tools/recolor-photos.py <origen> <destino> spinning.jpg hiit.jpg …`
+
 ## Prompts finales
 
 Los textos siguientes son instrucciones reales de generación. Se conservan en inglés tal como se utilizaron; no son textos de la interfaz.
