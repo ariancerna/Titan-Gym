@@ -17,6 +17,10 @@
 
 do $$
 declare
+  -- OPCIONAL: correo base para los socios simulados, p. ej. 'tucorreo@gmail.com'.
+  -- Déjalo vacío para usar el correo del administrador. Escríbelo solo en el SQL Editor:
+  -- no lo guardes en el repositorio, que es público. Debe ser una bandeja que controles.
+  base_email constant text := '';
   admin_id uuid;
   admin_email text;
   mail_user text;
@@ -63,6 +67,12 @@ begin
 
   -- Identidades realistas: subdirecciones del correo del administrador.
   select email into admin_email from auth.users where id = admin_id;
+  if base_email <> '' then
+    if base_email !~ '^[^[:space:]@+]+@[^[:space:]@]+\.[^[:space:]@]+$' then
+      raise exception 'base_email no es un correo válido: %', base_email;
+    end if;
+    admin_email := lower(base_email);
+  end if;
   mail_user := split_part(split_part(admin_email, '@', 1), '+', 1);
   mail_domain := split_part(admin_email, '@', 2);
   for member in
