@@ -61,9 +61,11 @@ test('sede única Qatuna incluso sin sesiones y sin avisos de IA en la interfaz'
   await expect(page.locator('body')).not.toContainText(/inteligencia artificial|generad[oa]s? (con|por) IA/i);
   await page.unroute('**/rest/v1/rpc/list_sessions');
   await page.goto('/clases');
-  await expect(page.locator('.catalog-metric')).toContainText('1 sede');
+  await expect(page.getByText('Sede activa')).toHaveCount(0);
   await expect(page.locator('.class-card')).toHaveCount(8);
-  for (const card of await page.locator('.class-card').all()) await expect(card).toContainText('TITAN GYM QATUNA');
+  // Con una sola sede, la tarjeta muestra la sala; la sede está en la portada y el pie de página.
+  for (const card of await page.locator('.class-card').all()) await expect(card).toContainText(/Sala /);
+  await expect(page.getByRole('contentinfo')).toContainText('TITAN GYM QATUNA');
 });
 test('una confirmación exige identidad, nunca muestra éxito falso', async ({ page }) => {
   await page.goto('/reserva-confirmada/00000000-0000-4000-8000-000000000000');

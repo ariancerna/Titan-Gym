@@ -43,7 +43,7 @@ export function AttendanceRoster({
           <h2>{session.name}</h2>
           <p>
             {new Date(session.starts_at).toLocaleString('es-PE', { timeZone: 'America/Lima' })} ·{' '}
-            {session.location} · {session.room}
+            {session.room}
           </p>
         </div>
         <Button variant="secondary" onClick={onClose}>

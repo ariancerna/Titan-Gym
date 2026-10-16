@@ -55,7 +55,7 @@ test('administrador crea clase y sesión, publica y conserva al recargar', async
   const session = page.getByRole('region', { name: 'Editor de sesión' });
   await session.getByLabel('Clase', { exact: false }).selectOption({ label: 'Entrenamiento administrativo' });
   await session.getByLabel('Instructor').selectOption({ index: 1 });
-  await session.getByLabel('Sede').selectOption({ index: 1 });
+  await expect(session.getByLabel('Sede')).toHaveCount(0); // una sola sede: se asigna sola
   await session.getByLabel('Sala', { exact: true }).fill('Sala nueva');
   const future = new Date(Date.now() + 86400000 * 3).toISOString().slice(0, 16);
   await session.getByLabel('Fecha y hora · Lima', { exact: true }).fill(future);

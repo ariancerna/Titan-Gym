@@ -85,7 +85,7 @@ function Receipt({ id }: { id: string }) {
                 : 'Confirmada'}
           </span>
         </div>
-        <ReservationSummary session={s} />
+        <ReservationSummary session={s} showNote={false} />
         <div className="receipt-member">
           <small>Socio titular</small>
           <strong>{r.member_name}</strong>

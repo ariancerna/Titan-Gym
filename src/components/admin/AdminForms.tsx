@@ -171,7 +171,8 @@ export function SessionEditor({
       : {
           class_id: '',
           instructor_id: '',
-          location_id: '',
+          // Con una sola sede no se pregunta: se asigna sola.
+          location_id: data.locations.length === 1 ? data.locations[0].id : '',
           room: '',
           starts_at: '',
           capacity: 20,
@@ -212,7 +213,13 @@ export function SessionEditor({
         })}
       >
         <div className="admin-form-grid">
-          {(['class_id', 'instructor_id', 'location_id'] as const).map((key, index) => (
+          {(
+            [
+              'class_id',
+              'instructor_id',
+              ...(data.locations.length > 1 ? ['location_id'] : []),
+            ] as ('class_id' | 'instructor_id' | 'location_id')[]
+          ).map((key, index) => (
             <SelectField
               key={key}
               label={['Clase', 'Instructor', 'Sede'][index]}

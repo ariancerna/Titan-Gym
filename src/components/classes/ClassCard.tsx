@@ -45,7 +45,7 @@ export function ClassCard({
         </p>
         <p className="meta">
           <MapPin size={15} />
-          {s.location} · {s.room}
+          {s.room}
         </p>
         <OccupancyBar capacity={s.capacity} reserved={s.reserved} />
         <div className="card-cta">

@@ -318,25 +318,6 @@
     max-width: 610px;
     margin: 0;
   }
-  .catalog-metric {
-    border: 1px solid #ffffff12;
-    padding: 14px 24px;
-    border-radius: 10px;
-    background: #202126;
-    min-width: 150px;
-  }
-  .catalog-metric small,
-  .catalog-metric strong {
-    display: block;
-    text-transform: uppercase;
-  }
-  .catalog-metric strong {
-    font: 600 22px var(--font-heading);
-    color: #facc15;
-  }
-  .catalog-metric small {
-    font-size: 10px;
-  }
   .filters {
     margin-bottom: 30px;
   }
@@ -677,26 +658,6 @@
   }
   .detail-content h1 {
     font-size: 36px;
-  }
-  .detail-stats {
-    display: flex;
-    gap: 48px;
-    padding-top: 20px;
-    border-top: 1px solid #ffffff0d;
-  }
-  .detail-stats small {
-    text-transform: uppercase;
-    color: #bfc0c6;
-    font-size: 10px;
-  }
-  .detail-stats strong {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font: 600 22px var(--font-heading);
-  }
-  .detail-stats svg {
-    color: #facc15;
   }
   .includes {
     margin-top: 28px;
@@ -1113,10 +1074,6 @@
   .coach-grid {
     grid-template-columns: 1fr;
   }
-  .detail-stats {
-    gap: 24px;
-    flex-wrap: wrap;
-  }
   .detail-aside .summary h2 {
     font-size: 24px;
   }
@@ -1234,9 +1191,6 @@
   .page-heading h1 {
     font-size: 32px;
   }
-  .catalog-metric {
-    display: none;
-  }
   .filter-row {
     gap: 12px;
   }
@@ -1302,13 +1256,6 @@
   }
   .detail-content {
     padding: 24px;
-  }
-  .detail-stats {
-    gap: 24px;
-    justify-content: space-between;
-  }
-  .detail-stats strong {
-    font-size: 20px;
   }
   .includes-grid {
     grid-template-columns: 1fr;
@@ -2538,4 +2485,14 @@
 .not-found > p:not(.not-found-code) {
   color: #c7c6cc;
   margin-bottom: 32px;
+}
+
+/* Catálogo: búsqueda y disponibilidad (las fechas se eligen con las pestañas de días) */
+.filter-row {
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+}
+@media (max-width: 639px) {
+  .filter-row {
+    grid-template-columns: 1fr;
+  }
 }

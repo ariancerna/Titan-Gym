@@ -82,7 +82,7 @@ test('PF-04: clase completa y reserva directa bloqueadas',async({page})=>{
   await expect(page.getByRole('heading',{name:'Clase completa',exact:true})).toBeVisible();
   await expect(page.getByRole('button',{name:'Confirmar reserva'})).toHaveCount(0);
 });
-test('duplicado rechazado y confirmación inexistente no muestra éxito',async({page,request})=>{
+test('duplicado rechazado y confirmación inexistente no muestra éxito',async({page})=>{
   await signInFixture(page);
   await page.goto(`/reservar/${sessionId}`);
   await page.getByRole('textbox',{name:'Nombre completo del socio'}).fill('Ana López');

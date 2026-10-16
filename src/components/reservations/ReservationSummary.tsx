@@ -7,8 +7,11 @@ import { OccupancyBar } from '../classes/OccupancyBar';
 export function ReservationSummary({
   session: s,
   children,
+  showNote = true,
 }: {
   session: ClassSession;
+  /** La nota de aforo solo tiene sentido antes de reservar (no en el comprobante). */
+  showNote?: boolean;
   /** Acción principal (p. ej. el botón de reservar). Si no hay, se muestra la nota de aforo. */
   children?: ReactNode;
 }) {
@@ -41,10 +44,8 @@ export function ReservationSummary({
         <div>
           <MapPin />
           <div>
-            <dt>Sede y sala</dt>
-            <dd>
-              {s.location} · {s.room}
-            </dd>
+            <dt>Sala</dt>
+            <dd>{s.room}</dd>
           </div>
         </div>
         <div>
@@ -56,11 +57,12 @@ export function ReservationSummary({
         </div>
       </dl>
       <OccupancyBar capacity={s.capacity} reserved={s.reserved} />
-      {children ?? (
-        <p className="notice">
-          Tu cupo se asigna al confirmar la reserva, sujeto a disponibilidad.
-        </p>
-      )}
+      {children ??
+        (showNote && (
+          <p className="notice">
+            Tu cupo se asigna al confirmar la reserva, sujeto a disponibilidad.
+          </p>
+        ))}
     </section>
   );
 }

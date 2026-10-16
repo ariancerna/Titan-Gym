@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Link, useNavigate } from 'react-router-dom';
-import { ArrowRight, ShieldCheck } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { useAuth } from '../../app/AuthProvider';
 import { reservationSchema, type ReservationValues } from '../../schemas/reservation';
 import { createReservation } from '../../features/reservations/api';
@@ -156,10 +156,6 @@ export function ReservationForm({
         <ButtonLink to={`/clases/${sessionId}`} variant="secondary">
           Volver sin reservar
         </ButtonLink>
-        <p className="meta">
-          <ShieldCheck />
-          Identidad verificada · Reserva protegida
-        </p>
       </form>
     </section>
   );

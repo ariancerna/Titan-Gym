@@ -33,15 +33,6 @@ export default function CatalogPage() {
           <h1>Horarios y clases disponibles</h1>
           <p>Elige una sesión, revisa los cupos y reserva tu lugar en TITAN GYM.</p>
         </div>
-        {query.isSuccess && (
-          <div className="catalog-metric">
-            <small>Sede activa</small>
-            <strong>
-              {new Set(sessions.map((s) => s.location)).size}{' '}
-              {new Set(sessions.map((s) => s.location)).size === 1 ? 'sede' : 'sedes'}
-            </strong>
-          </div>
-        )}
       </div>
       <section className="filters" aria-label="Filtros de clases">
         <div className="filter-row">
@@ -62,10 +53,6 @@ export default function CatalogPage() {
               <option value="available">Con cupos disponibles</option>
               <option value="full">Clase completa</option>
             </select>
-          </label>
-          <label className="select-field">
-            <span className="sr-only">Fecha de la sesión</span>
-            <input type="date" value={date} onChange={(e) => setDate(e.target.value)} />
           </label>
         </div>
         <div className="discipline-filters">

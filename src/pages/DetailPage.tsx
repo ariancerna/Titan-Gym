@@ -1,8 +1,7 @@
 import { useParams, Link } from 'react-router-dom';
-import { ArrowLeft, ArrowRight, ShieldCheck, Clock, UsersRound, MapPin } from 'lucide-react';
+import { ArrowRight, ShieldCheck, MapPin } from 'lucide-react';
 import { useClassSession } from '../features/classes/queries';
 import { ReservationSummary } from '../components/reservations/ReservationSummary';
-import { AvailabilityBadge } from '../components/classes/AvailabilityBadge';
 import { Button, ButtonLink } from '../components/ui/Button';
 import { LoadingState, ErrorState, EmptyState } from '../components/ui/States';
 import { bookingOpensAt, bookingState, formatDate, formatTime } from '../utils/sessions';
@@ -24,13 +23,9 @@ export default function DetailPage() {
   return (
     <div className="container page">
       <div className="breadcrumbs">
-        <span>
+        <nav aria-label="Ruta de navegación">
           <Link to="/">Inicio</Link> / <Link to="/clases">Clases</Link> / {s.name}
-        </span>
-        <Link to="/clases">
-          <ArrowLeft size={15} />
-          Volver al catálogo
-        </Link>
+        </nav>
       </div>
       <div className="detail-layout">
         <div>
@@ -38,29 +33,12 @@ export default function DetailPage() {
             {s.image_url && (
               <div className="detail-image">
                 <img src={s.image_url} alt={`Sesión de ${s.discipline} en TITAN GYM`} />
-                <AvailabilityBadge available={s.available} capacity={s.capacity} />
               </div>
             )}
             <div className="detail-content">
-              <p className="eyebrow yellow">{s.discipline} · TITAN GYM</p>
+              <p className="eyebrow yellow">{s.discipline}</p>
               <h1>{s.name}</h1>
               <p>{s.description}</p>
-              <div className="detail-stats">
-                <div>
-                  <small>Duración</small>
-                  <strong>
-                    <Clock size={16} />
-                    {s.duration_minutes} min
-                  </strong>
-                </div>
-                <div>
-                  <small>Capacidad máxima</small>
-                  <strong>
-                    <UsersRound size={16} />
-                    {s.capacity} personas
-                  </strong>
-                </div>
-              </div>
             </div>
           </article>
           <div className="coach-grid">

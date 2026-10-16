@@ -197,7 +197,7 @@ function AdminDashboard() {
                         · {s.duration_minutes} min
                       </p>
                       <p>
-                        {s.instructor} · {s.location} · {s.room}
+                        {s.instructor} · {s.room}
                       </p>
                       <p>
                         <strong className="yellow">

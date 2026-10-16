@@ -70,7 +70,7 @@ function ReservationCard({
           <UserRound size={15} />
           {s.instructor}
           <MapPin size={15} />
-          {s.location}
+          {s.room}
         </p>
         <p className="reservation-code">{r.code}</p>
       </div>
