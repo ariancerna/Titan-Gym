@@ -29,6 +29,7 @@ Estados: ✅ cumplido y verificado · 🟡 parcial · ❌ pendiente · ❔ no ve
 | Migración aplicada en Supabase alojado | ❔ | La migración nueva solo se probó en PostgreSQL local. Debe aplicarse antes de desplegar el frontend. |
 | Administrador real asignado | ❔ | Según `SUPABASE.md` (11/10) no había ninguno. Sin él no se pueden crear sesiones ni registrar asistencia en la demo. |
 | Sesiones futuras en producción | ❔ | El seed creó sesiones entre el 12 y el 16/10. Hoy casi todas ya pasaron. |
+| Consentimiento y política de privacidad (Ley N.° 29733) | ✅ (nuevo) | Página `/privacidad`, casilla obligatoria y registro con fecha en `privacy_consents`; la reserva exige consentimiento. Ver [PRIVACIDAD.md](PRIVACIDAD.md). |
 | Recordatorios (HU07) y lista de espera (HU08) | ❌ | Fuera del alcance comprometido para el APF3. |
 
 ### Contradicciones del informe APF2 que conviene corregir en el APF3
@@ -120,8 +121,8 @@ El orden importa: si se despliega el frontend sin la migración, Mis reservas y 
 | --- | --- | --- |
 | `npm run build` | Aprobado | Aprobado |
 | `npm test` | 31 aprobadas | 37 aprobadas (+6: indicadores, CSV, retorno seguro y mensajes de correo) |
-| `npm run test:db` | 25 aprobadas | 28 aprobadas (+3: dataset, cancelación, cancelación tardía) |
-| `npm run test:e2e` | 78 aprobadas (registro del 11/10) | 105 aprobadas, 0 fallidas, 0 inestables (+9 escenarios × 3 tamaños: cancelación, indicadores, registro, recuperación, nueva contraseña, fallo de correo, Google en /admin y enlaces del correo en dominio propio) |
+| `npm run test:db` | 25 aprobadas | 30 aprobadas (+5: dataset, cancelación, cancelación tardía y consentimiento de privacidad) |
+| `npm run test:e2e` | 78 aprobadas (registro del 11/10) | 111 aprobadas, 0 fallidas, 0 inestables (+11 escenarios × 3 tamaños: cancelación, indicadores, registro, recuperación, nueva contraseña, fallo de correo, Google en /admin, enlaces del correo en dominio propio y privacidad) |
 | `npm audit` | 0 vulnerabilidades | 0 vulnerabilidades |
 | `npm run format:check` | — | Sin diferencias |
 

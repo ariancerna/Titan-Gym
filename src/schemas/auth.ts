@@ -25,7 +25,14 @@ export const createPasswordSchema = z
   .refine(passwordsMatch, mismatch);
 
 export const signUpSchema = z
-  .object({ email, password: newPassword, confirmation: z.string() })
+  .object({
+    email,
+    password: newPassword,
+    confirmation: z.string(),
+    privacy: z
+      .boolean()
+      .refine((accepted) => accepted, 'Acepta la política de privacidad para crear la cuenta.'),
+  })
   .refine(passwordsMatch, mismatch);
 
 export const emailOnlySchema = z.object({ email });

@@ -1,12 +1,14 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { ArrowRight, ShieldCheck } from 'lucide-react';
 import { useAuth } from '../../app/AuthProvider';
 import { reservationSchema, type ReservationValues } from '../../schemas/reservation';
 import { createReservation } from '../../features/reservations/api';
+import { acceptPrivacyPolicy } from '../../features/privacy/api';
+import { usePrivacyConsent } from '../../features/privacy/queries';
 import { errorMessage } from '../../lib/errors';
 import { Input } from '../ui/Input';
 import { Button, ButtonLink } from '../ui/Button';
@@ -21,12 +23,20 @@ export function ReservationForm({
   const navigate = useNavigate();
   const cache = useQueryClient();
   const locked = useRef(false);
+  const consent = usePrivacyConsent();
+  // Socios que entraron con Google o con enlace todavía no aceptaron la política.
+  const needsConsent = consent.isSuccess && !consent.data;
+  const [privacyAccepted, setPrivacyAccepted] = useState(false);
+  const [privacyError, setPrivacyError] = useState('');
   const form = useForm<ReservationValues>({
     resolver: zodResolver(reservationSchema),
     defaultValues: { name: '', email: user?.email ?? '' },
   });
   const mutation = useMutation({
-    mutationFn: (values: ReservationValues) => createReservation(sessionId, values),
+    mutationFn: async (values: ReservationValues) => {
+      if (needsConsent) await acceptPrivacyPolicy();
+      return createReservation(sessionId, values);
+    },
     onSuccess: async (id) => {
       await cache.invalidateQueries({ queryKey: ['sessions'] });
       await cache.invalidateQueries({ queryKey: ['reservations'] });
@@ -34,10 +44,15 @@ export function ReservationForm({
     },
     onError: () => {
       void cache.invalidateQueries({ queryKey: ['sessions'] });
+      void consent.refetch();
     },
   });
   async function submit(values: ReservationValues) {
     if (locked.current) return;
+    if (needsConsent && !privacyAccepted) {
+      setPrivacyError('Acepta la política de privacidad para registrar la reserva.');
+      return;
+    }
     locked.current = true;
     try {
       await mutation.mutateAsync(values);
@@ -49,9 +64,9 @@ export function ReservationForm({
   }
   return (
     <section className="panel form-panel">
-      <p className="eyebrow yellow">Validación directa de socio</p>
-      <h2>Formulario de registro del socio</h2>
-      <p>Completa tus datos para registrar tu reserva y obtener tu comprobante.</p>
+      <p className="eyebrow yellow">Último paso</p>
+      <h2>Confirma tus datos</h2>
+      <p>Con estos datos te reconocerán en recepción y recibirás tu código de reserva.</p>
       <form onSubmit={form.handleSubmit(submit)} noValidate>
         <Input
           id="member-name"
@@ -87,6 +102,34 @@ export function ReservationForm({
             </p>
           )}
         </div>
+        {needsConsent && (
+          <div>
+            <label className="checkbox-label">
+              <input
+                type="checkbox"
+                checked={privacyAccepted}
+                aria-invalid={Boolean(privacyError)}
+                aria-describedby={privacyError ? 'privacy-error' : undefined}
+                onChange={(e) => {
+                  setPrivacyAccepted(e.target.checked);
+                  setPrivacyError('');
+                }}
+              />
+              <span>
+                He leído y acepto la{' '}
+                <Link to="/privacidad" target="_blank" rel="noopener" className="yellow">
+                  Política de privacidad
+                </Link>{' '}
+                para el registro de mis reservas y asistencia.
+              </span>
+            </label>
+            {privacyError && (
+              <p id="privacy-error" className="field-error" role="alert">
+                {privacyError}
+              </p>
+            )}
+          </div>
+        )}
         {mutation.isError && (
           <div role="alert" className="notice error">
             {errorMessage(mutation.error)}
@@ -102,12 +145,16 @@ export function ReservationForm({
             Clase completa. No hay cupos disponibles para esta sesión.
           </p>
         )}
-        <Button disabled={mutation.isPending || form.formState.isSubmitting || available <= 0}>
+        <Button
+          disabled={
+            mutation.isPending || form.formState.isSubmitting || available <= 0 || consent.isLoading
+          }
+        >
           {mutation.isPending ? 'Registrando reserva…' : 'Confirmar reserva'}
           <ArrowRight size={18} />
         </Button>
         <ButtonLink to={`/clases/${sessionId}`} variant="secondary">
-          Cancelar y volver atrás
+          Volver sin reservar
         </ButtonLink>
         <p className="meta">
           <ShieldCheck />

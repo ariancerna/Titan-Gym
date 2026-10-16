@@ -159,6 +159,7 @@ Cuando exista la URL definitiva, configura Site URL y su redirección `/auth/con
 - [Pruebas y evidencia APF2](docs/PRUEBAS_APF2.md)
 - [Dataset de asistencia APF3](docs/DATASET_APF3.md)
 - [Auditoría y plan APF3](docs/AUDITORIA_APF3.md)
+- [Privacidad y consentimiento](docs/PRIVACIDAD.md)
 - [Cuenta de evaluación y demostración pública APF2](docs/DEMO_VERCEL_APF2.md)
 - [Anexo de prompts de IA y validación](docs/ANEXO_PROMPTS_IA.md)
 - [Configuración de Supabase](docs/SUPABASE.md)

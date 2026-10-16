@@ -10,6 +10,7 @@ const Reservations = lazy(() => import('../pages/MyReservationsPage'));
 const AuthCallback = lazy(() => import('../pages/AuthCallbackPage'));
 const Admin = lazy(() => import('../pages/AdminPage'));
 const ResetPassword = lazy(() => import('../pages/ResetPasswordPage'));
+const Privacy = lazy(() => import('../pages/PrivacyPage'));
 export function AppRoutes() {
   const location = useLocation();
   useEffect(() => {
@@ -27,6 +28,7 @@ export function AppRoutes() {
         <Route path="/mis-reservas" element={<Reservations />} />
         <Route path="/auth/confirm" element={<AuthCallback />} />
         <Route path="/restablecer-contrasena" element={<ResetPassword />} />
+        <Route path="/privacidad" element={<Privacy />} />
         <Route path="/admin" element={<Admin />} />
         <Route
           path="*"

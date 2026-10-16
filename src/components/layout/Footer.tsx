@@ -17,6 +17,7 @@ export function Footer() {
           <Link to="/clases">Horarios y clases</Link>
           <Link to="/mis-reservas">Mis reservas</Link>
           <Link to="/admin">Administración</Link>
+          <Link to="/privacidad">Privacidad</Link>
         </nav>
       </div>
     </footer>

@@ -1,5 +1,5 @@
 {
-  "executedAt": "2026-10-16T01:37:58.046Z",
+  "executedAt": "2026-10-16T03:05:01.965Z",
   "engine": "PostgreSQL 17.6 on x86_64-windows, compiled by msvc-19.44.35213, 64-bit",
   "scope": "PostgreSQL real; auth.uid y auth.users mínimos de pruebas. Sin servicio Supabase Auth.",
   "results": [
@@ -109,6 +109,14 @@
     },
     {
       "name": "Asistencia: estado inválido y reserva cancelada rechazados",
+      "passed": true
+    },
+    {
+      "name": "Ley 29733: sin consentimiento vigente no se guarda la reserva; aceptar la habilita",
+      "passed": true
+    },
+    {
+      "name": "Ley 29733: la casilla de \"Crear cuenta\" queda registrada al crear el usuario",
       "passed": true
     },
     {

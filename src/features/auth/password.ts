@@ -1,4 +1,5 @@
 import { requireSupabase } from '../../lib/supabase/client';
+import { privacyPolicyVersion } from '../../content/privacy';
 import {
   magicLinkRedirect,
   rememberReturnPath,
@@ -40,7 +41,11 @@ export async function signUpWithPassword(email: string, password: string): Promi
   const result = await requireSupabase().auth.signUp({
     email,
     password,
-    options: { emailRedirectTo: magicLinkRedirect() },
+    // La base de datos registra la aceptación (y su fecha) al crear el usuario.
+    options: {
+      emailRedirectTo: magicLinkRedirect(),
+      data: { privacy_version: privacyPolicyVersion },
+    },
   });
   if (result.error) throw result.error;
   return Boolean(result.data.session);

@@ -32,6 +32,8 @@ export async function createHarness() {
   await admin.query(await readFile('supabase/seed.sql','utf8'));
   const users = ['70000000-0000-4000-8000-000000000001','70000000-0000-4000-8000-000000000002','70000000-0000-4000-8000-000000000003'];
   for (const [i,id] of users.entries()) await admin.query('insert into auth.users(id,email,email_confirmed_at) values($1,$2,now())',[id,`test${i+1}@example.com`]);
+  // Los socios de prueba ya aceptaron la política vigente; el caso sin consentimiento se prueba aparte.
+  await admin.query("insert into public.privacy_consents(user_id,policy_version,source) select unnest($1::uuid[]),private.current_privacy_version(),'signup'",[users]);
   async function connectAs(userId) {
     const client = db.getPgClient(); await client.connect();
     await client.query(`set role ${userId ? 'authenticated' : 'anon'}`);

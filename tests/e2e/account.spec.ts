@@ -18,6 +18,7 @@ test('crear cuenta valida contraseñas y pide confirmar el correo sin revelar si
     expect(body.email).toBe('nuevo@example.com');
     expect(body.password).toBe('una frase de prueba larga');
     expect(body.code_challenge).toBeTruthy();
+    expect(body.data.privacy_version).toBe('2026-10-16');
     await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ id: '70000000-0000-4000-8000-000000000009', aud: 'authenticated', role: 'authenticated', email: 'nuevo@example.com', identities: [], created_at: new Date().toISOString() }) });
   });
   await page.goto(target);
@@ -29,7 +30,9 @@ test('crear cuenta valida contraseñas y pide confirmar el correo sin revelar si
   await page.getByRole('button', { name: 'Crear cuenta', exact: true }).click();
   await expect(page.getByText('Usa al menos 12 caracteres.')).toBeVisible();
   await expect(page.getByText('Las contraseñas no coinciden.')).toBeVisible();
+  await expect(page.getByText('Acepta la política de privacidad para crear la cuenta.')).toBeVisible();
   expect(signups).toBe(0);
+  await page.getByRole('checkbox', { name: /Política de privacidad/ }).check();
   await page.getByLabel('Contraseña', { exact: true }).fill('una frase de prueba larga');
   await page.getByLabel('Repite la contraseña', { exact: true }).fill('una frase de prueba larga');
   await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
@@ -112,4 +115,38 @@ test('enlace con tipo desconocido o sin token no inicia sesión', async ({ page 
   await expect(page.getByRole('heading', { name: 'Enlace no válido' })).toBeVisible();
   await expect(page).toHaveURL(/\/auth\/confirm$/);
   expect(calls).toBe(0);
+});
+
+test('Ley 29733: quien entró con Google acepta la privacidad en su primera reserva', async ({ page, request }) => {
+  await request.post('http://127.0.0.1:54331/__test/reset');
+  await page.addInitScript(s => localStorage.setItem('fitsmart-agenda-auth', JSON.stringify(s)), fixtureSession());
+  // Simula una cuenta sin consentimiento; la reserva real se guarda en el PostgreSQL de pruebas.
+  await page.route('**/rest/v1/privacy_consents*', route => route.fulfill({ status: 200, contentType: 'application/json', body: '[]' }));
+  const accepted: string[] = [];
+  await page.route('**/rest/v1/rpc/accept_privacy_policy', async route => {
+    accepted.push(route.request().postDataJSON().p_version);
+    await route.fulfill({ status: 204, body: '' });
+  });
+  await page.goto(target);
+  await page.getByRole('textbox', { name: 'Nombre completo del socio' }).fill('Ana López');
+  await page.getByRole('checkbox', { name: /Confirmo mi asistencia/ }).check();
+  await page.getByRole('button', { name: 'Confirmar reserva', exact: true }).click();
+  await expect(page.getByRole('alert').filter({ hasText: 'política de privacidad' })).toBeVisible();
+  expect(accepted).toEqual([]);
+  await expect(page.getByRole('link', { name: 'Política de privacidad' })).toHaveAttribute('href', '/privacidad');
+  await page.getByRole('checkbox', { name: /Política de privacidad/ }).check();
+  await page.getByRole('button', { name: 'Confirmar reserva', exact: true }).click();
+  await expect(page.getByRole('heading', { name: '¡Reserva confirmada!' })).toBeVisible();
+  expect(accepted).toEqual(['2026-10-16']);
+});
+
+test('política de privacidad accesible desde el pie de página', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('contentinfo').getByRole('link', { name: 'Privacidad' }).click();
+  await expect(page).toHaveURL(/\/privacidad$/);
+  await expect(page.getByRole('heading', { name: 'Política de privacidad', level: 1 })).toBeVisible();
+  for (const title of ['2. Qué datos guardamos', '5. Con quién se comparten', '7. Tus derechos', '9. Cómo ejercer tus derechos'])
+    await expect(page.getByRole('heading', { name: title })).toBeVisible();
+  await expect(page.getByText(/São Paulo, Brasil/)).toBeVisible();
+  await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
 });

@@ -19,6 +19,10 @@ export function errorMessage(error: unknown): string {
     return 'El registro de cuentas nuevas no está disponible por ahora.';
   if (/email_address_invalid|invalid.*email|unable to validate email/i.test(raw))
     return 'Revisa el correo electrónico: no parece una dirección válida.';
+  if (raw.includes('PRIVACY_CONSENT_REQUIRED'))
+    return 'Acepta la política de privacidad para registrar la reserva.';
+  if (raw.includes('PRIVACY_VERSION_OUTDATED'))
+    return 'La política de privacidad se actualizó. Recarga la página y vuelve a aceptarla.';
   if (raw.includes('ADMIN_REQUIRED'))
     return 'Tu cuenta no tiene permisos de administrador. Solicita acceso al responsable del proyecto.';
   if (raw.includes('CAPACITY_BELOW_RESERVATIONS'))

@@ -150,6 +150,32 @@ try {
     assert((await admin.query('select cancelled_at from public.reservations where id=$1',[reservationId])).rows[0].cancelled_at,'el trigger registra la fecha de cancelación');
     await assert.rejects(manager.query('select public.admin_set_attendance($1,$2)',[reservationId,'present']),/RESERVATION_CANCELLED/);
   });
+  await check('Ley 29733: sin consentimiento vigente no se guarda la reserva; aceptar la habilita',async()=>{
+    const newcomer='70000000-0000-4000-8000-000000000008';
+    await admin.query("insert into auth.users(id,email,email_confirmed_at) values($1,'nuevo@example.com',now())",[newcomer]);
+    const c=await connectAs(newcomer);
+    try{
+      await assert.rejects(reserve(c,s(1),'nuevo@example.com','Nuevo Socio'),/PRIVACY_CONSENT_REQUIRED/);
+      await assert.rejects(c.query("select public.accept_privacy_policy('2020-01-01')"),/PRIVACY_VERSION_OUTDATED/);
+      await assert.rejects(anonymous.query("select public.accept_privacy_policy(private.current_privacy_version())"),/permission denied/);
+      await c.query("select public.accept_privacy_policy(private.current_privacy_version())");
+      await c.query("select public.accept_privacy_policy(private.current_privacy_version())");
+      const rows=(await c.query('select * from public.privacy_consents')).rows;
+      assert.equal(rows.length,1);assert.equal(rows[0].source,'reservation');assert(rows[0].accepted_at);
+      assert.equal((await b.query('select * from public.privacy_consents where user_id=$1',[newcomer])).rows.length,0);
+      await assert.rejects(c.query("insert into public.privacy_consents(user_id,policy_version,source) values($1,'2026-10-16','signup')",[newcomer]),/permission denied/);
+      assert.ok((await reserve(c,s(1),'nuevo@example.com','Nuevo Socio')).rows[0].id);
+    }finally{await c.end();}
+  });
+  await check('Ley 29733: la casilla de "Crear cuenta" queda registrada al crear el usuario',async()=>{
+    const signup='70000000-0000-4000-8000-000000000009';
+    await admin.query("insert into auth.users(id,email,raw_user_meta_data) values($1,'registro@example.com',jsonb_build_object('privacy_version',private.current_privacy_version()))",[signup]);
+    const row=(await admin.query('select source,accepted_at from public.privacy_consents where user_id=$1',[signup])).rows[0];
+    assert.equal(row.source,'signup');assert(row.accepted_at);
+    const forged='70000000-0000-4000-8000-00000000000a';
+    await admin.query("insert into auth.users(id,email,raw_user_meta_data) values($1,'antigua@example.com','{\"privacy_version\":\"2020-01-01\"}')",[forged]);
+    assert.equal((await admin.query('select count(*)::int n from public.privacy_consents where user_id=$1',[forged])).rows[0].n,0);
+  });
   await check('Admin: revocación inmediata sin renovar JWT',async()=>{
     await admin.query('delete from private.administrators where user_id=$1',[users[2]]);
     assert.equal((await manager.query('select public.is_admin() value')).rows[0].value,false);

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import type { z } from 'zod';
@@ -20,7 +20,7 @@ export function SignUpForm({ onSignIn }: { onSignIn: () => void }) {
   const [sentTo, setSentTo] = useState('');
   const form = useForm<Values>({
     resolver: zodResolver(signUpSchema),
-    defaultValues: { email: '', password: '', confirmation: '' },
+    defaultValues: { email: '', password: '', confirmation: '', privacy: false },
   });
 
   async function submit(values: Values) {
@@ -81,6 +81,28 @@ export function SignUpForm({ onSignIn }: { onSignIn: () => void }) {
         {...form.register('confirmation')}
       />
       <p className="field-hint">Mínimo 12 caracteres. Una frase corta es más fácil de recordar.</p>
+      <div className="field">
+        <label className="checkbox-label">
+          <input
+            type="checkbox"
+            aria-invalid={Boolean(form.formState.errors.privacy)}
+            aria-describedby={form.formState.errors.privacy ? 'signup-privacy-error' : undefined}
+            {...form.register('privacy')}
+          />
+          <span>
+            He leído y acepto la{' '}
+            <Link to="/privacidad" target="_blank" rel="noopener" className="yellow">
+              Política de privacidad
+            </Link>
+            .
+          </span>
+        </label>
+        {form.formState.errors.privacy && (
+          <p id="signup-privacy-error" className="field-error" role="alert">
+            {form.formState.errors.privacy.message}
+          </p>
+        )}
+      </div>
       <Button className="btn-block" disabled={!configured || form.formState.isSubmitting}>
         {form.formState.isSubmitting ? 'Creando cuenta…' : 'Crear cuenta'}
       </Button>

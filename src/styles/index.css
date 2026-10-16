@@ -2129,3 +2129,41 @@
     white-space: nowrap;
   }
 }
+
+/* Política de privacidad */
+.privacy-policy {
+  max-width: 760px;
+}
+.privacy-policy section {
+  padding-block: 20px;
+  border-bottom: 1px solid #ffffff12;
+}
+.privacy-policy h2 {
+  font-size: 22px;
+  margin-bottom: 12px;
+}
+.privacy-policy p,
+.privacy-policy li {
+  color: #c7c6cc;
+  font-size: 15px;
+  line-height: 1.7;
+}
+.privacy-policy ul {
+  margin: 0 0 12px;
+  padding-left: 20px;
+  list-style: disc;
+}
+.privacy-policy li + li {
+  margin-top: 6px;
+}
+.privacy-policy a,
+.privacy-summary a {
+  color: #facc15;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.privacy-summary {
+  margin-top: 24px;
+  font-size: 13px;
+  color: #a1a1aa;
+}
