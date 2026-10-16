@@ -66,6 +66,7 @@ No se exportan nombres, correos ni el UUID real del socio.
 - **Nulos y valores válidos:** las columnas de origen tienen `NOT NULL` y `CHECK` en PostgreSQL (estado de reserva, estado de asistencia, duración, capacidad).
 - **Cobertura:** el panel muestra "Asistencia registrada", el porcentaje de reservas no canceladas que tienen asistencia marcada. Si es bajo, el dataset no sirve para entrenar aunque tenga muchas filas. Es el control que mitiga el riesgo 3 del informe APF2.
 - **Duplicados:** un índice único impide dos reservas activas del mismo socio en la misma sesión.
+- **Datos simulados para la exposición:** `supabase/demo/datos_simulados_exposicion.sql` crea sesiones del 21/09 al 31/12/2026 con reservas, cancelaciones y asistencia simuladas (sesiones con id `de000000-…`); `borrar_datos_simulados.sql` las elimina. Sirven para demostrar el flujo y el indicador, no para reportar resultados reales.
 - **Datos de demostración:** las 89 reservas del seed son académicas (`socio-demo-N@titan.invalid`). No deben presentarse como comportamiento real de socios de TITAN GYM ni usarse para reportar la precisión de un modelo.
 
 ## Partición recomendada
