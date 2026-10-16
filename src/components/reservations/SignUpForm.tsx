@@ -45,7 +45,7 @@ export function SignUpForm({ onSignIn }: { onSignIn: () => void }) {
         <h3>Revisa tu correo</h3>
         <p>
           Si <strong>{sentTo}</strong> no estaba registrado, te enviamos un enlace para confirmar la
-          cuenta. Ábrelo en este mismo navegador para terminar.
+          cuenta. Ábrelo para terminar el registro.
         </p>
         <p>¿Ya tenías cuenta con ese correo? Inicia sesión o recupera tu contraseña.</p>
         <Button type="button" variant="secondary" onClick={onSignIn}>

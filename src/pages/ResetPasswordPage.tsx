@@ -40,7 +40,7 @@ export default function ResetPasswordPage() {
       <div className="container page narrow">
         <EmptyState
           title="Enlace no válido o vencido"
-          message="Pide un enlace nuevo desde «¿Olvidaste tu contraseña?» y ábrelo en este mismo navegador."
+          message="Pide un enlace nuevo desde «¿Olvidaste tu contraseña?». Cada enlace funciona una sola vez y vence en 1 hora."
         />
         <div className="center">
           <ButtonLink to="/mis-reservas">Volver al acceso</ButtonLink>

@@ -87,3 +87,29 @@ test('fallo del servicio de correo muestra un mensaje claro y no un error de con
   await expect(page.getByRole('alert')).toContainText('No pudimos enviar el correo');
   await expect(page.getByRole('alert')).not.toContainText('conexión');
 });
+
+test('enlace del correo en nuestro dominio: valida token_hash y lleva a la página correcta', async ({ page }) => {
+  const session = fixtureSession();
+  const verified: string[] = [];
+  await page.route('**/auth/v1/verify*', async route => {
+    const body = route.request().postDataJSON();
+    expect(body.token_hash).toBe('hash-de-prueba');
+    verified.push(body.type);
+    await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(session) });
+  });
+  await page.goto('/auth/confirm?token_hash=hash-de-prueba&type=recovery');
+  await expect(page).toHaveURL(/\/restablecer-contrasena$/);
+  await expect(page.getByRole('heading', { name: 'Elige una contraseña nueva' })).toBeVisible();
+  await page.goto('/auth/confirm?token_hash=hash-de-prueba&type=email');
+  await expect(page).toHaveURL(/\/mis-reservas$/);
+  expect(verified).toEqual(['recovery', 'email']);
+});
+
+test('enlace con tipo desconocido o sin token no inicia sesión', async ({ page }) => {
+  let calls = 0;
+  await page.route('**/auth/v1/verify*', route => { calls++; return route.abort(); });
+  await page.goto('/auth/confirm?token_hash=hash-de-prueba&type=invite');
+  await expect(page.getByRole('heading', { name: 'Enlace no válido' })).toBeVisible();
+  await expect(page).toHaveURL(/\/auth\/confirm$/);
+  expect(calls).toBe(0);
+});

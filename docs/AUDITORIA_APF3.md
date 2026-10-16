@@ -121,7 +121,7 @@ El orden importa: si se despliega el frontend sin la migración, Mis reservas y 
 | `npm run build` | Aprobado | Aprobado |
 | `npm test` | 31 aprobadas | 37 aprobadas (+6: indicadores, CSV, retorno seguro y mensajes de correo) |
 | `npm run test:db` | 25 aprobadas | 28 aprobadas (+3: dataset, cancelación, cancelación tardía) |
-| `npm run test:e2e` | 78 aprobadas (registro del 11/10) | 99 aprobadas, 0 fallidas, 0 inestables (+7 escenarios × 3 tamaños: cancelación, indicadores, registro, recuperación, nueva contraseña, fallo de correo y Google en /admin) |
+| `npm run test:e2e` | 78 aprobadas (registro del 11/10) | 105 aprobadas, 0 fallidas, 0 inestables (+9 escenarios × 3 tamaños: cancelación, indicadores, registro, recuperación, nueva contraseña, fallo de correo, Google en /admin y enlaces del correo en dominio propio) |
 | `npm audit` | 0 vulnerabilidades | 0 vulnerabilidades |
 | `npm run format:check` | — | Sin diferencias |
 

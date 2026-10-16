@@ -114,8 +114,8 @@ export function AuthGate() {
             onBack={() => show('login')}
             sentMessage={(email) => (
               <p>
-                Solicitud aceptada para <strong>{email}</strong>. Abre el enlace en este mismo
-                navegador y dispositivo; pedir el enlace no reserva ningún cupo.
+                Solicitud aceptada para <strong>{email}</strong>. Abre el enlace del correo para
+                entrar; pedir el enlace no reserva ningún cupo.
               </p>
             )}
           />
@@ -130,7 +130,7 @@ export function AuthGate() {
             sentMessage={(email) => (
               <p>
                 Si existe una cuenta con <strong>{email}</strong>, recibirás un enlace para elegir
-                una contraseña nueva. Ábrelo en este mismo navegador.
+                una contraseña nueva.
               </p>
             )}
           />

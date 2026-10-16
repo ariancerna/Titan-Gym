@@ -70,7 +70,7 @@ test('enlace mágico: solicitud PKCE, retorno y formulario privado', async ({ pa
   await page.getByRole('textbox', { name: 'Correo electrónico', exact: true }).fill('test1@example.com');
   await page.getByRole('button', { name: 'Enviar enlace de acceso' }).click();
   await expect(page.getByRole('status')).toContainText('Solicitud aceptada');
-  await expect(page.getByText(/mismo navegador y dispositivo/)).toBeVisible();
+  await expect(page.getByText(/Abre el enlace del correo/)).toBeVisible();
   await page.goto('/auth/confirm?code=test-fixture-code');
   await expect(page).toHaveURL(new RegExp(`${target}$`));
   await expect(page.getByRole('textbox', { name: 'Nombre completo del socio' })).toBeVisible();

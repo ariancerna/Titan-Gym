@@ -68,6 +68,8 @@ La ruta `/admin` ofrece correo/contraseña, recuperación de contraseña y Googl
 
 ## Flujo de identidad
 
+Actualización APF3: los correos (enlace de acceso, confirmación y recuperación) ya no pasan por `supabase.co`. Las plantillas apuntan a `{{ .RedirectTo }}?token_hash=…&type=email|recovery` y `/auth/confirm` valida el enlace con `verifyOtp`, de modo que el enlace puede abrirse en otro dispositivo. Solo se aceptan los tipos `email` y `recovery`; Google sigue usando el código PKCE descrito abajo.
+
 Se solicita un enlace al correo mediante signInWithOtp, con flowType PKCE y redirección exacta `/auth/confirm`. Se intercambia el código una sola vez con exchangeCodeForSession y se valida la identidad con getUser. El verificador queda en el mismo navegador; no se comparte el enlace. Se limpia la URL y se limita el retorno a rutas internas autorizadas. El correo del formulario es el de la identidad verificada y es de solo lectura. Conocer un correo o UUID no permite acceder a reservas de otra cuenta. AuthProvider limpia la caché privada al cambiar de identidad. Supabase comprueba el JWT en el servicio; la función verifica además que el usuario y su correo confirmado existan.
 
 La plantilla de enlace utiliza `{{ .ConfirmationURL }}`; en el proyecto gratuito se mantiene la predeterminada. No hay un selector que permita adoptar la identidad de otro socio. No se envía un comprobante por correo tras reservar: la pantalla entrega el código guardado y no promete servicios de notificación pendientes. El correo predeterminado se limita al equipo autorizado; el registro público de socios requiere SMTP propio.
