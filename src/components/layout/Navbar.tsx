@@ -1,16 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import type { User } from '@supabase/supabase-js';
-import {
-  ArrowRight,
-  CalendarDays,
-  ChevronDown,
-  LogIn,
-  LogOut,
-  Menu,
-  UserRound,
-  X,
-} from 'lucide-react';
+import { CalendarDays, ChevronDown, LogIn, LogOut, Menu, UserRound, X } from 'lucide-react';
 import { useAuth } from '../../app/AuthProvider';
 import { savedName } from '../../features/auth/profile';
 import { requireSupabase } from '../../lib/supabase/client';
@@ -138,9 +129,6 @@ export function Navbar() {
               Ingresar
             </Link>
           )}
-          <ButtonLink to="/clases" className="nav-cta">
-            Reservar clase <ArrowRight size={16} />
-          </ButtonLink>
           <button
             className="icon-button mobile-menu"
             aria-label={open ? 'Cerrar menú' : 'Abrir menú'}
@@ -185,9 +173,6 @@ export function Navbar() {
                 </ButtonLink>
               )
             )}
-            <ButtonLink to="/clases" className="nav-panel-cta">
-              Reservar clase <ArrowRight size={16} />
-            </ButtonLink>
           </div>
         </div>
       )}
