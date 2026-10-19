@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
-import { CalendarDays, MapPin, UserRound } from 'lucide-react';
+import { CalendarDays, Hourglass, MapPin, UserRound } from 'lucide-react';
 import { useAuth } from '../app/AuthProvider';
 import { cancelReservation, getReservations } from '../features/reservations/api';
+import { leaveWaitlist } from '../features/waitlist/api';
+import { useMyWaitlist, waitlistKey } from '../features/waitlist/queries';
 import { dayLabel, formatDate, timeRange } from '../utils/sessions';
 import { errorMessage } from '../lib/errors';
 import type { Reservation, ReservationWithSession } from '../types/domain';
@@ -107,6 +109,70 @@ function ReservationCard({
   );
 }
 
+/** Clases llenas en las que el socio espera un cupo, con su posición en la fila. */
+function WaitlistSection() {
+  const { user } = useAuth();
+  const cache = useQueryClient();
+  const waitlist = useMyWaitlist();
+  const [confirming, setConfirming] = useState<string | null>(null);
+  const leave = useMutation({
+    mutationFn: leaveWaitlist,
+    onSuccess: () => cache.invalidateQueries({ queryKey: waitlistKey(user?.id) }),
+    onSettled: () => setConfirming(null),
+  });
+  if (!waitlist.data?.length) return null;
+  return (
+    <section className="waitlist-section" id="lista-espera" aria-labelledby="waitlist-title">
+      <h2 id="waitlist-title">
+        <Hourglass size={20} aria-hidden="true" /> Lista de espera
+      </h2>
+      <p>
+        Si se libera un cupo, te lo asignamos automáticamente por orden de llegada y te avisamos por
+        correo. La reserva aparecerá en tus próximas sesiones.
+      </p>
+      {leave.isError && (
+        <p role="alert" className="notice error">
+          {errorMessage(leave.error)}
+        </p>
+      )}
+      <ul className="waitlist-list">
+        {waitlist.data.map((w) => (
+          <li key={w.id} className="panel waitlist-card">
+            <div className="waitlist-info">
+              <strong>{w.name}</strong>
+              <span>
+                {dayLabel(w.starts_at)} {formatDate(w.starts_at)} · {timeRange(w)}
+              </span>
+              <span>
+                {w.instructor} · {w.room}
+              </span>
+            </div>
+            <span className="waitlist-position">Posición {w.queue_position}</span>
+            {confirming === w.id ? (
+              <div className="waitlist-actions">
+                <Button
+                  variant="danger"
+                  disabled={leave.isPending}
+                  onClick={() => leave.mutate(w.id)}
+                >
+                  Sí, salir
+                </Button>
+                <Button variant="secondary" onClick={() => setConfirming(null)}>
+                  Seguir en la lista
+                </Button>
+              </div>
+            ) : (
+              <Button variant="secondary" onClick={() => setConfirming(w.id)}>
+                Salir de la lista
+              </Button>
+            )}
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+}
+
 function ReservationList() {
   const { user } = useAuth();
   const [history, setHistory] = useState(false);
@@ -186,6 +252,7 @@ export default function MyReservationsPage() {
         <LoadingState />
       ) : user ? (
         <>
+          <WaitlistSection />
           <ReservationList />
           <p className="privacy-summary">
             Tus datos, la contraseña y los recordatorios por correo están en{' '}

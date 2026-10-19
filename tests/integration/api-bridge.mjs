@@ -29,6 +29,7 @@ const server = createServer(async(req,res)=>{
   if(url.pathname==='/auth/v1/logout'){res.writeHead(204);res.end();return;}
   if(url.pathname==='/__test/reset' && req.method==='POST'){
     await harness.admin.query('delete from private.attendance_history');await harness.admin.query('delete from public.attendance');
+    await harness.admin.query('delete from public.waitlist');
     await harness.admin.query('delete from public.reservations where user_id=any($1::uuid[])',[harness.users]);
     await harness.admin.query('delete from public.class_sessions where not(id=any($1::uuid[]))',[initialSessions]);
     await harness.admin.query('delete from public.member_preferences');
@@ -55,6 +56,9 @@ const server = createServer(async(req,res)=>{
       else if(url.pathname.endsWith('/accept_privacy_policy')){await client.query('select public.accept_privacy_policy($1)',[args.p_version]);data=null;}
       else if(url.pathname.endsWith('/admin_check_in'))data=(await client.query('select public.admin_check_in($1) value',[args.p_code])).rows[0].value;
       else if(url.pathname.endsWith('/set_email_reminders')){await client.query('select public.set_email_reminders($1)',[args.p_enabled]);data=null;}
+      else if(url.pathname.endsWith('/join_waitlist'))data=(await client.query('select public.join_waitlist($1,$2,$3) id',[args.p_session_id,args.p_member_name,args.p_email])).rows[0].id;
+      else if(url.pathname.endsWith('/leave_waitlist')){await client.query('select public.leave_waitlist($1)',[args.p_entry_id]);data=null;}
+      else if(url.pathname.endsWith('/my_waitlist'))data=(await client.query('select * from public.my_waitlist()')).rows;
       else throw new Error('Unknown test RPC');
     }else if(req.method==='GET' && url.pathname==='/rest/v1/privacy_consents'){
       const version=url.searchParams.get('policy_version')?.replace(/^eq\./,'');

@@ -4,7 +4,13 @@ import { useClassSession } from '../features/classes/queries';
 import { ReservationSummary } from '../components/reservations/ReservationSummary';
 import { Button, ButtonLink } from '../components/ui/Button';
 import { LoadingState, ErrorState, EmptyState } from '../components/ui/States';
-import { bookingOpensAt, bookingState, formatDate, formatTime } from '../utils/sessions';
+import {
+  bookingOpensAt,
+  bookingState,
+  formatDate,
+  formatTime,
+  waitlistOpen,
+} from '../utils/sessions';
 import { Photo } from '../components/ui/Photo';
 export default function DetailPage() {
   const { id = '' } = useParams();
@@ -79,6 +85,16 @@ export default function DetailPage() {
                 <ButtonLink to={`/reservar/${s.id}`} className="btn-block">
                   Reservar mi lugar <ArrowRight size={18} />
                 </ButtonLink>
+              ) : waitlistOpen(s) ? (
+                <>
+                  <ButtonLink to={`/reservar/${s.id}`} className="btn-block">
+                    Unirme a la lista de espera <ArrowRight size={18} />
+                  </ButtonLink>
+                  <p>
+                    La clase está llena. Si alguien cancela, el cupo se asigna por orden de llegada
+                    y te avisamos por correo.
+                  </p>
+                </>
               ) : (
                 <>
                   <Button disabled className="btn-block">

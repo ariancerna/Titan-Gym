@@ -249,6 +249,75 @@ try {
     const ds=(await manager.query('select reserva_id,recordatorio_enviado from public.admin_dataset() where reserva_id=$1',[mine])).rows[0];
     assert.equal(ds.recordatorio_enviado,true);
   });
+  await check('US08: lista de espera en orden; al cancelar, el primero recibe la reserva sin superar el aforo',async()=>{
+    const full='95000000-0000-4000-8000-000000000001';
+    await admin.query(`insert into public.class_sessions(id,class_id,instructor_id,location_id,room,starts_at,duration_minutes,capacity)
+      select $1,class_id,instructor_id,location_id,'Sala espera',now()+interval '2 days',45,1 from public.class_sessions where id=$2`,[full,s(1)]);
+    const join=(client,email,name)=>client.query('select public.join_waitlist($1,$2,$3) id',[full,name,email]);
+    const pos=async client=>(await client.query('select queue_position from public.my_waitlist() where session_id=$1',[full])).rows[0]?.queue_position;
+    await assert.rejects(join(a,'test1@example.com','Ana López'),/SESSION_HAS_SEATS/);
+    const held=(await reserve(a,full)).rows[0].id;
+    await assert.rejects(join(a,'test1@example.com','Ana López'),/DUPLICATE_RESERVATION/);
+    await assert.rejects(join(anonymous,'test1@example.com','Ana López'),/permission denied/);
+    await assert.rejects(join(b,'otro@example.com','Beto Ruiz'),/EMAIL_MISMATCH/);
+    await assert.rejects(join(b,'test2@example.com','Beto'),/INVALID_MEMBER/);
+    const first=(await join(b,'test2@example.com','Beto Ruiz')).rows[0].id;
+    await assert.rejects(join(b,'test2@example.com','Beto Ruiz'),/ALREADY_WAITING/);
+    const second=(await join(manager,'test3@example.com','Carla Admin')).rows[0].id;
+    assert.equal(await pos(b),1);assert.equal(await pos(manager),2);
+    assert.equal((await b.query('select id from public.waitlist where session_id=$1',[full])).rows.length,1,'cada socio solo ve su entrada');
+    await assert.rejects(anonymous.query('select * from public.waitlist'),/permission denied/);
+    await assert.rejects(b.query("insert into public.waitlist(session_id,user_id,member_name,member_email) values($1,$2,'Beto Ruiz','test2@example.com')",[full,users[1]]),/permission denied/);
+    await a.query('select public.cancel_reservation($1)',[held]);
+    const active=(await admin.query("select user_id,member_name,code from public.reservations where session_id=$1 and status='confirmed'",[full])).rows;
+    assert.equal(active.length,1,'se respeta el aforo de 1');assert.equal(active[0].user_id,users[1]);assert.equal(active[0].member_name,'Beto Ruiz');assert.match(active[0].code,/^TG-/);
+    assert.equal((await b.query('select status from public.waitlist where id=$1',[first])).rows[0].status,'promoted');
+    assert.equal(await pos(b),undefined);assert.equal(await pos(manager),1,'el siguiente avanza a la posición 1');
+    await manager.query('select public.leave_waitlist($1)',[second]);
+    assert.equal(await pos(manager),undefined);
+    await assert.rejects(a.query('select public.leave_waitlist($1)',[first]),/WAITLIST_NOT_FOUND/);
+    const third=(await join(manager,'test3@example.com','Carla Admin')).rows[0].id;
+    await admin.query('update public.class_sessions set capacity=2 where id=$1',[full]);
+    assert.equal((await admin.query('select status from public.waitlist where id=$1',[third])).rows[0].status,'promoted','el cupo nuevo por más capacidad va a la fila');
+    assert.equal((await admin.query("select count(*)::int n from public.reservations where session_id=$1 and status='confirmed'",[full])).rows[0].n,2);
+    await assert.rejects(b.query('select * from public.claim_waitlist_notices(true)'),/permission denied/);
+    await admin.query('set role service_role');
+    try{
+      const notices=(await admin.query('select * from public.claim_waitlist_notices()')).rows.filter(r=>[first,third].includes(r.entry_id));
+      assert.equal(notices.length,2);assert.match(notices[0].code,/^TG-/);assert.equal(notices.find(r=>r.entry_id===first).member_email,'test2@example.com');assert.equal(notices[0].room,'Sala espera');
+      assert.equal((await admin.query('select * from public.claim_waitlist_notices()')).rows.filter(r=>r.entry_id===first).length,0,'no se avisa dos veces');
+      await admin.query('select public.release_waitlist_notice($1)',[first]);
+      assert((await admin.query('select * from public.claim_waitlist_notices(true)')).rows.some(r=>r.entry_id===first),'tras un fallo vuelve a quedar pendiente');
+    }finally{await admin.query('reset role');}
+  });
+  await check('US08: en la última hora el cupo liberado no se asigna y la lista se cierra',async()=>{
+    const soon='95000000-0000-4000-8000-000000000002';
+    await admin.query(`insert into public.class_sessions(id,class_id,instructor_id,location_id,room,starts_at,duration_minutes,capacity)
+      select $1,class_id,instructor_id,location_id,'Sala espera tarde',now()+interval '2 days',45,1 from public.class_sessions where id=$2`,[soon,s(1)]);
+    const held=(await reserve(a,soon)).rows[0].id;
+    const entry=(await b.query('select public.join_waitlist($1,$2,$3) id',[soon,'Beto Ruiz','test2@example.com'])).rows[0].id;
+    await admin.query("update public.class_sessions set starts_at=now()+interval '30 minutes' where id=$1",[soon]);
+    await a.query('select public.cancel_reservation($1)',[held]);
+    assert.equal((await admin.query('select status from public.waitlist where id=$1',[entry])).rows[0].status,'waiting');
+    assert.equal((await admin.query("select count(*)::int n from public.reservations where session_id=$1 and status='confirmed'",[soon])).rows[0].n,0,'el cupo queda libre para reservar directamente');
+    await reserve(manager,soon,'test3@example.com','Carla Admin');
+    await assert.rejects(a.query('select public.join_waitlist($1,$2,$3)',[soon,'Ana López','test1@example.com']),/WAITLIST_CLOSED/);
+  });
+  await check('US08: dos cancelaciones simultáneas se serializan y la fila nunca supera el aforo',async()=>{
+    const pair='95000000-0000-4000-8000-000000000003';
+    await admin.query(`insert into public.class_sessions(id,class_id,instructor_id,location_id,room,starts_at,duration_minutes,capacity)
+      select $1,class_id,instructor_id,location_id,'Sala espera doble',now()+interval '2 days',45,2 from public.class_sessions where id=$2`,[pair,s(1)]);
+    const ra=(await reserve(a,pair)).rows[0].id, rb=(await reserve(b,pair,'test2@example.com','Beto Ruiz')).rows[0].id;
+    const entry=(await manager.query('select public.join_waitlist($1,$2,$3) id',[pair,'Carla Admin','test3@example.com'])).rows[0].id;
+    await a.query('begin');await a.query('select public.cancel_reservation($1)',[ra]);
+    let settled=false;
+    const pending=b.query('select public.cancel_reservation($1)',[rb]).finally(()=>{settled=true;});
+    await new Promise(r=>setTimeout(r,150));assert.equal(settled,false,'la segunda cancelación espera el bloqueo de la sesión');
+    await a.query('commit');await pending;
+    const active=(await admin.query("select user_id from public.reservations where session_id=$1 and status='confirmed'",[pair])).rows;
+    assert.equal(active.length,1);assert.equal(active[0].user_id,users[2]);
+    assert.equal((await admin.query('select status from public.waitlist where id=$1',[entry])).rows[0].status,'promoted');
+  });
   await check('Admin: revocación inmediata sin renovar JWT',async()=>{
     await admin.query('delete from private.administrators where user_id=$1',[users[2]]);
     assert.equal((await manager.query('select public.is_admin() value')).rows[0].value,false);

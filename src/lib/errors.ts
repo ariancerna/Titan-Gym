@@ -51,6 +51,15 @@ export function errorMessage(error: unknown): string {
     return 'Ya existe una clase con ese nombre o una sesión en esa sala y horario.';
   if (raw.includes('SESSION_FULL'))
     return 'La clase se llenó mientras completabas tus datos. No se registró la reserva. Elige otra sesión.';
+  if (raw.includes('SESSION_HAS_SEATS'))
+    return 'Se liberó un cupo en esta clase: ya puedes reservarla directamente.';
+  if (raw.includes('ALREADY_WAITING'))
+    return 'Ya estás en la lista de espera de esta clase. Consulta tu posición en Mis reservas.';
+  if (raw.includes('WAITLIST_CLOSED'))
+    return 'Falta menos de 1 hora para la clase: la lista de espera ya está cerrada.';
+  if (raw.includes('WAITLIST_NOT_FOUND'))
+    return 'No encontramos esa lista de espera en tu cuenta. Actualiza la página.';
+  if (raw.includes('PGRST202')) return 'La lista de espera todavía no está disponible.';
   if (raw.includes('DUPLICATE_RESERVATION'))
     return 'Ya tienes una reserva activa para esta sesión. Consúltala en Mis reservas.';
   if (raw.includes('AUTH_REQUIRED')) return 'Verifica tu correo para reservar de forma segura.';

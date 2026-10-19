@@ -27,6 +27,17 @@ export interface Reservation {
   status: 'confirmed' | 'cancelled' | 'attended';
   created_at: string;
 }
+export interface WaitlistEntry {
+  id: string;
+  session_id: string;
+  name: string;
+  instructor: string;
+  room: string;
+  starts_at: string;
+  duration_minutes: number;
+  queue_position: number;
+  created_at: string;
+}
 export interface ReservationWithSession extends Reservation {
   session: Pick<
     ClassSession,

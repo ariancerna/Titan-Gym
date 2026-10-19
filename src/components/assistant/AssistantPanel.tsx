@@ -276,6 +276,10 @@ function BookingAnswer() {
         <li>Muestra el código QR de tu reserva en recepción.</li>
       </ol>
       <p>
+        ¿Clase llena? Únete a la lista de espera desde su detalle: si alguien cancela, te asignamos
+        el cupo por orden de llegada y te avisamos por correo.
+      </p>
+      <p>
         ¿No puedes asistir? Cancela desde <Link to="/mis-reservas">Mis reservas</Link> antes de que
         empiece la clase para liberar tu cupo. Para membresías y pagos, consulta en recepción.
       </p>

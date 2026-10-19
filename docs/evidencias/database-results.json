@@ -1,5 +1,5 @@
 {
-  "executedAt": "2026-10-16T16:04:20.995Z",
+  "executedAt": "2026-10-19T16:32:18.882Z",
   "engine": "PostgreSQL 17.6 on x86_64-windows, compiled by msvc-19.44.35213, 64-bit",
   "scope": "PostgreSQL real; auth.uid y auth.users mínimos de pruebas. Sin servicio Supabase Auth.",
   "results": [
@@ -133,6 +133,18 @@
     },
     {
       "name": "HU07: recordatorios 3 horas antes, una sola vez, sin cancelados ni socios que los desactivaron",
+      "passed": true
+    },
+    {
+      "name": "US08: lista de espera en orden; al cancelar, el primero recibe la reserva sin superar el aforo",
+      "passed": true
+    },
+    {
+      "name": "US08: en la última hora el cupo liberado no se asigna y la lista se cierra",
+      "passed": true
+    },
+    {
+      "name": "US08: dos cancelaciones simultáneas se serializan y la fila nunca supera el aforo",
       "passed": true
     },
     {

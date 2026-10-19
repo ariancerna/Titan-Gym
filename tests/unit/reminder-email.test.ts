@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 // @ts-expect-error módulo JavaScript de tools/ sin tipos
-import { buildReminderEmail } from '../../tools/reminder-email.mjs';
+import { buildPromotionEmail, buildReminderEmail } from '../../tools/reminder-email.mjs';
 
 const reservation = {
   reservation_id: '11111111-1111-4111-8111-111111111111',
@@ -35,5 +35,30 @@ describe('correo de recordatorio (HU07)', () => {
     expect(email.html).not.toContain('<script>');
     expect(email.html).toContain('&lt;script&gt;');
     expect(email.html).toContain('Yoga &amp; &lt;b&gt;Relax&lt;/b&gt;');
+  });
+});
+
+describe('correo de cupo asignado desde la lista de espera (US08)', () => {
+  it('confirma la reserva con día, horario de Lima, código, QR y enlace para cancelar', () => {
+    const email = buildPromotionEmail(reservation, { siteUrl: 'https://titan-gym-tau.vercel.app' });
+    expect(email.subject).toBe('Se liberó un cupo: ya tienes tu reserva para Power Spinning Extreme');
+    expect(email.html).toContain('María, ya tienes tu cupo');
+    expect(email.html).toContain('Lista de espera');
+    expect(email.html).toContain('viernes, 16 de octubre');
+    expect(email.html).toContain('18:00 – 18:50');
+    expect(email.html).toContain('TG-7K4M2Q');
+    expect(email.html).toContain('src="cid:qr-reserva"');
+    expect(email.html).toContain('/reserva-confirmada/11111111-1111-4111-8111-111111111111');
+    expect(email.html).not.toContain('te esperamos hoy');
+    expect(email.text).toContain('pase al siguiente');
+  });
+
+  it('escapa los datos del socio', () => {
+    const email = buildPromotionEmail(
+      { ...reservation, member_name: '<img src=x onerror=alert(1)> Pérez' },
+      { siteUrl: 'https://titan-gym-tau.vercel.app' },
+    );
+    expect(email.html).not.toContain('<img src=x');
+    expect(email.html).toContain('&lt;img');
   });
 });

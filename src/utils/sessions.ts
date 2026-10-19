@@ -50,6 +50,11 @@ export function bookingState(s: ClassSession, now = Date.now()): BookingState {
   return s.available > 0 ? 'open' : 'full';
 }
 export const isBookable = (s: ClassSession) => bookingState(s) === 'open';
+/** En la última hora no se usa la lista de espera. Debe coincidir con private.waitlist_cutoff(). */
+export const waitlistCutoffMs = 3600000;
+/** Clase llena a la que todavía se puede uno apuntar en la lista de espera. */
+export const waitlistOpen = (s: ClassSession, now = Date.now()) =>
+  bookingState(s, now) === 'full' && new Date(s.starts_at).getTime() - now > waitlistCutoffMs;
 export function filterSessions(
   sessions: ClassSession[],
   search: string,

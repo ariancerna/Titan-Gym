@@ -79,7 +79,8 @@ test('PF-04: clase completa y reserva directa bloqueadas',async({page})=>{
   await expect(full.getByRole('link',{name:'Ver detalles y reservar'})).toHaveCount(0);
   await expect(full).toContainText('0 cupos libres');
   await page.goto('/reservar/50000000-0000-4000-8000-000000000003');
-  await expect(page.getByRole('heading',{name:'Clase completa',exact:true})).toBeVisible();
+  // Sin reserva directa: solo se ofrece la lista de espera (US08).
+  await expect(page.getByRole('heading',{name:'Únete a la lista de espera',exact:true})).toBeVisible();
   await expect(page.getByRole('button',{name:'Confirmar reserva'})).toHaveCount(0);
 });
 test('duplicado rechazado y confirmación inexistente no muestra éxito',async({page})=>{

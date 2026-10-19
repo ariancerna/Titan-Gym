@@ -2242,6 +2242,82 @@
   color: #a1a1aa;
 }
 
+/* Lista de espera */
+.waitlist-section {
+  margin-bottom: 32px;
+}
+.waitlist-section h2 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 22px;
+  margin-bottom: 8px;
+}
+.waitlist-section h2 > svg {
+  color: var(--accent-text);
+}
+.waitlist-section > p {
+  max-width: 640px;
+  font-size: 14px;
+}
+.waitlist-list {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.waitlist-card {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+  padding: 18px 20px;
+  border-color: #8b5cf640;
+}
+.waitlist-info {
+  display: grid;
+  gap: 2px;
+  flex: 1 1 240px;
+  min-width: 0;
+}
+.waitlist-info strong {
+  font-family: var(--font-heading);
+  font-size: 18px;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+}
+.waitlist-info span {
+  color: #a1a1aa;
+  font-size: 14px;
+}
+.waitlist-info span:first-of-type::first-letter {
+  text-transform: uppercase;
+}
+.waitlist-position {
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: #7c3aed26;
+  color: var(--accent-text);
+  font-weight: 600;
+  font-size: 14px;
+  white-space: nowrap;
+}
+.waitlist-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.waitlist-joined {
+  text-align: center;
+}
+.waitlist-joined > svg {
+  width: 40px;
+  height: 40px;
+  margin: 0 auto 12px;
+  color: var(--accent-text);
+}
+
 /* Mi perfil */
 .profile-facts {
   display: grid;

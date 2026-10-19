@@ -7,6 +7,8 @@ import { ArrowRight } from 'lucide-react';
 import { useAuth } from '../../app/AuthProvider';
 import { reservationSchema, type ReservationValues } from '../../schemas/reservation';
 import { createReservation } from '../../features/reservations/api';
+import { joinWaitlist } from '../../features/waitlist/api';
+import { waitlistKey } from '../../features/waitlist/queries';
 import { acceptPrivacyPolicy } from '../../features/privacy/api';
 import { usePrivacyConsent } from '../../features/privacy/queries';
 import { savedName } from '../../features/auth/profile';
@@ -16,9 +18,12 @@ import { Button, ButtonLink } from '../ui/Button';
 export function ReservationForm({
   sessionId,
   available,
+  waitlist = false,
 }: {
   sessionId: string;
   available: number;
+  /** Clase llena: el mismo formulario apunta al socio en la lista de espera. */
+  waitlist?: boolean;
 }) {
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -37,9 +42,14 @@ export function ReservationForm({
   const mutation = useMutation({
     mutationFn: async (values: ReservationValues) => {
       if (needsConsent) await acceptPrivacyPolicy();
-      return createReservation(sessionId, values);
+      return waitlist ? joinWaitlist(sessionId, values) : createReservation(sessionId, values);
     },
     onSuccess: async (id) => {
+      if (waitlist) {
+        await cache.invalidateQueries({ queryKey: waitlistKey(user?.id) });
+        navigate('/mis-reservas#lista-espera', { replace: true });
+        return;
+      }
       await cache.invalidateQueries({ queryKey: ['sessions'] });
       await cache.invalidateQueries({ queryKey: ['reservations'] });
       navigate(`/reserva-confirmada/${id}`, { replace: true });
@@ -66,9 +76,13 @@ export function ReservationForm({
   }
   return (
     <section className="panel form-panel">
-      <p className="eyebrow accent">Datos del socio</p>
-      <h2>Confirma tus datos</h2>
-      <p>Con estos datos te reconocerán en recepción y recibirás tu código de reserva.</p>
+      <p className="eyebrow accent">{waitlist ? 'Clase completa' : 'Datos del socio'}</p>
+      <h2>{waitlist ? 'Únete a la lista de espera' : 'Confirma tus datos'}</h2>
+      <p>
+        {waitlist
+          ? 'Si alguien cancela, el cupo se asigna automáticamente por orden de llegada y te avisamos por correo con tu código de reserva.'
+          : 'Con estos datos te reconocerán en recepción y recibirás tu código de reserva.'}
+      </p>
       <form onSubmit={form.handleSubmit(submit)} noValidate>
         <Input
           id="member-name"
@@ -96,7 +110,9 @@ export function ReservationForm({
               aria-describedby="accepted-error"
               {...form.register('accepted')}
             />
-            Confirmo mi asistencia y acepto llegar con puntualidad.
+            {waitlist
+              ? 'Si me asignan un cupo, asistiré o cancelaré a tiempo para liberarlo.'
+              : 'Confirmo mi asistencia y acepto llegar con puntualidad.'}
           </label>
           {form.formState.errors.accepted && (
             <p id="accepted-error" className="field-error" role="alert">
@@ -142,17 +158,26 @@ export function ReservationForm({
             </p>
           </div>
         )}
-        {available <= 0 && (
+        {!waitlist && available <= 0 && (
           <p role="alert" className="notice">
             Clase completa. No hay cupos disponibles para esta sesión.
           </p>
         )}
         <Button
           disabled={
-            mutation.isPending || form.formState.isSubmitting || available <= 0 || consent.isLoading
+            mutation.isPending ||
+            form.formState.isSubmitting ||
+            (!waitlist && available <= 0) ||
+            consent.isLoading
           }
         >
-          {mutation.isPending ? 'Registrando reserva…' : 'Confirmar reserva'}
+          {waitlist
+            ? mutation.isPending
+              ? 'Uniéndote a la lista…'
+              : 'Unirme a la lista de espera'
+            : mutation.isPending
+              ? 'Registrando reserva…'
+              : 'Confirmar reserva'}
           <ArrowRight size={18} />
         </Button>
         <ButtonLink to={`/clases/${sessionId}`} variant="secondary">

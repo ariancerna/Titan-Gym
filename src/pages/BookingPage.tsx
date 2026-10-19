@@ -1,12 +1,41 @@
 import { Link, useParams } from 'react-router-dom';
-import { ArrowLeft, Check } from 'lucide-react';
+import { ArrowLeft, Check, Hourglass } from 'lucide-react';
 import { useAuth } from '../app/AuthProvider';
 import { useClassSession } from '../features/classes/queries';
 import { ReservationSummary } from '../components/reservations/ReservationSummary';
 import { ReservationForm } from '../components/reservations/ReservationForm';
 import { AuthGate } from '../components/reservations/AuthGate';
+import { ButtonLink } from '../components/ui/Button';
 import { LoadingState, ErrorState, EmptyState } from '../components/ui/States';
-import { bookingOpensAt, bookingState, formatDate, isBookable } from '../utils/sessions';
+import { useMyWaitlist } from '../features/waitlist/queries';
+import {
+  bookingOpensAt,
+  bookingState,
+  formatDate,
+  isBookable,
+  waitlistOpen,
+} from '../utils/sessions';
+
+/** Clase llena: si ya está en la fila muestra su posición; si no, el formulario de espera. */
+function WaitlistStep({ sessionId }: { sessionId: string }) {
+  const waitlist = useMyWaitlist();
+  if (waitlist.isPending) return <LoadingState />;
+  const entry = waitlist.data?.find((w) => w.session_id === sessionId);
+  if (!entry) return <ReservationForm sessionId={sessionId} available={0} waitlist />;
+  return (
+    <section className="panel form-panel waitlist-joined" role="status">
+      <Hourglass aria-hidden="true" />
+      <h2>Ya estás en la lista de espera</h2>
+      <p>
+        Tu posición es la <strong>{entry.queue_position}</strong>. Si se libera un cupo te lo
+        asignamos automáticamente y te avisamos por correo.
+      </p>
+      <ButtonLink to="/mis-reservas#lista-espera" variant="secondary">
+        Ver mis reservas
+      </ButtonLink>
+    </section>
+  );
+}
 export default function BookingPage() {
   const { id = '' } = useParams();
   const query = useClassSession(id);
@@ -22,7 +51,7 @@ export default function BookingPage() {
         Regresar al detalle de la clase
       </Link>
       <div className="booking-header">
-        <h1>Reserva tu lugar</h1>
+        <h1>{waitlistOpen(s) ? 'Lista de espera' : 'Reserva tu lugar'}</h1>
         <ol className="stepper" aria-label="Pasos de la reserva">
           <li className="done">
             <span aria-hidden="true">
@@ -42,7 +71,13 @@ export default function BookingPage() {
       </div>
       <div className="booking-layout">
         <ReservationSummary session={s} />
-        {!isBookable(s) ? (
+        {waitlistOpen(s) ? (
+          user ? (
+            <WaitlistStep sessionId={s.id} />
+          ) : (
+            <AuthGate />
+          )
+        ) : !isBookable(s) ? (
           <EmptyState
             title={
               bookingState(s) === 'full'
