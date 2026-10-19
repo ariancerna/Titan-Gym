@@ -134,7 +134,7 @@ Estado de los hallazgos y pendientes de este informe después de los cambios del
 
 | ID / requisito | Estado | Qué se hizo o qué falta |
 | --- | --- | --- |
-| HU08 lista de espera | ✅ Código y pruebas | Fila por orden de llegada; al cancelar o subir la capacidad, el primero recibe la reserva en la misma transacción y un aviso por correo. Falta **aplicar `20261021000000_lista_espera.sql` en Supabase** ([pasos](LISTA_ESPERA.md)); hasta entonces la web oculta la función sin errores. |
+| HU08 lista de espera | ✅ Código y pruebas | Fila por orden de llegada; al cancelar o subir la capacidad, el primero recibe la reserva en la misma transacción y un aviso por correo. Migración `20261021000000_lista_espera.sql` aplicada por el titular el 19/10 (informado por el propietario). La política de privacidad pasó a la versión 2026-10-19 para mencionarla. |
 | HU07 recordatorios | ✅ | Implementados desde el 15/10 (la fila «HU07 y HU08 ❌» de la sección 2 quedó desactualizada). |
 | S3 CSP | ✅ Corregido | Content-Security-Policy y Permissions-Policy en `vercel.json`. Verificado sirviendo el build con esas cabeceras: 0 violaciones en inicio, asistente, catálogo, detalle, perfil, admin y acceso con Google. Falta confirmarlo en el despliegue real. |
 | Q2 consultas N+1 | ✅ Corregido | Mis reservas trae reserva, sesión, clase e instructor en una sola consulta (embedding de PostgREST), sin migración. |

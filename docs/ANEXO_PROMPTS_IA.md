@@ -41,6 +41,7 @@ Para la entrega, adjuntar además la exportación de la conversación relevante,
 | P17 | “solo el profesor me dijo, en la parte de cliente, esto siempre sale?” (tarjeta de contraseña) y “si asi esta bien, hazlo” | Página Mi perfil y tarjeta «Crear/Cambiar contraseña» según la marca `has_password`; nombre que completa las reservas. | Pruebas unitarias y e2e del perfil. |
 | P18 | “puedes arreglar el navbar, no me gusta” y “no me gusta que no este centrado lo del medio y el boton reservar clase es muy grande y si lo quitamos” | Menú de cuenta, menú móvil con la cuenta, enlaces centrados y retiro de «Reservar clase». | Medición del centrado (0 px de desvío) y pruebas e2e de administración y perfil. |
 | P19 | “q mejoras me recomiendas” y “has todo” | CSP, fotos WebP, Mis reservas en una consulta, lista de espera (US08) y actualización de la documentación. | 37 comprobaciones PostgreSQL, unitarias y e2e; detalle en el README y en la auditoría. |
+| P20 | “si hazlo, ya aplique la migracion, revisare en vercel” (mencionar la lista de espera en la política) | Política de privacidad versión 2026-10-19 y migración `20261022000000_privacidad_lista_espera.sql`: los socios vuelven a aceptarla en su siguiente reserva. | Pruebas SQL «Ley 29733» y e2e de consentimiento aprobadas. |
 
 ## 4. Prompts de imágenes
 

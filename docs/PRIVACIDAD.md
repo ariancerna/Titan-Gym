@@ -21,9 +21,16 @@ Cada socio puede ver la fecha en que aceptó la política en Mi perfil.
 ```sql
 select source, count(*) as socios, min(accepted_at) as primera, max(accepted_at) as ultima
 from public.privacy_consents
-where policy_version = '2026-10-16'
+where policy_version = '2026-10-19'
 group by source;
 ```
+
+## Versiones
+
+| Versión | Cambio |
+| --- | --- |
+| 2026-10-16 | Versión inicial. |
+| 2026-10-19 | Añade la lista de espera (datos, asignación automática y aviso por correo), el nombre guardado en Mi perfil y los correos de recordatorio y de cupo entre los envíos del proveedor de correo. Migración `20261022000000_privacidad_lista_espera.sql`. |
 
 ## Si cambia la política
 

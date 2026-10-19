@@ -4,7 +4,7 @@ Aplicación web para consultar clases, conocer los cupos disponibles y reservar 
 
 ![Inicio de FitSmart Agenda](docs/evidencias/desktop-inicio.png)
 
-> Estado: publicado en https://titan-gym-tau.vercel.app (HTTP 200 comprobado el 11/10/2026, ver [Demostración](docs/DEMO_VERCEL_APF2.md)). Reservas, cancelación, lista de espera, recordatorios, perfil y panel de administración conectados a Supabase. La migración de la lista de espera debe aplicarse en Supabase ([pasos](docs/LISTA_ESPERA.md)). La primera cuenta administradora debe ser autorizada explícitamente; no se asignan roles automáticamente.
+> Estado: publicado en https://titan-gym-tau.vercel.app (HTTP 200 comprobado el 11/10/2026, ver [Demostración](docs/DEMO_VERCEL_APF2.md)). Reservas, cancelación, lista de espera, recordatorios, perfil y panel de administración conectados a Supabase. La migración de la lista de espera fue aplicada en Supabase por el titular el 19/10 ([detalle](docs/LISTA_ESPERA.md)); la de la política de privacidad 2026-10-19 debe aplicarse justo después de desplegar ([Privacidad](docs/PRIVACIDAD.md#versiones)). La primera cuenta administradora debe ser autorizada explícitamente; no se asignan roles automáticamente.
 
 ## Funcionalidades
 
@@ -154,7 +154,7 @@ Configuración y límites: [Administración](docs/ADMINISTRACION.md). La primera
 
 El repositorio incluye [vercel.json](vercel.json) para las rutas SPA. Importa este repositorio en Vercel, selecciona Vite y configura las dos variables públicas de Supabase. Build: `npm run build`. Directorio de salida: `dist`.
 
-La app está publicada en https://titan-gym-tau.vercel.app; Site URL y su redirección `/auth/confirm` deben apuntar a esa dirección en Supabase. Si un cambio usa una función nueva de la base de datos, aplica primero su migración (la última es `20261021000000_lista_espera.sql`). Comprueba desde una ventana privada el acceso, la reserva, el comprobante y el aislamiento entre usuarios. Pasos completos: [Despliegue](docs/DESPLIEGUE.md).
+La app está publicada en https://titan-gym-tau.vercel.app; Site URL y su redirección `/auth/confirm` deben apuntar a esa dirección en Supabase. Si un cambio usa una función nueva de la base de datos, aplica primero su migración (la última es `20261022000000_privacidad_lista_espera.sql`). Comprueba desde una ventana privada el acceso, la reserva, el comprobante y el aislamiento entre usuarios. Pasos completos: [Despliegue](docs/DESPLIEGUE.md).
 
 ## Documentación
 

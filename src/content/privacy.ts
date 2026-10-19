@@ -2,7 +2,7 @@ import { gym } from './gym';
 
 // Versión vigente de la política. Si cambia el texto de forma relevante, actualiza esta fecha
 // y la de private.current_privacy_version() en una migración: los socios deberán aceptarla de nuevo.
-export const privacyPolicyVersion = '2026-10-16';
+export const privacyPolicyVersion = '2026-10-19';
 
 // Correo para ejercer los derechos ARCO. Si queda vacío, la política indica solo la recepción.
 export const privacyContactEmail = '';
@@ -34,8 +34,9 @@ export const privacySections: PrivacySection[] = [
     items: [
       'Tu correo electrónico, para identificar tu cuenta y enviarte enlaces de acceso.',
       'Tu contraseña, administrada por el servicio de autenticación. Se guarda cifrada y nadie del gimnasio puede verla.',
-      'El nombre que escribes al reservar, para reconocerte en recepción.',
+      'El nombre que escribes al reservar o guardas en Mi perfil, para reconocerte en recepción y completar tus reservas.',
       'Tus reservas: clase, fecha, código, estado y, si cancelas, la hora de la cancelación.',
+      'Si te unes a una lista de espera: la clase, la fecha en que te uniste y tu posición en la fila.',
       'Tu asistencia a cada clase, registrada por el personal del gimnasio.',
       'Si entras con Google: el nombre y el correo de esa cuenta.',
       'La fecha en que aceptaste esta política.',
@@ -45,7 +46,8 @@ export const privacySections: PrivacySection[] = [
   {
     title: '3. Para qué los usamos',
     items: [
-      'Gestionar tus reservas y controlar el aforo de cada clase.',
+      'Gestionar tus reservas y tu lugar en la lista de espera, y controlar el aforo de cada clase.',
+      'Si estás en una lista de espera y se libera un cupo, asignarte la reserva automáticamente por orden de llegada y avisarte por correo.',
       'Enviarte un recordatorio por correo 3 horas antes de cada clase reservada. Puedes desactivarlo en Mi perfil.',
       'Registrar la asistencia y calcular la tasa de inasistencias de cada clase.',
       'Analizar las inasistencias con un modelo predictivo. Para eso se usan datos seudonimizados: sin tu nombre ni tu correo.',
@@ -65,13 +67,13 @@ export const privacySections: PrivacySection[] = [
       'Supabase: base de datos y autenticación. Sus servidores están en São Paulo, Brasil, por lo que existe una transferencia internacional de datos.',
       'Vercel: alojamiento de la página web.',
       'Google: solo si eliges iniciar sesión con Google.',
-      'El proveedor de correo que envía los enlaces de acceso.',
+      'El proveedor de correo que envía los enlaces de acceso, los recordatorios y los avisos de cupo.',
     ],
   },
   {
     title: '6. Cuánto tiempo los conservamos',
     paragraphs: [
-      'Tu cuenta, mientras la mantengas activa. Las reservas y la asistencia, hasta dos años después de cada clase para el análisis de inasistencias; luego se eliminan o se anonimizan. Si pides la cancelación de tus datos, quitamos tu nombre y tu correo de tus reservas.',
+      'Tu cuenta, mientras la mantengas activa. Las reservas, las entradas de la lista de espera y la asistencia, hasta dos años después de cada clase para el análisis de inasistencias; luego se eliminan o se anonimizan. Si pides la cancelación de tus datos, quitamos tu nombre y tu correo de tus reservas.',
     ],
   },
   {

@@ -18,7 +18,7 @@ test('crear cuenta valida contraseñas y pide confirmar el correo sin revelar si
     expect(body.email).toBe('nuevo@example.com');
     expect(body.password).toBe('una frase de prueba larga');
     expect(body.code_challenge).toBeTruthy();
-    expect(body.data.privacy_version).toBe('2026-10-16');
+    expect(body.data.privacy_version).toBe('2026-10-19');
     expect(body.data.has_password).toBe(true);
     await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ id: '70000000-0000-4000-8000-000000000009', aud: 'authenticated', role: 'authenticated', email: 'nuevo@example.com', identities: [], created_at: new Date().toISOString() }) });
   });
@@ -138,7 +138,7 @@ test('Ley 29733: quien entró con Google acepta la privacidad en su primera rese
   await page.getByRole('checkbox', { name: /Política de privacidad/ }).check();
   await page.getByRole('button', { name: 'Confirmar reserva', exact: true }).click();
   await expect(page.getByRole('heading', { name: '¡Reserva confirmada!' })).toBeVisible();
-  expect(accepted).toEqual(['2026-10-16']);
+  expect(accepted).toEqual(['2026-10-19']);
 });
 
 test('política de privacidad accesible desde el pie de página', async ({ page }) => {
