@@ -47,7 +47,7 @@ test('una cuenta con contraseña ve «Cambiar contraseña» en lugar de «Crear 
 test('el nombre guardado en el perfil completa la siguiente reserva', async ({ page }) => {
   const session = identity();
   await signedIn(page, session);
-  let saved: { data?: unknown } | null = null;
+  let saved = null as { data?: unknown } | null;
   await page.route('**/auth/v1/user', async route => {
     if (route.request().method() !== 'PUT') { await route.fallback(); return; }
     saved = route.request().postDataJSON();
