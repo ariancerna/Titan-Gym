@@ -70,3 +70,16 @@ export function filterSessions(
       (!availability || (availability === 'available' ? s.available > 0 : s.available === 0)),
   );
 }
+
+/** Sesiones futuras ordenadas por hora de inicio. */
+export const upcomingSessions = (sessions: ClassSession[], now = Date.now()) =>
+  sessions
+    .filter((s) => new Date(s.starts_at).getTime() > now)
+    .sort((a, b) => new Date(a.starts_at).getTime() - new Date(b.starts_at).getTime());
+/** La próxima sesión de cada clase, en orden de inicio. */
+export function nextSessionPerClass(sessions: ClassSession[], now = Date.now()) {
+  const seen = new Set<string>();
+  return upcomingSessions(sessions, now).filter(
+    (s) => !seen.has(s.class_id) && seen.add(s.class_id),
+  );
+}
