@@ -4,6 +4,7 @@ import { dayLabel, formatDate, timeRange, isBookable } from '../../utils/session
 import { AvailabilityBadge } from './AvailabilityBadge';
 import { OccupancyBar } from './OccupancyBar';
 import { ButtonLink } from '../ui/Button';
+import { Photo } from '../ui/Photo';
 export function ClassCard({
   session: s,
   featured = false,
@@ -15,8 +16,8 @@ export function ClassCard({
     <article className={`class-card ${featured ? 'featured' : ''}`}>
       {featured && (s.featured_image_url || s.image_url) && (
         <div className="card-image">
-          <img
-            src={s.featured_image_url || s.image_url || undefined}
+          <Photo
+            src={(s.featured_image_url || s.image_url)!}
             alt={`Entrenamiento de ${s.discipline}`}
             loading="lazy"
           />

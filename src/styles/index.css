@@ -106,6 +106,10 @@
     display: block;
     max-width: 100%;
   }
+  /* El <picture> de las fotos no participa en el diseño: la <img> se coloca como antes. */
+  picture.photo {
+    display: contents;
+  }
   input,
   select {
     color: white;

@@ -5,6 +5,7 @@ import { ReservationSummary } from '../components/reservations/ReservationSummar
 import { Button, ButtonLink } from '../components/ui/Button';
 import { LoadingState, ErrorState, EmptyState } from '../components/ui/States';
 import { bookingOpensAt, bookingState, formatDate, formatTime } from '../utils/sessions';
+import { Photo } from '../components/ui/Photo';
 export default function DetailPage() {
   const { id = '' } = useParams();
   const query = useClassSession(id);
@@ -32,7 +33,7 @@ export default function DetailPage() {
           <article className="panel detail-hero">
             {s.image_url && (
               <div className="detail-image">
-                <img src={s.image_url} alt={`Sesión de ${s.discipline} en TITAN GYM`} />
+                <Photo src={s.image_url} alt={`Sesión de ${s.discipline} en TITAN GYM`} />
               </div>
             )}
             <div className="detail-content">

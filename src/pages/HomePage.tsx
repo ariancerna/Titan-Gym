@@ -5,6 +5,7 @@ import { useSessions, useGymLocations } from '../features/classes/queries';
 import { ClassCard } from '../components/classes/ClassCard';
 import { ButtonLink } from '../components/ui/Button';
 import { CardGridSkeleton, EmptyState, ErrorState } from '../components/ui/States';
+import { Photo } from '../components/ui/Photo';
 
 const steps = [
   {
@@ -33,10 +34,10 @@ export default function HomePage() {
   return (
     <>
       <section className="hero">
-        <img
+        <Photo
           className="hero-photo"
           src="/assets/generated/hero.jpg"
-          alt="Sala de entrenamiento con iluminación amarilla"
+          alt="Sala de entrenamiento con iluminación morada"
           fetchPriority="high"
         />
         <div className="hero-overlay" />
