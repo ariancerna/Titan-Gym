@@ -4,10 +4,9 @@ import { Link } from 'react-router-dom';
 import { CalendarDays, MapPin, UserRound } from 'lucide-react';
 import { useAuth } from '../app/AuthProvider';
 import { cancelReservation, getReservations } from '../features/reservations/api';
-import { useClassSession } from '../features/classes/queries';
 import { dayLabel, formatDate, timeRange } from '../utils/sessions';
 import { errorMessage } from '../lib/errors';
-import type { Reservation } from '../types/domain';
+import type { Reservation, ReservationWithSession } from '../types/domain';
 import { AuthGate } from '../components/reservations/AuthGate';
 import { Button } from '../components/ui/Button';
 import { LoadingState, ErrorState, EmptyState } from '../components/ui/States';
@@ -23,25 +22,22 @@ function ReservationCard({
   history,
   onCancelled,
 }: {
-  reservation: Reservation;
+  reservation: ReservationWithSession;
   history: boolean;
   onCancelled: (className: string) => void;
 }) {
   const cache = useQueryClient();
-  const query = useClassSession(r.session_id);
+  const s = r.session;
   const [confirming, setConfirming] = useState(false);
   const cancel = useMutation({
     mutationFn: () => cancelReservation(r.id),
     onSuccess: async () => {
-      onCancelled(query.data?.name ?? 'la clase');
+      onCancelled(s?.name || 'la clase');
       await cache.invalidateQueries({ queryKey: ['reservations'] });
       await cache.invalidateQueries({ queryKey: ['sessions'] });
     },
   });
 
-  if (query.isLoading) return <LoadingState />;
-  if (query.isError) return <ErrorState error={query.error} retry={() => void query.refetch()} />;
-  const s = query.data;
   if (!s)
     return (
       <article className="panel">

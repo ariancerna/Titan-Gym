@@ -27,3 +27,9 @@ export interface Reservation {
   status: 'confirmed' | 'cancelled' | 'attended';
   created_at: string;
 }
+export interface ReservationWithSession extends Reservation {
+  session: Pick<
+    ClassSession,
+    'starts_at' | 'duration_minutes' | 'room' | 'name' | 'instructor'
+  > | null;
+}

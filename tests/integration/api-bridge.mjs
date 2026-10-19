@@ -65,7 +65,16 @@ const server = createServer(async(req,res)=>{
       data=(await client.query('select id,name,address from public.locations order by name')).rows;
     }else if(req.method==='GET' && url.pathname==='/rest/v1/reservations'){
       const id=url.searchParams.get('id')?.replace(/^eq\./,'');
-      data=(await client.query('select id,code,session_id,member_name,member_email,status,created_at from public.reservations where ($1::uuid is null or id=$1) order by created_at desc',[id||null])).rows;
+      // Embedding de PostgREST (session:class_sessions(...)): mismo JSON anidado y mismo RLS del usuario.
+      const embed=url.searchParams.get('select')?.includes('session:');
+      data=(await client.query(`select r.id,r.code,r.session_id,r.member_name,r.member_email,r.status,r.created_at${embed?`,
+        case when s.id is null then null else json_build_object('starts_at',s.starts_at,'duration_minutes',s.duration_minutes,'room',s.room,
+          'class',json_build_object('name',c.name),'instructor',json_build_object('name',i.name)) end session`:''}
+        from public.reservations r
+        left join public.class_sessions s on s.id=r.session_id
+        left join public.classes c on c.id=s.class_id
+        left join public.instructors i on i.id=s.instructor_id
+        where ($1::uuid is null or r.id=$1) order by r.created_at desc`,[id||null])).rows;
     }else {res.writeHead(404);res.end('{}');return;}
     res.end(JSON.stringify(data));
   }catch(e){res.writeHead(400);res.end(JSON.stringify({code:e.code||'TEST_ERROR',message:e.message}));}

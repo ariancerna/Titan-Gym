@@ -33,7 +33,7 @@ export const formatTime = (value: string) =>
     minute: '2-digit',
     hourCycle: 'h23',
   }).format(new Date(value));
-export const timeRange = (s: ClassSession) =>
+export const timeRange = (s: Pick<ClassSession, 'starts_at' | 'duration_minutes'>) =>
   `${formatTime(s.starts_at)} – ${formatTime(new Date(new Date(s.starts_at).getTime() + s.duration_minutes * 60000).toISOString())}`;
 export const occupancy = (s: Pick<ClassSession, 'capacity' | 'reserved'>) =>
   Math.min(100, Math.max(0, Math.round((s.reserved / s.capacity) * 100)));
