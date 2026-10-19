@@ -19,6 +19,7 @@ test('crear cuenta valida contraseñas y pide confirmar el correo sin revelar si
     expect(body.password).toBe('una frase de prueba larga');
     expect(body.code_challenge).toBeTruthy();
     expect(body.data.privacy_version).toBe('2026-10-16');
+    expect(body.data.has_password).toBe(true);
     await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ id: '70000000-0000-4000-8000-000000000009', aud: 'authenticated', role: 'authenticated', email: 'nuevo@example.com', identities: [], created_at: new Date().toISOString() }) });
   });
   await page.goto(target);
@@ -154,7 +155,7 @@ test('política de privacidad accesible desde el pie de página', async ({ page 
 test('HU07: el socio puede desactivar y volver a activar los recordatorios por correo', async ({ page, request }) => {
   await request.post('http://127.0.0.1:54331/__test/reset');
   await page.addInitScript(s => localStorage.setItem('fitsmart-agenda-auth', JSON.stringify(s)), fixtureSession());
-  await page.goto('/mis-reservas');
+  await page.goto('/perfil');
   const toggle = page.getByRole('switch', { name: 'Recibir recordatorios por correo' });
   await expect(toggle).toBeChecked();
   const saved = () => page.waitForResponse((r) => r.url().includes('/rpc/set_email_reminders') && r.ok());

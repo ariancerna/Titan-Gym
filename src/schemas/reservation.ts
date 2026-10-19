@@ -1,11 +1,13 @@
 import { z } from 'zod';
+export const memberName = z
+  .string()
+  .trim()
+  .min(3, 'Ingresa tu nombre completo (mínimo 3 caracteres).')
+  .max(100, 'El nombre es demasiado largo.')
+  .refine((v) => v.split(/\s+/).length >= 2, 'Ingresa nombre y apellido.');
+export const profileSchema = z.object({ name: memberName });
 export const reservationSchema = z.object({
-  name: z
-    .string()
-    .trim()
-    .min(3, 'Ingresa tu nombre completo (mínimo 3 caracteres).')
-    .max(100, 'El nombre es demasiado largo.')
-    .refine((v) => v.split(/\s+/).length >= 2, 'Ingresa nombre y apellido.'),
+  name: memberName,
   email: z
     .string()
     .trim()

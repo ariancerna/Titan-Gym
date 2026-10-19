@@ -7,6 +7,7 @@ const Detail = lazy(() => import('../pages/DetailPage'));
 const Booking = lazy(() => import('../pages/BookingPage'));
 const Confirmation = lazy(() => import('../pages/ConfirmationPage'));
 const Reservations = lazy(() => import('../pages/MyReservationsPage'));
+const Profile = lazy(() => import('../pages/ProfilePage'));
 const AuthCallback = lazy(() => import('../pages/AuthCallbackPage'));
 const Admin = lazy(() => import('../pages/AdminPage'));
 const ResetPassword = lazy(() => import('../pages/ResetPasswordPage'));
@@ -27,6 +28,7 @@ export function AppRoutes() {
         <Route path="/reservar/:id" element={<Booking />} />
         <Route path="/reserva-confirmada/:id" element={<Confirmation />} />
         <Route path="/mis-reservas" element={<Reservations />} />
+        <Route path="/perfil" element={<Profile />} />
         <Route path="/auth/confirm" element={<AuthCallback />} />
         <Route path="/restablecer-contrasena" element={<ResetPassword />} />
         <Route path="/privacidad" element={<Privacy />} />

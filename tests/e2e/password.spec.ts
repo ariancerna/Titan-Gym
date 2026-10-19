@@ -52,12 +52,17 @@ test('crear contraseña valida campos y conserva cuenta y reserva anterior', asy
     updates++;
     const body = route.request().postDataJSON();
     // El cliente Supabase añade metadatos PKCE; no se envía identidad ni correo para cambiar de cuenta.
-    expect(Object.keys(body).every(key => ['password', 'code_challenge', 'code_challenge_method'].includes(key))).toBe(true);
+    expect(Object.keys(body).every(key => ['password', 'data', 'code_challenge', 'code_challenge_method'].includes(key))).toBe(true);
     expect(body.password).toBe('una-frase-fixture-segura');
+    // Solo la marca que adapta el perfil; no hay roles ni identidad en los metadatos.
+    expect(body.data).toEqual({ has_password: true });
     await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(session.user) });
   });
   await page.goto('/mis-reservas');
   await expect(page.locator('.reservation-card')).toHaveCount(1);
+  await expect(page.getByRole('button', { name: 'Crear contraseña', exact: true })).toHaveCount(0);
+  await page.getByRole('link', { name: 'Mi perfil' }).last().click();
+  await expect(page).toHaveURL(/\/perfil$/);
   await page.getByRole('button', { name: 'Crear contraseña', exact: true }).click();
   await page.getByLabel('Nueva contraseña', { exact: true }).fill('corta');
   await page.getByLabel('Repetir contraseña', { exact: true }).fill('corta');
@@ -76,6 +81,7 @@ test('crear contraseña valida campos y conserva cuenta y reserva anterior', asy
   await expect(page.getByRole('region', { name: 'Seguridad de tu cuenta' }).getByRole('status')).toContainText('Contraseña guardada');
   expect(updates).toBe(1);
   await expect(page.getByLabel('Nueva contraseña', { exact: true })).toHaveCount(0);
+  await page.goto('/mis-reservas');
   await expect(page.locator('.reservation-card')).toHaveCount(1);
   await page.getByRole('link', { name: 'Ver comprobante', exact: true }).click();
   await expect(page).toHaveURL(new RegExp(`/reserva-confirmada/${reservationId}$`));
@@ -88,7 +94,7 @@ test('error al guardar contraseña no presenta éxito falso', async ({ page }) =
     if (route.request().method() !== 'PUT') { await route.fallback(); return; }
     await route.fulfill({ status: 422, contentType: 'application/json', body: '{"code":"weak_password","msg":"Weak password"}' });
   });
-  await page.goto('/mis-reservas');
+  await page.goto('/perfil');
   await page.getByRole('button', { name: 'Crear contraseña', exact: true }).click();
   await page.getByLabel('Nueva contraseña', { exact: true }).fill('una-frase-fixture-segura');
   await page.getByLabel('Repetir contraseña', { exact: true }).fill('una-frase-fixture-segura');

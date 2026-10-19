@@ -4,14 +4,11 @@ import { Link } from 'react-router-dom';
 import { CalendarDays, MapPin, UserRound } from 'lucide-react';
 import { useAuth } from '../app/AuthProvider';
 import { cancelReservation, getReservations } from '../features/reservations/api';
-import { usePrivacyConsent } from '../features/privacy/queries';
 import { useClassSession } from '../features/classes/queries';
 import { dayLabel, formatDate, timeRange } from '../utils/sessions';
 import { errorMessage } from '../lib/errors';
 import type { Reservation } from '../types/domain';
 import { AuthGate } from '../components/reservations/AuthGate';
-import { CreatePasswordForm } from '../components/reservations/CreatePasswordForm';
-import { ReminderPreference } from '../components/reservations/ReminderPreference';
 import { Button } from '../components/ui/Button';
 import { LoadingState, ErrorState, EmptyState } from '../components/ui/States';
 
@@ -114,19 +111,6 @@ function ReservationCard({
   );
 }
 
-function PrivacySummary() {
-  const consent = usePrivacyConsent();
-  if (!consent.isSuccess) return null;
-  return (
-    <p className="privacy-summary">
-      {consent.data
-        ? `Aceptaste la política de privacidad el ${formatDate(consent.data.accepted_at)}. `
-        : 'Te pediremos aceptar la política de privacidad en tu próxima reserva. '}
-      <Link to="/privacidad">Ver política y cómo ejercer tus derechos</Link>
-    </p>
-  );
-}
-
 function ReservationList() {
   const { user } = useAuth();
   const [history, setHistory] = useState(false);
@@ -207,9 +191,10 @@ export default function MyReservationsPage() {
       ) : user ? (
         <>
           <ReservationList />
-          <ReminderPreference />
-          <CreatePasswordForm key={user.id} />
-          <PrivacySummary />
+          <p className="privacy-summary">
+            Tus datos, la contraseña y los recordatorios por correo están en{' '}
+            <Link to="/perfil">Mi perfil</Link>.
+          </p>
         </>
       ) : (
         <div className="narrow">

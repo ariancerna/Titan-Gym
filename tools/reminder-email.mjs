@@ -32,7 +32,7 @@ export function buildReminderEmail(reservation, { siteUrl }) {
   const day = dayFormat.format(start);
   const firstName = reservation.member_name.trim().split(/\s+/)[0];
   const receiptUrl = `${siteUrl}/reserva-confirmada/${reservation.reservation_id}`;
-  const settingsUrl = `${siteUrl}/mis-reservas`;
+  const settingsUrl = `${siteUrl}/perfil#recordatorios`;
   const subject = `Hoy a las ${timeFormat.format(start)}: ${reservation.class_name} en TITAN GYM`;
 
   const e = {
@@ -77,7 +77,7 @@ export function buildReminderEmail(reservation, { siteUrl }) {
           </td></tr>
           <tr><td style="padding:20px 8px 0;font:12px/1.6 Arial,Helvetica,sans-serif;color:#71717a;">
             Recibes este recordatorio porque reservaste esta clase. Puedes desactivarlos en
-            <a href="${settingsUrl}" style="color:#a1a1aa;">Mis reservas</a>.<br />
+            <a href="${settingsUrl}" style="color:#a1a1aa;">Mi perfil</a>.<br />
             FitSmart Agenda · proyecto académico UTP
           </td></tr>
         </table>
@@ -96,7 +96,7 @@ export function buildReminderEmail(reservation, { siteUrl }) {
     `Código de reserva: ${reservation.code}`,
     '',
     `¿No podrás venir? Cancela antes de la hora de inicio: ${receiptUrl}`,
-    `Desactiva los recordatorios en Mis reservas: ${settingsUrl}`,
+    `Desactiva los recordatorios en Mi perfil: ${settingsUrl}`,
   ].join('\n');
 
   return { subject, html, text };

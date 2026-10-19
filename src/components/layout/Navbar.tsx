@@ -7,7 +7,7 @@ import { ButtonLink } from '../ui/Button';
 export function Navbar() {
   const [open, setOpen] = useState(false);
   const [error, setError] = useState(false);
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
   async function signOut() {
     const { error } = await requireSupabase().auth.signOut();
     setError(Boolean(error));
@@ -38,11 +38,23 @@ export function Navbar() {
           ))}
         </nav>
         <div className="nav-actions">
-          {user ? (
-            <button className="nav-account" onClick={signOut}>
-              <LogOut size={18} aria-hidden="true" />
-              <span className="nav-account-text">Cerrar sesión</span>
-            </button>
+          {loading ? (
+            // Mientras se confirma la sesión guardada no se muestra «Ingresar»: parecería cerrada.
+            <span className="nav-account pending" aria-hidden="true">
+              <UserCircle size={18} />
+              <span className="nav-account-text">Ingresar</span>
+            </span>
+          ) : user ? (
+            <>
+              <NavLink to="/perfil" className="nav-account" onClick={() => setOpen(false)}>
+                <UserCircle size={18} aria-hidden="true" />
+                <span className="nav-account-text">Mi perfil</span>
+              </NavLink>
+              <button className="nav-account" onClick={signOut}>
+                <LogOut size={18} aria-hidden="true" />
+                <span className="nav-account-text">Cerrar sesión</span>
+              </button>
+            </>
           ) : (
             <Link to="/mis-reservas" className="nav-account">
               <UserCircle size={18} aria-hidden="true" />

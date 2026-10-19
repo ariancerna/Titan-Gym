@@ -63,6 +63,11 @@ export function Footer() {
             <li>
               <Link to="/mis-reservas">{user ? 'Mis reservas' : 'Ingresar o crear cuenta'}</Link>
             </li>
+            {user && (
+              <li>
+                <Link to="/perfil">Mi perfil</Link>
+              </li>
+            )}
             <li>
               <Link to="/admin">Acceso del personal</Link>
             </li>

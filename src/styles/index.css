@@ -2030,6 +2030,12 @@
   background: #ffffff12;
   color: #fff;
 }
+.nav-account.pending {
+  visibility: hidden;
+}
+.nav-account.active {
+  color: var(--accent-text);
+}
 @media (max-width: 639px) {
   .nav-account {
     padding: 0;
@@ -2082,6 +2088,36 @@
   margin-top: 24px;
   font-size: 13px;
   color: #a1a1aa;
+}
+
+/* Mi perfil */
+.profile-facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin: 8px 0 24px;
+  padding: 16px 0;
+  border-block: 1px solid #ffffff0d;
+}
+.profile-facts dt {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #a1a1aa;
+}
+.profile-facts dd {
+  margin: 4px 0 0;
+  color: #fff;
+  overflow-wrap: anywhere;
+}
+.profile-hint {
+  margin: -6px 0 16px;
+  font-size: 13px;
+}
+.profile-status {
+  margin: 12px 0 0;
+  color: #67e8b6;
 }
 
 /* Pie de página */

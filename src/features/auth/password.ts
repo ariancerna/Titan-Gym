@@ -1,3 +1,4 @@
+import type { User } from '@supabase/supabase-js';
 import { requireSupabase } from '../../lib/supabase/client';
 import { privacyPolicyVersion } from '../../content/privacy';
 import {
@@ -20,14 +21,23 @@ export async function signInWithPassword(email: string, password: string): Promi
     await client.auth.signOut({ scope: 'local' });
     throw new Error('AUTH_REQUIRED');
   }
+  // Cuentas anteriores a la marca: entrar con contraseña demuestra que la tienen.
+  if (!hasPassword(verified.data.user))
+    await client.auth.updateUser({ data: { has_password: true } }).catch(() => undefined);
 }
+
+/**
+ * Supabase no informa al navegador si la cuenta tiene contraseña. La marca se guarda al crearla,
+ * al configurarla y al entrar con ella; solo decide qué ve el socio en su perfil, no da acceso.
+ */
+export const hasPassword = (user: User | null) => user?.user_metadata?.has_password === true;
 
 export async function createAccountPassword(password: string): Promise<void> {
   const client = requireSupabase();
   const verified = await client.auth.getUser();
   if (verified.error || !verified.data.user?.email_confirmed_at || verified.data.user.is_anonymous)
     throw new Error('AUTH_REQUIRED');
-  const result = await client.auth.updateUser({ password });
+  const result = await client.auth.updateUser({ password, data: { has_password: true } });
   if (result.error) throw result.error;
   if (result.data.user.id !== verified.data.user.id) throw new Error('AUTH_REQUIRED');
 }
@@ -44,7 +54,7 @@ export async function signUpWithPassword(email: string, password: string): Promi
     // La base de datos registra la aceptación (y su fecha) al crear el usuario.
     options: {
       emailRedirectTo: magicLinkRedirect(),
-      data: { privacy_version: privacyPolicyVersion },
+      data: { privacy_version: privacyPolicyVersion, has_password: true },
     },
   });
   if (result.error) throw result.error;

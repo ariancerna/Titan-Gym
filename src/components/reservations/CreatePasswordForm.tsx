@@ -5,7 +5,7 @@ import type { z } from 'zod';
 import { KeyRound } from 'lucide-react';
 import { useAuth } from '../../app/AuthProvider';
 import { createPasswordSchema } from '../../schemas/auth';
-import { createAccountPassword } from '../../features/auth/password';
+import { createAccountPassword, hasPassword } from '../../features/auth/password';
 import { errorMessage } from '../../lib/errors';
 import { Button } from '../ui/Button';
 import { Input } from '../ui/Input';
@@ -21,6 +21,7 @@ export function CreatePasswordForm() {
     defaultValues: { password: '', confirmation: '' },
   });
   if (!user?.email_confirmed_at || user.is_anonymous) return null;
+  const has = hasPassword(user);
   async function submit(values: z.infer<typeof createPasswordSchema>) {
     if (lock.current) return;
     lock.current = true;
@@ -41,10 +42,11 @@ export function CreatePasswordForm() {
   return (
     <section className="panel auth-panel mt-8" aria-label="Seguridad de tu cuenta">
       <p className="eyebrow accent">Seguridad de tu cuenta</p>
-      <h2>Correo y contraseña</h2>
+      <h2>{has ? 'Contraseña' : 'Correo y contraseña'}</h2>
       <p>
-        Configura una contraseña para esta cuenta verificada. Se mantienen tus accesos y reservas;
-        no se unen cuentas con correos diferentes.
+        {has
+          ? 'Ya tienes una contraseña para entrar con tu correo. Puedes cambiarla cuando quieras.'
+          : 'Configura una contraseña para esta cuenta verificada. Se mantienen tus accesos y reservas; no se unen cuentas con correos diferentes.'}
       </p>
       {success && (
         <p role="status">
@@ -63,7 +65,7 @@ export function CreatePasswordForm() {
           }}
         >
           <KeyRound size={18} />
-          Crear contraseña
+          {has ? 'Cambiar contraseña' : 'Crear contraseña'}
         </Button>
       ) : (
         <form className="max-w-xl" onSubmit={form.handleSubmit(submit)} noValidate>
@@ -76,8 +78,10 @@ export function CreatePasswordForm() {
             {...form.register('password')}
           />
           <p>
-            Usa una contraseña única o una frase larga de 12 a 128 caracteres. Si ya tenías una,
-            este formulario la sustituirá.
+            Usa una contraseña única o una frase larga de 12 a 128 caracteres.
+            {has
+              ? ' Reemplazará a la actual.'
+              : ' Si ya tenías una, este formulario la sustituirá.'}
           </p>
           <Input
             id="account-password-confirm"

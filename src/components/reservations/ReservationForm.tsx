@@ -9,6 +9,7 @@ import { reservationSchema, type ReservationValues } from '../../schemas/reserva
 import { createReservation } from '../../features/reservations/api';
 import { acceptPrivacyPolicy } from '../../features/privacy/api';
 import { usePrivacyConsent } from '../../features/privacy/queries';
+import { savedName } from '../../features/auth/profile';
 import { errorMessage } from '../../lib/errors';
 import { Input } from '../ui/Input';
 import { Button, ButtonLink } from '../ui/Button';
@@ -30,7 +31,8 @@ export function ReservationForm({
   const [privacyError, setPrivacyError] = useState('');
   const form = useForm<ReservationValues>({
     resolver: zodResolver(reservationSchema),
-    defaultValues: { name: '', email: user?.email ?? '' },
+    // El nombre del perfil (o el de Google) evita escribirlo en cada reserva.
+    defaultValues: { name: savedName(user), email: user?.email ?? '' },
   });
   const mutation = useMutation({
     mutationFn: async (values: ReservationValues) => {
