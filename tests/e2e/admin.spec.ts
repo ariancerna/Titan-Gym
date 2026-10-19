@@ -36,6 +36,10 @@ test('contraseña administrativa verifica rol y cerrar sesión oculta datos priv
   await page.getByRole('button', { name: 'Pasadas', exact: true }).click();
   await page.locator('.admin-session').filter({ hasText: 'Sala asistencia de pruebas' }).getByRole('button', { name: 'Ver inscritos' }).click();
   await expect(page.getByText('socio-demo-1@titan.invalid', { exact: true })).toBeVisible();
+  // Cerrar sesión está en el menú de la cuenta (escritorio) o en el menú desplegable (tablet y móvil).
+  const account = page.getByRole('button', { name: /^Cuenta de / });
+  if (await account.isVisible()) await account.click();
+  else await page.getByRole('button', { name: 'Abrir menú' }).click();
   await page.getByRole('button', { name: 'Cerrar sesión', exact: true }).click();
   await expect(page.getByRole('heading', { name: 'Acceso de administradores' })).toBeVisible();
   await expect(page.getByText('socio-demo-1@titan.invalid', { exact: true })).toHaveCount(0);

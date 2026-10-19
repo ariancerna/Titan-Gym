@@ -22,7 +22,10 @@ test('Mis reservas solo muestra reservas; cuenta, contraseña y recordatorios es
   await expect(page.getByRole('heading', { name: 'Mis reservas' })).toBeVisible();
   await expect(page.getByRole('region', { name: 'Seguridad de tu cuenta' })).toHaveCount(0);
   await expect(page.getByRole('switch', { name: 'Recibir recordatorios por correo' })).toHaveCount(0);
-  await page.getByRole('navigation').getByRole('link', { name: 'Mi perfil' }).or(page.locator('.nav-actions').getByRole('link', { name: 'Mi perfil' })).first().click();
+  const account = page.getByRole('button', { name: 'Cuenta de test1' });
+  if (await account.isVisible()) await account.click();
+  else await page.getByRole('button', { name: 'Abrir menú' }).click();
+  await page.locator('#account-menu, #nav-panel').getByRole('link', { name: 'Mi perfil' }).click();
   await expect(page).toHaveURL(/\/perfil$/);
   await expect(page.getByRole('heading', { name: 'Mi perfil' })).toBeVisible();
   await expect(page.getByText('test1@example.com')).toBeVisible();

@@ -1063,14 +1063,17 @@
   .steps {
     gap: 16px;
   }
-  .nav-links {
-    gap: 20px;
+  /* Por debajo de 1024 px los enlaces y la cuenta pasan al menú desplegable. */
+  .nav-links,
+  .nav-actions > .nav-account,
+  .nav-account-menu {
+    display: none;
+  }
+  .mobile-menu {
+    display: inline-flex;
   }
   .nav-inner {
     gap: 16px;
-  }
-  .nav-cta {
-    padding-inline: 16px;
   }
   .detail-layout {
     grid-template-columns: 1.5fr 1fr;
@@ -1130,29 +1133,6 @@
   }
   .nav-cta {
     display: none;
-  }
-  .mobile-menu {
-    display: inline-flex;
-  }
-  .nav-links {
-    display: none;
-  }
-  .nav-links.open {
-    display: flex;
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 72px;
-    background: #1b1b1f;
-    padding: 16px 24px 24px;
-    flex-direction: column;
-    align-items: stretch;
-    gap: 4px;
-    border-bottom: 1px solid #ffffff20;
-    box-shadow: 0 20px 30px #0005;
-  }
-  .nav-links a {
-    min-height: 48px;
   }
   .hero {
     min-height: 650px;
@@ -2012,6 +1992,7 @@
 .auth-staff a {
   color: var(--accent-text);
 }
+/* Barra de navegación: cuenta y menú desplegable */
 .nav-account {
   display: inline-flex;
   align-items: center;
@@ -2032,23 +2013,192 @@
 }
 .nav-account.pending {
   visibility: hidden;
+  width: 110px;
 }
-.nav-account.active {
+.nav-account-menu {
+  position: relative;
+}
+.nav-user {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 4px 12px 4px 4px;
+  border: 1px solid #ffffff1a;
+  border-radius: 999px;
+  background: #ffffff08;
+  color: #fff;
+  font: 500 15px var(--font-heading);
+  letter-spacing: 0.4px;
+}
+.nav-user:hover,
+.nav-user[aria-expanded='true'] {
+  background: #ffffff12;
+  border-color: var(--accent-border);
+}
+.nav-user-name {
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.nav-chevron {
+  color: #a1a1aa;
+  transition: transform 0.15s;
+}
+.nav-user[aria-expanded='true'] .nav-chevron {
+  transform: rotate(180deg);
+}
+.nav-avatar {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--on-accent);
+  font: 600 13px var(--font-body);
+  letter-spacing: 0.5px;
+}
+.nav-dropdown {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 10px);
+  z-index: 30;
+  display: grid;
+  gap: 2px;
+  width: 270px;
+  padding: 8px;
+  background: #202126;
+  border: 1px solid #ffffff1a;
+  border-radius: 12px;
+  box-shadow: 0 20px 40px #0009;
+}
+.nav-dropdown-head {
+  padding: 10px 12px 12px;
+  margin-bottom: 4px;
+  border-bottom: 1px solid #ffffff12;
+}
+.nav-dropdown-head strong,
+.nav-dropdown-head small,
+.nav-panel-user strong,
+.nav-panel-user small {
+  display: block;
+}
+.nav-dropdown-head small,
+.nav-panel-user small {
+  color: #a1a1aa;
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+.nav-dropdown a,
+.nav-signout,
+.nav-panel-account > a:not(.btn) {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 44px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 8px;
+  background: none;
+  color: #e4e4e7;
+  font-size: 15px;
+  text-align: left;
+}
+.nav-dropdown a:hover,
+.nav-signout:hover,
+.nav-panel-account > a:not(.btn):hover {
+  background: #ffffff0d;
+  color: #fff;
+}
+.nav-dropdown a > svg,
+.nav-panel-account > a > svg {
   color: var(--accent-text);
 }
-@media (max-width: 639px) {
-  .nav-account {
-    padding: 0;
-    min-width: 44px;
-    justify-content: center;
-  }
-  .nav-account-text {
+.nav-signout {
+  position: relative;
+  margin-top: 6px;
+  color: #fca5a5;
+}
+.nav-signout::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -4px;
+  border-top: 1px solid #ffffff12;
+}
+.nav-signout > svg {
+  color: #f87171;
+}
+.nav-panel {
+  display: none;
+}
+@media (max-width: 1023px) {
+  .nav-panel {
+    display: block;
     position: absolute;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-    clip: rect(0 0 0 0);
-    white-space: nowrap;
+    left: 0;
+    right: 0;
+    top: 100%;
+    max-height: calc(100dvh - 72px);
+    overflow-y: auto;
+    padding-block: 8px 20px;
+    background: #1b1b1f;
+    border-bottom: 1px solid #ffffff20;
+    box-shadow: 0 20px 30px #0006;
+  }
+  .nav-panel nav {
+    display: flex;
+    flex-direction: column;
+  }
+  .nav-panel nav a {
+    display: flex;
+    align-items: center;
+    min-height: 50px;
+    border-bottom: 1px solid #ffffff0a;
+    font: 500 17px var(--font-heading);
+    letter-spacing: 0.4px;
+  }
+  .nav-panel nav a.active,
+  .nav-panel-account > a.active {
+    color: var(--accent-text);
+  }
+  .nav-panel-account {
+    display: grid;
+    gap: 6px;
+    margin-top: 16px;
+  }
+  .nav-panel-user {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+    padding: 12px;
+    margin-bottom: 4px;
+    border-radius: 12px;
+    background: #ffffff08;
+    border: 1px solid #ffffff12;
+  }
+  .nav-panel-user > span:last-child {
+    min-width: 0;
+  }
+  .nav-panel-cta {
+    margin-top: 8px;
+  }
+}
+@media (min-width: 640px) and (max-width: 1023px) {
+  /* En tablet «Reservar clase» ya está en la barra. */
+  .nav-panel-cta {
+    display: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .nav-chevron {
+    transition: none;
   }
 }
 
