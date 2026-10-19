@@ -86,3 +86,10 @@ Se descartaron dos variantes transparentes iniciales. Se eligió una variante de
 ```text
 Use case: background-extraction. Edit target: the provided TITAN GYM yellow helmet-and-barbell emblem. Remove ONLY the near-black background, including the dark areas inside all the helmet and barbell negative-space cutouts, and replace those areas with genuine fully transparent alpha. Preserve the yellow emblem's exact silhouette, proportions, position, colors and crisp smooth edges. Do not redesign, recolor, add texture, add outlines, add shadows, add glow, add text or crop the emblem. Keep square composition and existing generous margins. Return a clean transparent PNG cutout, NOT a checkerboard painted into the image.
 ```
+
+## Optimización (19/10/2026)
+
+Cada foto de `public/assets/generated` tiene una versión `.webp` generada desde el mismo `.jpg` con calidad 78 y el mismo tamaño (1672 × 941): 851 KB en total frente a 1972 KB. La web la sirve con el componente `Photo` y conserva el `.jpg` como respaldo, así que las rutas guardadas en la base de datos no cambian. La diferencia media por canal frente al original es de unos 2/255.
+
+Los 116 recursos exportados de Figma que la aplicación no usa se movieron de `public/assets` a `design/figma`: ya no se publican. `tools/assets-local.json` conserva su procedencia con la nueva ruta. Se mantienen en `public/assets` los que usan la base de datos, el seed y las pruebas.
+

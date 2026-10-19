@@ -34,7 +34,7 @@ Procedimiento con la aplicación actual:
 1. Elegir un correo controlado por el equipo, destinado únicamente a evaluación.
 2. Entrar con esa cuenta desde Google en `/mis-reservas`. Si la aplicación OAuth está en modo de pruebas, comprobar que la cuenta puede autorizarla. No compartir contraseñas de Google con el profesor.
 3. Alternativamente, usar el enlace por correo solo si el servicio de envío permite ese destinatario. No añadir al profesor al equipo de Supabase para eludir restricciones.
-4. Una vez autenticado, abrir **Crear contraseña** en Mis reservas y configurar una frase exclusiva para esta cuenta. El propietario la introduce directamente; no se escribe en este repositorio ni en el chat.
+4. Una vez autenticado, abrir **Crear contraseña** en Mi perfil y configurar una frase exclusiva para esta cuenta. El propietario la introduce directamente; no se escribe en este repositorio ni en el chat.
 5. Cerrar sesión. Abrir una ventana privada y probar **Correo y contraseña** con esa cuenta.
 6. Verificar que `/admin` muestra acceso restringido. Esta cuenta no necesita permisos administrativos para demostrar reservas.
 

@@ -10,10 +10,12 @@ Cada socio recibe un correo **3 horas antes** de cada clase reservada, con la cl
 
 No reciben recordatorio:
 - las reservas canceladas;
-- los socios que lo desactivaron en **Mis reservas → Recordatorio por correo**;
+- los socios que lo desactivaron en **Mi perfil → Recordatorio por correo**;
 - los socios de demostración y los datos simulados de la exposición.
 
 Las funciones solo pueden ejecutarse con la clave de servicio; socios y visitantes no tienen acceso. Los registros de GitHub Actions son públicos, por eso el script solo imprime cantidades: nunca nombres, correos ni códigos.
+
+La misma tarea envía el aviso de **cupo asignado desde la lista de espera** (`claim_waitlist_notices`, ver [Lista de espera](LISTA_ESPERA.md)). Si esa migración todavía no está aplicada, deja una advertencia y no marca la ejecución como fallida.
 
 ## Configuración (una sola vez)
 

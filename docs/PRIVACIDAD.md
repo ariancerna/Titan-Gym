@@ -14,7 +14,7 @@ Evidencia para la matriz de cumplimiento normativo (sección 4.2 del informe).
 | Derechos ARCO | La política explica cómo ejercerlos y menciona a la Autoridad Nacional de Protección de Datos Personales. | Secciones 7 y 9 |
 | Seudonimización para análisis | El dataset de ML no incluye nombre ni correo. | `docs/DATASET_APF3.md` |
 
-Cada socio puede ver la fecha en que aceptó la política al final de Mis reservas.
+Cada socio puede ver la fecha en que aceptó la política en Mi perfil.
 
 ## Consulta de evidencia (Supabase → SQL Editor)
 

@@ -46,7 +46,7 @@ export const privacySections: PrivacySection[] = [
     title: '3. Para qué los usamos',
     items: [
       'Gestionar tus reservas y controlar el aforo de cada clase.',
-      'Enviarte un recordatorio por correo 3 horas antes de cada clase reservada. Puedes desactivarlo en Mis reservas.',
+      'Enviarte un recordatorio por correo 3 horas antes de cada clase reservada. Puedes desactivarlo en Mi perfil.',
       'Registrar la asistencia y calcular la tasa de inasistencias de cada clase.',
       'Analizar las inasistencias con un modelo predictivo. Para eso se usan datos seudonimizados: sin tu nombre ni tu correo.',
     ],

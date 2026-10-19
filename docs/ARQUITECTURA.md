@@ -26,9 +26,11 @@ erDiagram
   locations ||--o{ class_sessions : aloja
   class_sessions ||--o{ reservations : recibe
   auth_users ||--o{ reservations : pertenece
+  class_sessions ||--o{ waitlist : espera
+  auth_users ||--o{ waitlist : apunta
 ```
 
-Las entidades principales poseen UUID y timestamps `created_at`/`updated_at`. La fecha de la sesión es `timestamptz`; la presentación usa America/Lima. Las reservas admiten confirmed/cancelled/attended. La cancelación sigue pendiente. La asistencia administrativa se registra por separado en `attendance` con pending/present/absent; no altera artificialmente la ocupación ni el estado de reserva.
+Las entidades principales poseen UUID y timestamps `created_at`/`updated_at`. La fecha de la sesión es `timestamptz`; la presentación usa America/Lima. Las reservas admiten confirmed/cancelled/attended. La cancelación (HU05) libera el cupo y, si hay lista de espera, lo asigna al primero de la fila. La asistencia administrativa se registra por separado en `attendance` con pending/present/absent; no altera artificialmente la ocupación ni el estado de reserva.
 
 La capacidad pertenece a la sesión. La disponibilidad es `capacity - count(reservations activas)` y no un contador editable del navegador. Se cuentan confirmed y attended; cancelled no ocupa lugar. Índices parciales cubren el conteo y la unicidad por socio/sesión; la consulta de reservas tiene índice por propietario y fecha. La política RLS usa `(select auth.uid()) = user_id` para evitar evaluaciones repetidas por fila.
 
@@ -74,7 +76,7 @@ Se solicita un enlace al correo mediante signInWithOtp, con flowType PKCE y redi
 
 La plantilla de enlace utiliza `{{ .ConfirmationURL }}`; en el proyecto gratuito se mantiene la predeterminada. No hay un selector que permita adoptar la identidad de otro socio. No se envía un comprobante por correo tras reservar: la pantalla entrega el código guardado y no promete servicios de notificación pendientes. El correo predeterminado se limita al equipo autorizado; el registro público de socios requiere SMTP propio.
 
-También se admite signInWithPassword, con verificación getUser. Una cuenta confirmada puede configurar su propia contraseña mediante updateUser desde Mis reservas. No se pasa un user_id editable ni se cambia email; el servidor conserva el UUID. La contraseña solo transita entre formulario y Supabase Auth, no se persiste en caché/localStorage/tablas públicas. Formulario de alta de contraseña: 12–128 caracteres y confirmación; login acepta contraseñas existentes sin recortarlas. No se implementó registro público por password ni recuperación como funcionalidades terminadas; ver `ACCESO_CONTRASENA.md`.
+También se admite signInWithPassword, con verificación getUser. Una cuenta confirmada puede configurar su propia contraseña mediante updateUser desde Mi perfil. No se pasa un user_id editable ni se cambia email; el servidor conserva el UUID. La contraseña solo transita entre formulario y Supabase Auth, no se persiste en caché/localStorage/tablas públicas. Formulario de alta de contraseña: 12–128 caracteres y confirmación; login acepta contraseñas existentes sin recortarlas. No se implementó registro público por password ni recuperación como funcionalidades terminadas; ver `ACCESO_CONTRASENA.md`.
 
 ## Diseño y accesibilidad
 
@@ -87,6 +89,38 @@ Se conservan Oswald, Space Grotesk, colores solicitados, hero centrado, tarjetas
 Los iconos se implementan con Lucide según el stack solicitado. Se retiraron de las pantallas los controles de simulación del diseño y promesas no implementadas: QR de acceso, cancelación automática, recordatorios y cancelación gratuita. El comprobante utiliza un código UUID único real. Los horarios, sedes y métricas de sesiones proceden de la base; no se afirma que las métricas estáticas de Figma sean datos reales del gimnasio.
 
 Las instrucciones de Supabase orientaron la separación de funciones privilegiadas, RLS e índices; las de Figma orientaron la extracción de originales y adaptación al layout responsive.
+
+## Lista de espera (US08)
+
+```mermaid
+sequenceDiagram
+  participant A as Socio que cancela
+  participant P as PostgreSQL
+  participant B as Primero de la fila
+  A->>P: RPC cancel_reservation
+  P->>P: Bloquear class_sessions FOR UPDATE
+  P->>P: Marcar la reserva como cancelada
+  P->>P: promote_waitlist: crear la reserva de B y marcar su entrada
+  P-->>A: Cancelación registrada
+  Note over P,B: La tarea de correos (cada 15 min) llama a claim_waitlist_notices
+  P-->>B: Correo «ya tienes tu cupo» con código y QR
+```
+
+La tabla `waitlist` tiene RLS de propietario y un índice único parcial que admite una sola entrada activa por socio y sesión. La asignación ocurre dentro de la transacción que libera el cupo (cancelación o trigger de aumento de capacidad), con la sesión bloqueada, así que la fila nunca supera el aforo; el trigger de aforo sigue siendo la última defensa. `cancel_reservation` bloquea primero la sesión, en el mismo orden que `reserve_session`. En la última hora no se asigna: el cupo queda para reserva directa. Detalle y pasos de aplicación: [Lista de espera](LISTA_ESPERA.md).
+
+## Perfil del socio
+
+`/perfil` reúne lo que no es una reserva: correo verificado, formas de entrar, nombre, contraseña, recordatorios y resumen de privacidad. Supabase no informa al navegador si la cuenta tiene contraseña, así que se guarda `user_metadata.has_password` al registrarse con contraseña, al configurarla y al entrar con ella; solo decide si se muestra «Crear» o «Cambiar» contraseña y no concede ningún permiso. El nombre se guarda en `user_metadata.full_name` (Google ya lo aporta) y completa el formulario de reserva; no modifica reservas anteriores. Los roles se siguen comprobando contra `private.administrators`, nunca contra metadata.
+
+## Asistente guiado
+
+Botón flotante con respuestas fijas, sin IA y sin enviar datos a terceros. Las respuestas de clases y horarios usan la misma RPC `list_sessions` que el catálogo; el contacto es un enlace de WhatsApp. El panel se descarga solo al abrirlo y no aparece en `/admin`.
+
+## Cabeceras de seguridad e imágenes
+
+`vercel.json` aplica una Content-Security-Policy: scripts, estilos, fuentes e imágenes solo del propio dominio; conexiones al propio dominio y a `*.supabase.co`; workers `blob:` para el lector de QR; `style-src-attr 'unsafe-inline'` solo para atributos `style` (los usa el recuadro de `qr-scanner`). `Permissions-Policy` permite la cámara al propio sitio y desactiva micrófono, ubicación, pagos y USB.
+
+Las fotos de `/assets/generated` tienen una versión `.webp` (57 % menos peso). El componente `Photo` la sirve con el `.jpg` como respaldo, de modo que la base de datos sigue guardando rutas `.jpg`. Los recursos de Figma sin uso están en `design/figma` y no se publican.
 
 ## Límites actuales
 

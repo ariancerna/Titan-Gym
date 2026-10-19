@@ -4,7 +4,7 @@
 
 En el acceso seguro se puede elegir «Correo y contraseña» o «Enlace por correo», además de Google. El inicio utiliza Supabase Auth signInWithPassword y verifica el usuario mediante getUser. No existe inicio local simulado ni se consulta una tabla de contraseñas de la agenda.
 
-En Mis reservas, una cuenta con correo verificado puede abrir «Crear contraseña». La operación usa updateUser con password, sobre la identidad autenticada obtenida del servicio. No acepta user_id ni correo editable para elegir otra cuenta. El UUID permanece igual, así como sus reservas y accesos anteriores. Si ya tenía contraseña, el formulario la reemplaza y lo advierte antes de guardar.
+En Mi perfil, una cuenta con correo verificado puede abrir «Crear contraseña» (o «Cambiar contraseña» si ya tiene una; ver la marca `has_password` en [Arquitectura](ARQUITECTURA.md)). La operación usa updateUser con password, sobre la identidad autenticada obtenida del servicio. No acepta user_id ni correo editable para elegir otra cuenta. El UUID permanece igual, así como sus reservas y accesos anteriores. Si ya tenía contraseña, el formulario la reemplaza y lo advierte antes de guardar.
 
 El formulario de creación exige 12–128 caracteres y coincidencia de confirmación; no recorta espacios ni impone reglas nuevas a la contraseña existente durante login. Supabase aplica además su política de servidor. Los campos de contraseña se limpian tras un intento y al cerrar el formulario. No se almacenan contraseñas en localStorage, Query, tablas públicas, logs o archivos; el servicio Auth maneja el hash. Los bloqueos de envío previenen solicitudes repetidas y el mensaje de credenciales inválidas no confirma si un correo existe.
 

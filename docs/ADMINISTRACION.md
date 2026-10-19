@@ -6,7 +6,7 @@ El módulo `/admin` permite gestionar clases generales, sesiones, inscritos y as
 
 No hay una cuenta predeterminada ni una contraseña publicada. El seed no asigna roles. La primera cuenta real está pendiente de identificación por el propietario.
 
-1. El responsable indica qué cuenta verificada debe recibir el rol. Si todavía no existe, su titular debe iniciar sesión con Google y configurar su contraseña desde Mis reservas.
+1. El responsable indica qué cuenta verificada debe recibir el rol. Si todavía no existe, su titular debe iniciar sesión con Google y configurar su contraseña desde Mi perfil.
 2. Un operador de confianza comprueba la cuenta en el editor SQL de Supabase. Sustituye el correo de ejemplo por el aprobado; no ejecutes estos comandos desde el frontend:
 
 ```sql

@@ -1,6 +1,6 @@
 # Despliegue en Vercel y Supabase
 
-Estado: Supabase creado, migrado y conectado; Vercel preparado, **no publicado**. El proyecto dedicado es `cyufnolnnwaeacnyzpfy`. Consulta [el registro real de configuración](SUPABASE.md). No se ha verificado una URL pública del frontend.
+Estado: Supabase creado, migrado y conectado; frontend publicado en https://titan-gym-tau.vercel.app (HTTP 200 comprobado el 11/10/2026, ver [Demostración](DEMO_VERCEL_APF2.md)). Revisa en el panel de Vercel que el último despliegue haya terminado bien. Antes de desplegar un cambio que use una función nueva, aplica su migración; la última es `20261021000000_lista_espera.sql` ([Lista de espera](LISTA_ESPERA.md)). El proyecto dedicado es `cyufnolnnwaeacnyzpfy`. Consulta [el registro real de configuración](SUPABASE.md). No se ha verificado una URL pública del frontend.
 
 La migración administrativa también está aplicada. En otra instalación, aplica todas las migraciones en orden. Antes de demostrar `/admin`, autoriza una cuenta verificada siguiendo [Administración](ADMINISTRACION.md). No existe administrador por defecto ni contraseña publicada. Verifica desde una ventana privada el acceso permitido y el rechazo de una cuenta de socio.
 
@@ -45,4 +45,4 @@ No se han ejecutado estos pasos contra una URL pública durante esta entrega.
 
 ## Contraseña de una cuenta existente
 
-El proveedor Email ya está habilitado; no cambiar Confirm email ni Anonymous Sign-ins para admitir contraseñas. Una vez autenticado con Google/enlace, el propietario configura la contraseña dentro de Mis reservas, directamente y sin compartirla con el agente. Después prueba cerrar sesión e iniciar con el mismo correo y contraseña. El formulario de la app exige 12–128 caracteres; revisar aparte la política de servidor y reautenticación antes de producción. No hay signUp público ni recuperación por correo terminados. La protección de contraseñas filtradas del advisor permanece deshabilitada en Free; no se contrató Pro. Véase `ACCESO_CONTRASENA.md`.
+El proveedor Email ya está habilitado; no cambiar Confirm email ni Anonymous Sign-ins para admitir contraseñas. Una vez autenticado con Google/enlace, el propietario configura la contraseña dentro de Mi perfil, directamente y sin compartirla con el agente. Después prueba cerrar sesión e iniciar con el mismo correo y contraseña. El formulario de la app exige 12–128 caracteres; revisar aparte la política de servidor y reautenticación antes de producción. No hay signUp público ni recuperación por correo terminados. La protección de contraseñas filtradas del advisor permanece deshabilitada en Free; no se contrató Pro. Véase `ACCESO_CONTRASENA.md`.

@@ -1,10 +1,10 @@
 # FitSmart Agenda · TITAN GYM
 
-Aplicación web para consultar clases, conocer los cupos disponibles y reservar en TITAN GYM. MVP académico APF2 desarrollado con React, TypeScript y Supabase: las reservas se guardan en PostgreSQL y el aforo se valida de forma atómica, incluso ante solicitudes simultáneas.
+Aplicación web para consultar clases, conocer los cupos disponibles y reservar en TITAN GYM. MVP académico (APF2 y APF3) desarrollado con React, TypeScript y Supabase: las reservas se guardan en PostgreSQL y el aforo se valida de forma atómica, incluso ante solicitudes simultáneas.
 
 ![Inicio de FitSmart Agenda](docs/evidencias/desktop-inicio.png)
 
-> Estado: reservas y panel de administración implementados y conectados a Supabase. Preparado para Vercel, sin despliegue público verificado. La primera cuenta administradora debe ser autorizada explícitamente; no se asignan roles automáticamente.
+> Estado: publicado en https://titan-gym-tau.vercel.app (HTTP 200 comprobado el 11/10/2026, ver [Demostración](docs/DEMO_VERCEL_APF2.md)). Reservas, cancelación, lista de espera, recordatorios, perfil y panel de administración conectados a Supabase. La migración de la lista de espera debe aplicarse en Supabase ([pasos](docs/LISTA_ESPERA.md)). La primera cuenta administradora debe ser autorizada explícitamente; no se asignan roles automáticamente.
 
 ## Funcionalidades
 
@@ -14,13 +14,16 @@ Aplicación web para consultar clases, conocer los cupos disponibles y reservar 
 - Reserva con validación de datos, identidad verificada y prevención de duplicados.
 - Confirmación que consulta una reserva guardada; sin comprobantes ficticios.
 - Mis reservas: próximas sesiones e historial exclusivos de la cuenta autenticada, con cancelación antes del inicio de la clase.
+- Lista de espera en clases llenas: al liberarse un cupo, el primero de la fila recibe la reserva automáticamente y un aviso por correo.
+- Mi perfil: correo verificado, formas de entrar, nombre que completa las reservas, contraseña, recordatorios y privacidad.
+- Asistente guiado (sin IA) con clases, horarios por día, cómo reservar y contacto por WhatsApp.
 - Acceso con correo y contraseña, Google como segunda opción y enlace por correo.
-- Creación de contraseña desde una cuenta ya autenticada, conservando su identidad y reservas.
+- Creación o cambio de contraseña desde Mi perfil, conservando la identidad y las reservas.
 - Diseño responsive para escritorio, tablet y móvil, con recursos originales de TITAN GYM.
 - Panel administrativo para crear/editar clases, programar sesiones, consultar inscritos y registrar asistencia con historial.
 - Indicador de no-shows y exportación CSV del dataset seudonimizado para el componente de Machine Learning (APF3).
 - Comprobante con código QR y registro de llegada en recepción escaneando el QR desde el panel.
-- Recordatorio por correo 3 horas antes de cada clase, con opción para desactivarlo.
+- Recordatorio por correo 3 horas antes de cada clase, con opción para desactivarlo en Mi perfil.
 
 ## Tecnologías
 
@@ -92,7 +95,8 @@ Consulta [Acceso con contraseña](docs/ACCESO_CONTRASENA.md) y [Google Auth](doc
 | `/clases/:id` | Detalle de una sesión |
 | `/reservar/:id` | Acceso y formulario de reserva |
 | `/reserva-confirmada/:id` | Comprobante de una reserva propia |
-| `/mis-reservas` | Reservas propias y creación de contraseña |
+| `/mis-reservas` | Reservas propias y lista de espera |
+| `/perfil` | Datos de la cuenta, contraseña, recordatorios y privacidad |
 | `/auth/confirm` | Retorno de autenticación mediante PKCE |
 | `/admin` | Acceso administrativo por correo/contraseña y panel protegido |
 
@@ -100,21 +104,21 @@ Los identificadores de detalle y reserva corresponden a `class_sessions.id`; el 
 
 ## Datos y seguridad
 
-El esquema separa `disciplines`, `locations`, `instructors`, `classes`, `class_sessions` y `reservations`, con UUID, claves foráneas, índices y fechas con zona horaria.
+El esquema separa `disciplines`, `locations`, `instructors`, `classes`, `class_sessions`, `reservations` y `waitlist`, con UUID, claves foráneas, índices y fechas con zona horaria.
 
 La reserva se crea mediante una operación transaccional en PostgreSQL que verifica la identidad autenticada, bloquea la sesión, rechaza duplicados, comprueba el aforo e inserta la reserva. Las reservas activas no pueden superar la capacidad, aunque dos usuarios intenten ocupar el último lugar simultáneamente.
 
-Row Level Security protege las tablas. Los socios solo pueden consultar sus propias reservas; conocer el correo o identificador de otro socio no concede acceso. Las claves privilegiadas no se usan en el navegador.
+Row Level Security protege las tablas. Los socios solo pueden consultar sus propias reservas y entradas de lista de espera; conocer el correo o identificador de otro socio no concede acceso. Las claves privilegiadas no se usan en el navegador. `vercel.json` aplica una Content-Security-Policy y una Permissions-Policy ([detalle](docs/ARQUITECTURA.md#cabeceras-de-seguridad-e-imágenes)).
 
 ## Pruebas y evidencia
 
-Última ejecución documentada: **11 de octubre de 2026**.
+Última ejecución: **19 de octubre de 2026**.
 
 | Comprobación | Resultado |
 | --- | --- |
-| Vitest / pruebas unitarias | 31 aprobadas |
-| Integración SQL en PostgreSQL 17.6 | 25 aprobadas |
-| Playwright en 1440, 768 y 390 px | 78 aprobadas |
+| Vitest / pruebas unitarias | 57 aprobadas |
+| Integración SQL en PostgreSQL 17.6 | 37 aprobadas (incluye lista de espera y concurrencia) |
+| Playwright en 1440, 768 y 390 px | 135 pruebas con Microsoft Edge: todas aprobadas salvo «navegación, identidad visual» en 390 px, que en Edge es intermitente por la espera de imágenes y también falla con la versión anterior. La ejecución completa con el Chromium de Playwright del 15/10 aprobó 120 de 120 |
 | Build de producción | Aprobado |
 | Auditoría de dependencias de producción | 0 vulnerabilidades reportadas |
 
@@ -144,15 +148,13 @@ El panel `/admin` solicita correo y contraseña y requiere un rol protegido en S
 
 El rol se asigna desde un entorno privilegiado en `private.administrators`. Cada operación verifica `auth.uid()` y ese rol en PostgreSQL; no se confía en metadata editable ni en el navegador. Los socios siguen viendo únicamente sus propias reservas. Google o una contraseña válida no otorgan permisos administrativos por sí solos.
 
-Configuración y límites: [Administración](docs/ADMINISTRACION.md). La primera cuenta real está pendiente de que el propietario indique su correo. **US06** conserva la prioridad **Should have**, ahora implementada en esta ampliación. Cancelaciones, recordatorios, lista de espera e indicadores siguen pendientes según el [Product Backlog](docs/PRODUCT_BACKLOG.md).
+Configuración y límites: [Administración](docs/ADMINISTRACION.md). La primera cuenta real está pendiente de que el propietario indique su correo. **US06** conserva la prioridad **Should have**, ahora implementada en esta ampliación. Cancelación, recordatorios, lista de espera e indicadores ya están implementados; estado de cada historia en el [Product Backlog](docs/PRODUCT_BACKLOG.md).
 
 ## Despliegue en Vercel
 
 El repositorio incluye [vercel.json](vercel.json) para las rutas SPA. Importa este repositorio en Vercel, selecciona Vite y configura las dos variables públicas de Supabase. Build: `npm run build`. Directorio de salida: `dist`.
 
-Cuando exista la URL definitiva, configura Site URL y su redirección `/auth/confirm` en Supabase. Comprueba desde una ventana privada el acceso, la reserva, el comprobante y el aislamiento entre usuarios. Pasos completos: [Despliegue](docs/DESPLIEGUE.md).
-
-**Todavía no hay una URL de producción verificada.**
+La app está publicada en https://titan-gym-tau.vercel.app; Site URL y su redirección `/auth/confirm` deben apuntar a esa dirección en Supabase. Si un cambio usa una función nueva de la base de datos, aplica primero su migración (la última es `20261021000000_lista_espera.sql`). Comprueba desde una ventana privada el acceso, la reserva, el comprobante y el aislamiento entre usuarios. Pasos completos: [Despliegue](docs/DESPLIEGUE.md).
 
 ## Documentación
 
@@ -163,6 +165,7 @@ Cuando exista la URL definitiva, configura Site URL y su redirección `/auth/con
 - [Auditoría y plan APF3](docs/AUDITORIA_APF3.md)
 - [Privacidad y consentimiento](docs/PRIVACIDAD.md)
 - [Recordatorios por correo](docs/RECORDATORIOS.md)
+- [Lista de espera](docs/LISTA_ESPERA.md)
 - [Cuenta de evaluación y demostración pública APF2](docs/DEMO_VERCEL_APF2.md)
 - [Anexo de prompts de IA y validación](docs/ANEXO_PROMPTS_IA.md)
 - [Configuración de Supabase](docs/SUPABASE.md)

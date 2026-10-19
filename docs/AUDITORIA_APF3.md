@@ -127,3 +127,26 @@ El orden importa: si se despliega el frontend sin la migración, Mis reservas y 
 | `npm run format:check` | — | Sin diferencias |
 
 Alcance: PostgreSQL 17 embebido con Auth de prueba y Chromium de Playwright. No acredita que la migración funcione en el Supabase alojado hasta aplicarla y probarla allí. Capturas nuevas: `cancelar-reserva-{desktop,tablet,mobile}.png`; el resto de `docs/evidencias/` se regeneró con la interfaz actual.
+
+## 7. Seguimiento del 19 de octubre de 2026
+
+Estado de los hallazgos y pendientes de este informe después de los cambios del 19/10. La tabla de la sección 3 se conserva como registro del 15/10.
+
+| ID / requisito | Estado | Qué se hizo o qué falta |
+| --- | --- | --- |
+| HU08 lista de espera | ✅ Código y pruebas | Fila por orden de llegada; al cancelar o subir la capacidad, el primero recibe la reserva en la misma transacción y un aviso por correo. Falta **aplicar `20261021000000_lista_espera.sql` en Supabase** ([pasos](LISTA_ESPERA.md)); hasta entonces la web oculta la función sin errores. |
+| HU07 recordatorios | ✅ | Implementados desde el 15/10 (la fila «HU07 y HU08 ❌» de la sección 2 quedó desactualizada). |
+| S3 CSP | ✅ Corregido | Content-Security-Policy y Permissions-Policy en `vercel.json`. Verificado sirviendo el build con esas cabeceras: 0 violaciones en inicio, asistente, catálogo, detalle, perfil, admin y acceso con Google. Falta confirmarlo en el despliegue real. |
+| Q2 consultas N+1 | ✅ Corregido | Mis reservas trae reserva, sesión, clase e instructor en una sola consulta (embedding de PostgREST), sin migración. |
+| Q4 recursos sin uso | ✅ Corregido | Fotos en WebP (1972 KB → 851 KB) con el JPG de respaldo; 116 recursos de Figma sin uso movidos a `design/figma`. |
+| F2 sesiones en producción | ✅ Verificado | El catálogo público alojado devolvía 16 sesiones futuras el 19/10. |
+| D1 documentación | ✅ Corregido | README, despliegue y backlog indican la URL publicada y el estado real de cada historia. |
+| S2 longitud mínima de contraseña | ❌ Titular | Subir «Minimum password length» a 12 en Supabase → Authentication → Providers → Email. |
+| Administrador real | ❔ Titular | Autorizar una cuenta según [Administración](ADMINISTRACION.md) para poder demostrar `/admin`. |
+| S1 contraseña de evaluación | ❔ Titular | Cambiarla después de la evaluación. |
+| Q3, Q5 | Pendiente | Sin cambios. |
+| Modelo predictivo | ❌ | Sigue sin datos reales de asistencia; no se entrenó con datos sintéticos. |
+
+Además se agregaron el asistente guiado (sin IA), la página Mi perfil y el menú de cuenta en la barra de navegación ([backlog](PRODUCT_BACKLOG.md)).
+
+Pruebas del 19/10: ver la tabla del [README](../README.md#pruebas-y-evidencia).
