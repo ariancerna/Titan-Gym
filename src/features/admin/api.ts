@@ -3,6 +3,9 @@ export interface NamedEntity {
   id: string;
   name: string;
 }
+export interface ManagedInstructor extends NamedEntity {
+  bio: string;
+}
 export interface ManagedClass extends NamedEntity {
   discipline_id: string;
   description: string;
@@ -22,11 +25,16 @@ export interface ManagedSession {
   instructor: string;
   location: string;
   reserved: number;
+  /** Socios en lista de espera y asistentes registrados como presentes. */
+  waiting: number;
+  present: number;
+  cancelled_at: string | null;
+  cancel_reason: string | null;
 }
 export interface AdminSnapshot {
   disciplines: NamedEntity[];
   locations: NamedEntity[];
-  instructors: NamedEntity[];
+  instructors: ManagedInstructor[];
   classes: ManagedClass[];
   sessions: ManagedSession[];
 }
@@ -43,6 +51,7 @@ export interface RosterMember {
     status: AttendanceStatus;
     previous_status: AttendanceStatus | null;
     recorded_by: string;
+    recorded_by_email: string | null;
     created_at: string;
   }[];
 }
@@ -95,6 +104,24 @@ export interface CheckInResult {
   already_present: boolean;
 }
 export const checkIn = (code: string) => rpc<CheckInResult>('admin_check_in', { p_code: code });
+export interface WaitlistMember {
+  id: string;
+  member_name: string;
+  member_email: string;
+  status: 'waiting' | 'promoted';
+  created_at: string;
+}
+export const getWaitlist = (sessionId: string) =>
+  rpc<WaitlistMember[]>('admin_waitlist', { p_session_id: sessionId });
+export const cancelSession = (sessionId: string, reason: string) =>
+  rpc<number>('admin_cancel_session', { p_session_id: sessionId, p_reason: reason });
+export const createRecurringSessions = (data: Record<string, unknown>, until: string) =>
+  rpc<{ created: number; skipped: number }>('admin_create_recurring_sessions', {
+    p_data: data,
+    p_until: until,
+  });
+export const saveInstructor = (data: { name: string; bio: string }, id?: string) =>
+  rpc<string>('admin_save_instructor', { p_data: data, p_id: id ?? null });
 export const attendanceLabel: Record<AttendanceStatus, string> = {
   pending: 'Pendiente',
   present: 'Presente',

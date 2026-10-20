@@ -116,9 +116,9 @@ Row Level Security protege las tablas. Los socios solo pueden consultar sus prop
 
 | Comprobación | Resultado |
 | --- | --- |
-| Vitest / pruebas unitarias | 57 aprobadas |
-| Integración SQL en PostgreSQL 17.6 | 37 aprobadas (incluye lista de espera y concurrencia) |
-| Playwright en 1440, 768 y 390 px | 135 pruebas con Microsoft Edge: todas aprobadas salvo «navegación, identidad visual» en 390 px, que en Edge es intermitente por la espera de imágenes y también falla con la versión anterior. La ejecución completa con el Chromium de Playwright del 15/10 aprobó 120 de 120 |
+| Vitest / pruebas unitarias | 65 aprobadas |
+| Integración SQL en PostgreSQL 17.6 | 40 aprobadas (incluye lista de espera, concurrencia, cancelación de sesiones y sesiones semanales) |
+| Playwright en 1440, 768 y 390 px | 150 de 150 aprobadas (incluye el panel en pestañas, cancelación de sesiones, sesiones semanales, instructores y lista de espera en el panel) |
 | Build de producción | Aprobado |
 | Auditoría de dependencias de producción | 0 vulnerabilidades reportadas |
 

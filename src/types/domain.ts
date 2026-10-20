@@ -17,6 +17,9 @@ export interface ClassSession {
   capacity: number;
   reserved: number;
   available: number;
+  /** Cancelada por el gimnasio: no admite reservas; el comprobante muestra el motivo. */
+  cancelled: boolean;
+  cancel_reason: string | null;
 }
 export interface Reservation {
   id: string;
@@ -25,6 +28,8 @@ export interface Reservation {
   member_name: string;
   member_email: string;
   status: 'confirmed' | 'cancelled' | 'attended';
+  /** La canceló el gimnasio al cancelar la sesión (no el socio). */
+  cancelled_by_gym?: boolean;
   created_at: string;
 }
 export interface WaitlistEntry {
@@ -41,6 +46,6 @@ export interface WaitlistEntry {
 export interface ReservationWithSession extends Reservation {
   session: Pick<
     ClassSession,
-    'starts_at' | 'duration_minutes' | 'room' | 'name' | 'instructor'
+    'starts_at' | 'duration_minutes' | 'room' | 'name' | 'instructor' | 'cancel_reason'
   > | null;
 }

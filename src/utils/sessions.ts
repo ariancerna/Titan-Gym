@@ -43,8 +43,9 @@ const dayMs = 86400000;
 export const bookingOpensAt = (s: Pick<ClassSession, 'starts_at'>) =>
   new Date(new Date(s.starts_at).getTime() - bookingWindowDays * dayMs);
 
-export type BookingState = 'open' | 'full' | 'started' | 'not-open';
+export type BookingState = 'open' | 'full' | 'started' | 'not-open' | 'cancelled';
 export function bookingState(s: ClassSession, now = Date.now()): BookingState {
+  if (s.cancelled) return 'cancelled';
   if (new Date(s.starts_at).getTime() <= now) return 'started';
   if (bookingOpensAt(s).getTime() > now) return 'not-open';
   return s.available > 0 ? 'open' : 'full';
@@ -87,4 +88,18 @@ export function nextSessionPerClass(sessions: ClassSession[], now = Date.now()) 
   return upcomingSessions(sessions, now).filter(
     (s) => !seen.has(s.class_id) && seen.add(s.class_id),
   );
+}
+
+const shortWhen = new Intl.DateTimeFormat('es-PE', {
+  timeZone: timezone,
+  weekday: 'short',
+  day: 'numeric',
+  month: 'short',
+});
+/** «lun 20 oct · 20:00–20:50», el formato compacto del panel de administración. */
+export function formatSessionWhen(startsAt: string, durationMinutes: number): string {
+  const start = new Date(startsAt);
+  const end = new Date(start.getTime() + durationMinutes * 60000);
+  const day = shortWhen.format(start).replace(/\./g, '').replace(',', '');
+  return `${day} · ${formatTime(start.toISOString())}–${formatTime(end.toISOString())}`;
 }

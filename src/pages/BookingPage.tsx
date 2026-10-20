@@ -80,16 +80,20 @@ export default function BookingPage() {
         ) : !isBookable(s) ? (
           <EmptyState
             title={
-              bookingState(s) === 'full'
-                ? 'Clase completa'
-                : bookingState(s) === 'not-open'
-                  ? 'Reservas aún no abiertas'
-                  : 'La sesión ya comenzó'
+              bookingState(s) === 'cancelled'
+                ? 'Clase cancelada'
+                : bookingState(s) === 'full'
+                  ? 'Clase completa'
+                  : bookingState(s) === 'not-open'
+                    ? 'Reservas aún no abiertas'
+                    : 'La sesión ya comenzó'
             }
             message={
-              bookingState(s) === 'not-open'
-                ? `Las reservas se abren 7 días antes de la clase: desde el ${formatDate(bookingOpensAt(s).toISOString())}.`
-                : 'No se puede registrar una reserva para esta sesión. Explora otros horarios.'
+              bookingState(s) === 'cancelled'
+                ? `El gimnasio canceló esta clase${s.cancel_reason ? `: ${s.cancel_reason}` : ''}. Elige otro horario.`
+                : bookingState(s) === 'not-open'
+                  ? `Las reservas se abren 7 días antes de la clase: desde el ${formatDate(bookingOpensAt(s).toISOString())}.`
+                  : 'No se puede registrar una reserva para esta sesión. Explora otros horarios.'
             }
             action
           />

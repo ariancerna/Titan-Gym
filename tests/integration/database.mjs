@@ -318,6 +318,58 @@ try {
     assert.equal(active.length,1);assert.equal(active[0].user_id,users[2]);
     assert.equal((await admin.query('select status from public.waitlist where id=$1',[entry])).rows[0].status,'promoted');
   });
+  await check('Panel: cancelar una sesión cancela sus reservas, cierra la lista de espera y prepara el aviso',async()=>{
+    const sid='96000000-0000-4000-8000-000000000001';
+    await admin.query(`insert into public.class_sessions(id,class_id,instructor_id,location_id,room,starts_at,duration_minutes,capacity)
+      select $1,class_id,instructor_id,location_id,'Sala cancelable',now()+interval '2 days',45,1 from public.class_sessions where id=$2`,[sid,s(1)]);
+    const rid=(await reserve(a,sid)).rows[0].id;
+    await b.query('select public.join_waitlist($1,$2,$3)',[sid,'Beto Ruiz','test2@example.com']);
+    assert.equal((await manager.query('select public.admin_waitlist($1) data',[sid])).rows[0].data.length,1);
+    await assert.rejects(a.query('select public.admin_waitlist($1)',[sid]),/ADMIN_REQUIRED/);
+    await assert.rejects(a.query('select public.admin_cancel_session($1,$2)',[sid,'Instructor enfermo']),/ADMIN_REQUIRED/);
+    await assert.rejects(manager.query('select public.admin_cancel_session($1,$2)',[sid,'x']),/INVALID_REASON/);
+    assert.equal((await manager.query('select public.admin_cancel_session($1,$2) n',[sid,'Instructor enfermo'])).rows[0].n,1);
+    const r=(await a.query('select status,cancelled_by_gym,cancelled_at from public.reservations where id=$1',[rid])).rows[0];
+    assert.equal(r.status,'cancelled');assert.equal(r.cancelled_by_gym,true);assert(r.cancelled_at);
+    assert.equal((await manager.query('select public.admin_waitlist($1) data',[sid])).rows[0].data.length,0,'la lista de espera se cierra');
+    const detail=(await anonymous.query('select cancelled,cancel_reason from public.list_sessions($1)',[sid])).rows[0];
+    assert.equal(detail.cancelled,true);assert.equal(detail.cancel_reason,'Instructor enfermo');
+    assert(!(await anonymous.query('select id from public.list_sessions()')).rows.some(x=>x.id===sid),'no aparece en el catálogo');
+    await assert.rejects(reserve(b,sid,'test2@example.com','Beto Ruiz'),/SESSION_CLOSED/);
+    await assert.rejects(manager.query('select public.admin_cancel_session($1,$2)',[sid,'Otra vez']),/SESSION_CANCELLED/);
+    await assert.rejects(manager.query('select public.admin_save_session($1,$2)',[{class_id:'40000000-0000-4000-8000-000000000001',instructor_id:'30000000-0000-4000-8000-000000000001',location_id:'20000000-0000-4000-8000-000000000001',room:'Sala cancelable',starts_at:new Date(Date.now()+3*86400000).toISOString(),duration_minutes:45,capacity:5,published:true},sid]),/SESSION_CANCELLED/);
+    await admin.query('set role service_role');
+    try{
+      const notices=(await admin.query('select * from public.claim_cancellation_notices()')).rows;
+      assert(notices.some(n=>n.reservation_id===rid&&n.cancel_reason==='Instructor enfermo'));
+      assert.equal((await admin.query('select * from public.claim_cancellation_notices()')).rows.filter(n=>n.reservation_id===rid).length,0,'el aviso no se repite');
+    }finally{await admin.query('reset role');}
+    await assert.rejects(a.query('select * from public.claim_cancellation_notices(true)'),/permission denied/);
+  });
+  await check('Panel: sesiones semanales hasta una fecha, omitiendo las salas ocupadas',async()=>{
+    const start=new Date(Date.now()+3*86400000); start.setUTCSeconds(0,0);
+    const base={class_id:'40000000-0000-4000-8000-000000000002',instructor_id:'30000000-0000-4000-8000-000000000002',location_id:'20000000-0000-4000-8000-000000000001',room:'Sala semanal',starts_at:start.toISOString(),duration_minutes:45,capacity:12,published:true};
+    await manager.query('select public.admin_save_session($1)',[{...base,starts_at:new Date(start.getTime()+14*86400000).toISOString()}]);
+    const until=new Date(start.getTime()+28*86400000).toISOString().slice(0,10);
+    const result=(await manager.query('select public.admin_create_recurring_sessions($1,$2) r',[base,until])).rows[0].r;
+    assert.equal(result.created,4);assert.equal(result.skipped,1);
+    assert.equal((await admin.query("select count(*)::int n from public.class_sessions where room='Sala semanal'")).rows[0].n,5);
+    await assert.rejects(manager.query('select public.admin_create_recurring_sessions($1,$2)',[base,'2030-01-01']),/INVALID_RECURRENCE/);
+    await assert.rejects(a.query('select public.admin_create_recurring_sessions($1,$2)',[base,until]),/ADMIN_REQUIRED/);
+  });
+  await check('Panel: instructores, datos de la vista Hoy y correo del responsable en el historial',async()=>{
+    const id=(await manager.query("select public.admin_save_instructor('{\"name\":\"Rosa Paredes\",\"bio\":\"Pilates y movilidad.\"}') id")).rows[0].id;
+    await manager.query("select public.admin_save_instructor('{\"name\":\"Rosa Paredes Díaz\",\"bio\":\"\"}',$1)",[id]);
+    assert.equal((await admin.query('select name from public.instructors where id=$1',[id])).rows[0].name,'Rosa Paredes Díaz');
+    await assert.rejects(manager.query("select public.admin_save_instructor('{\"name\":\"Ro\"}')"),/INVALID_INSTRUCTOR/);
+    await assert.rejects(a.query("select public.admin_save_instructor('{\"name\":\"Intruso Total\"}')"),/ADMIN_REQUIRED/);
+    const snap=(await manager.query('select public.admin_snapshot() data')).rows[0].data;
+    assert(snap.sessions.every(x=>typeof x.waiting==='number'&&typeof x.present==='number'));
+    const past=snap.sessions.find(x=>x.present>0);
+    assert(past,'una sesión con asistencia registrada informa sus presentes');
+    const roster=(await manager.query('select public.admin_roster($1) data',[past.id])).rows[0].data;
+    assert(roster.some(m=>m.history.some(h=>h.recorded_by_email==='test3@example.com')));
+  });
   await check('Admin: revocación inmediata sin renovar JWT',async()=>{
     await admin.query('delete from private.administrators where user_id=$1',[users[2]]);
     assert.equal((await manager.query('select public.is_admin() value')).rows[0].value,false);

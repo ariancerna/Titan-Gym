@@ -17,6 +17,8 @@ Las funciones solo pueden ejecutarse con la clave de servicio; socios y visitant
 
 La misma tarea envía el aviso de **cupo asignado desde la lista de espera** (`claim_waitlist_notices`, ver [Lista de espera](LISTA_ESPERA.md)). Si esa migración todavía no está aplicada, deja una advertencia y no marca la ejecución como fallida.
 
+También envía el aviso de **clase cancelada por el gimnasio** (`claim_cancellation_notices`, migración `20261023000000_panel_admin.sql`): un correo por reserva afectada con la clase, el horario y el motivo escrito por el administrador, sin QR. Se envía una sola vez por reserva y excluye los datos de demostración, igual que los recordatorios.
+
 ## Configuración (una sola vez)
 
 1. Aplica `supabase/migrations/20261020000000_recordatorios.sql` en Supabase (SQL Editor) y regístrala en `supabase_migrations.schema_migrations`.

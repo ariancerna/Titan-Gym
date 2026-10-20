@@ -24,6 +24,8 @@ Una fila por **reserva de una sesión que ya comenzó**. Las sesiones futuras no
 
 La cancelación (HU05) solo se permite antes del inicio de la clase y la asistencia solo después del inicio, así que una reserva no puede estar cancelada y marcada como ausente a la vez. Por eso `asistio = false` equivale exactamente a no-show.
 
+Las sesiones canceladas por el gimnasio no forman parte del dataset: esas reservas no reflejan una decisión del socio.
+
 ## Diccionario de datos
 
 | Columna | Tipo | Descripción | Uso previsto |

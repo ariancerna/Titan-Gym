@@ -98,18 +98,22 @@ export default function DetailPage() {
               ) : (
                 <>
                   <Button disabled className="btn-block">
-                    {state === 'full'
-                      ? 'Clase completa'
-                      : state === 'not-open'
-                        ? 'Reservas aún no abiertas'
-                        : 'Sesión finalizada'}
+                    {state === 'cancelled'
+                      ? 'Clase cancelada'
+                      : state === 'full'
+                        ? 'Clase completa'
+                        : state === 'not-open'
+                          ? 'Reservas aún no abiertas'
+                          : 'Sesión finalizada'}
                   </Button>
                   <p>
-                    {state === 'full'
-                      ? 'No es posible reservar: la capacidad máxima ha sido alcanzada.'
-                      : state === 'not-open'
-                        ? `Las reservas se abren 7 días antes: desde el ${formatDate(bookingOpensAt(s).toISOString())} a las ${formatTime(bookingOpensAt(s).toISOString())}.`
-                        : 'No es posible reservar: la clase ya comenzó.'}
+                    {state === 'cancelled'
+                      ? `El gimnasio canceló esta clase${s.cancel_reason ? `: ${s.cancel_reason}` : ''}. Elige otro horario.`
+                      : state === 'full'
+                        ? 'No es posible reservar: la capacidad máxima ha sido alcanzada.'
+                        : state === 'not-open'
+                          ? `Las reservas se abren 7 días antes: desde el ${formatDate(bookingOpensAt(s).toISOString())} a las ${formatTime(bookingOpensAt(s).toISOString())}.`
+                          : 'No es posible reservar: la clase ya comenzó.'}
                   </p>
                 </>
               )}

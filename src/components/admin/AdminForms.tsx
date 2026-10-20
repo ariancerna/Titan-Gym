@@ -1,14 +1,17 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import type { z } from 'zod';
 import { useMutation } from '@tanstack/react-query';
 import { classSchema, sessionSchema, limaInputDate } from '../../schemas/admin';
 import {
+  createRecurringSessions,
   saveClass,
+  saveInstructor,
   saveSession,
   type AdminSnapshot,
   type ManagedClass,
+  type ManagedInstructor,
   type ManagedSession,
 } from '../../features/admin/api';
 import { Input } from '../ui/Input';
@@ -160,10 +163,15 @@ export function SessionEditor({
 }: {
   data: AdminSnapshot;
   current?: ManagedSession;
-  onSaved: () => void;
+  /** Recibe un mensaje para el aviso de "guardado" (p. ej. cuántas sesiones semanales se crearon). */
+  onSaved: (message?: string) => void;
   onCancel: () => void;
 }) {
   const lock = useRef(false);
+  // Repetición semanal: solo al crear una sesión nueva.
+  const [repeat, setRepeat] = useState(false);
+  const [until, setUntil] = useState('');
+  const [untilError, setUntilError] = useState('');
   const form = useForm<z.input<typeof sessionSchema>, unknown, z.output<typeof sessionSchema>>({
     resolver: zodResolver(sessionSchema),
     defaultValues: current
@@ -181,12 +189,20 @@ export function SessionEditor({
         },
   });
   const mutation = useMutation({
-    mutationFn: (v: z.output<typeof sessionSchema>) =>
-      saveSession(
-        { ...v, starts_at: new Date(`${v.starts_at}:00-05:00`).toISOString() },
-        current?.id,
-      ),
-    onSuccess: onSaved,
+    mutationFn: async (v: z.output<typeof sessionSchema>) => {
+      const payload = { ...v, starts_at: new Date(`${v.starts_at}:00-05:00`).toISOString() };
+      if (!repeat || current) {
+        await saveSession(payload, current?.id);
+        return undefined;
+      }
+      const result = await createRecurringSessions(payload, until);
+      return `Se crearon ${result.created} sesiones semanales${
+        result.skipped
+          ? ` (${result.skipped} omitidas porque la sala ya estaba ocupada a esa hora)`
+          : ''
+      }.`;
+    },
+    onSuccess: (message) => onSaved(message),
   });
   const locked = Boolean(current?.reserved);
   return (
@@ -202,6 +218,12 @@ export function SessionEditor({
       <form
         noValidate
         onSubmit={form.handleSubmit((v) => {
+          if (repeat && !current) {
+            if (!until) return setUntilError('Indica hasta qué fecha se repite.');
+            if (until < v.starts_at.slice(0, 10))
+              return setUntilError('La fecha final debe ser posterior al inicio.');
+          }
+          setUntilError('');
           if (!lock.current) {
             lock.current = true;
             mutation.mutate(v, {
@@ -289,6 +311,39 @@ export function SessionEditor({
           />
           Publicar en el catálogo
         </label>
+        {!current && (
+          <fieldset className="admin-recurrence">
+            <label className="checkbox-label">
+              <input
+                type="checkbox"
+                checked={repeat}
+                onChange={(e) => setRepeat(e.target.checked)}
+              />
+              Repetir cada semana, mismo día y hora
+            </label>
+            {repeat && (
+              <div className="field">
+                <label htmlFor="session-until">Repetir hasta (máximo 6 meses)</label>
+                <input
+                  id="session-until"
+                  type="date"
+                  value={until}
+                  onChange={(e) => {
+                    setUntil(e.target.value);
+                    setUntilError('');
+                  }}
+                  aria-invalid={Boolean(untilError)}
+                  aria-describedby={untilError ? 'session-until-error' : undefined}
+                />
+                {untilError && (
+                  <p id="session-until-error" role="alert" className="field-error">
+                    {untilError}
+                  </p>
+                )}
+              </div>
+            )}
+          </fieldset>
+        )}
         {mutation.isError && (
           <p role="alert" className="field-error">
             {errorMessage(mutation.error)}
@@ -297,6 +352,78 @@ export function SessionEditor({
         <div className="admin-actions">
           <Button disabled={mutation.isPending}>
             {mutation.isPending ? 'Guardando…' : 'Guardar sesión'}
+          </Button>
+          <Button
+            type="button"
+            variant="secondary"
+            disabled={mutation.isPending}
+            onClick={onCancel}
+          >
+            Cancelar edición
+          </Button>
+        </div>
+      </form>
+    </section>
+  );
+}
+
+export function InstructorEditor({
+  current,
+  onSaved,
+  onCancel,
+}: {
+  current?: ManagedInstructor;
+  onSaved: () => void;
+  onCancel: () => void;
+}) {
+  const [name, setName] = useState(current?.name ?? '');
+  const [bio, setBio] = useState(current?.bio ?? '');
+  const [error, setError] = useState('');
+  const mutation = useMutation({
+    mutationFn: () => saveInstructor({ name: name.trim(), bio: bio.trim() }, current?.id),
+    onSuccess: () => onSaved(),
+  });
+  return (
+    <section className="panel" aria-label="Editor de instructor">
+      <h2>{current ? 'Editar instructor' : 'Nuevo instructor'}</h2>
+      <form
+        noValidate
+        onSubmit={(e) => {
+          e.preventDefault();
+          if (name.trim().length < 3) return setError('Ingresa el nombre y apellido.');
+          setError('');
+          mutation.mutate();
+        }}
+      >
+        <Input
+          id="instructor-name"
+          label="Nombre del instructor"
+          value={name}
+          maxLength={80}
+          onChange={(e) => setName(e.target.value)}
+          error={error || undefined}
+        />
+        <div className="field">
+          <label htmlFor="instructor-bio">Especialidad o presentación</label>
+          <textarea
+            id="instructor-bio"
+            rows={3}
+            maxLength={300}
+            value={bio}
+            onChange={(e) => setBio(e.target.value)}
+          />
+          <small className="field-hint">
+            {bio.length}/300 · se muestra en el detalle de cada clase.
+          </small>
+        </div>
+        {mutation.isError && (
+          <p role="alert" className="field-error">
+            {errorMessage(mutation.error)}
+          </p>
+        )}
+        <div className="admin-actions">
+          <Button disabled={mutation.isPending}>
+            {mutation.isPending ? 'Guardando…' : 'Guardar instructor'}
           </Button>
           <Button
             type="button"

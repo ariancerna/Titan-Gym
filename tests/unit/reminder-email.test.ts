@@ -29,7 +29,11 @@ describe('correo de recordatorio (HU07)', () => {
 
   it('escapa el HTML de los datos del socio y de la clase', () => {
     const email = buildReminderEmail(
-      { ...reservation, member_name: '<script>alert(1)</script> Pérez', class_name: 'Yoga & <b>Relax</b>' },
+      {
+        ...reservation,
+        member_name: '<script>alert(1)</script> Pérez',
+        class_name: 'Yoga & <b>Relax</b>',
+      },
       { siteUrl: 'https://titan-gym-tau.vercel.app' },
     );
     expect(email.html).not.toContain('<script>');
@@ -41,7 +45,9 @@ describe('correo de recordatorio (HU07)', () => {
 describe('correo de cupo asignado desde la lista de espera (US08)', () => {
   it('confirma la reserva con día, horario de Lima, código, QR y enlace para cancelar', () => {
     const email = buildPromotionEmail(reservation, { siteUrl: 'https://titan-gym-tau.vercel.app' });
-    expect(email.subject).toBe('Se liberó un cupo: ya tienes tu reserva para Power Spinning Extreme');
+    expect(email.subject).toBe(
+      'Se liberó un cupo: ya tienes tu reserva para Power Spinning Extreme',
+    );
     expect(email.html).toContain('María, ya tienes tu cupo');
     expect(email.html).toContain('Lista de espera');
     expect(email.html).toContain('viernes, 16 de octubre');
@@ -60,5 +66,22 @@ describe('correo de cupo asignado desde la lista de espera (US08)', () => {
     );
     expect(email.html).not.toContain('<img src=x');
     expect(email.html).toContain('&lt;img');
+  });
+});
+
+describe('aviso de clase cancelada por el gimnasio', () => {
+  it('explica el motivo, no incluye QR y propone otro horario', async () => {
+    // @ts-expect-error módulo JavaScript de tools/ sin tipos
+    const { buildCancellationEmail } = await import('../../tools/reminder-email.mjs');
+    const email = buildCancellationEmail(
+      { ...reservation, cancel_reason: 'Instructor con <b>gripe</b>' },
+      { siteUrl: 'https://titan-gym-tau.vercel.app' },
+    );
+    expect(email.subject).toContain('Clase cancelada: Power Spinning Extreme');
+    expect(email.html).toContain('cancelamos esta clase');
+    expect(email.html).toContain('Instructor con &lt;b&gt;gripe&lt;/b&gt;');
+    expect(email.html).not.toContain('cid:qr-reserva');
+    expect(email.html).toContain('https://titan-gym-tau.vercel.app/clases');
+    expect(email.text).toContain('Motivo: Instructor con <b>gripe</b>');
   });
 });

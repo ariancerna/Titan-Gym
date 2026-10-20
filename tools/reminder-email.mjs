@@ -46,7 +46,7 @@ function classDetails(reservation, siteUrl) {
 }
 
 /** Diseño compartido: marca, tarjeta con los datos de la clase, QR, aviso y pie. */
-function layout({ siteUrl, subject, preheader, eyebrow, heading, d, note, footer }) {
+function layout({ siteUrl, subject, preheader, eyebrow, heading, d, note, footer, qr = true }) {
   return `<!doctype html>
 <html lang="es">
   <head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /><title>${escapeHtml(subject)}</title></head>
@@ -68,12 +68,16 @@ function layout({ siteUrl, subject, preheader, eyebrow, heading, d, note, footer
               <tr><td style="color:#a1a1aa;padding-right:16px;vertical-align:top;">Sala</td><td style="color:#ffffff;">${d.e.room}</td></tr>
               <tr><td style="color:#a1a1aa;padding-right:16px;vertical-align:top;">Sede</td><td style="color:#ffffff;">${d.e.address}</td></tr>
             </table>
-            <table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 auto 8px;">
+${
+              qr
+                ? `            <table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 auto 8px;">
               <tr><td align="center" style="background:#ffffff;border-radius:10px;padding:8px;">
                 <img src="cid:qr-reserva" width="168" height="168" alt="Código QR de la reserva ${d.e.code}" style="display:block;border:0;" />
               </td></tr>
             </table>
-            <p style="margin:0 0 24px;text-align:center;font-size:13px;color:#c7c6cc;">Muestra este QR en recepción · <strong style="color:#ffffff;letter-spacing:2px;">${d.e.code}</strong></p>
+            <p style="margin:0 0 24px;text-align:center;font-size:13px;color:#c7c6cc;">Muestra este QR en recepción · <strong style="color:#ffffff;letter-spacing:2px;">${d.e.code}</strong></p>`
+                : ''
+            }
             <p style="margin:0;padding:14px 16px;background:#1f1a2e;border:1px solid #3b2f63;border-radius:6px;font-size:13px;line-height:1.5;">
               ${note}
             </p>
@@ -145,6 +149,38 @@ export function buildPromotionEmail(reservation, { siteUrl }) {
     `Código de reserva: ${reservation.code}`,
     '',
     `¿Ya no puedes ir? Cancela para que el cupo pase al siguiente: ${d.receiptUrl}`,
+  ].join('\n');
+  return { subject, html, text };
+}
+
+/** Aviso de sesión cancelada por el gimnasio: sin QR, porque la reserva ya no es válida. */
+export function buildCancellationEmail(reservation, { siteUrl }) {
+  const d = classDetails(reservation, siteUrl);
+  const reason = escapeHtml(reservation.cancel_reason);
+  const subject = `Clase cancelada: ${reservation.class_name}, ${d.day} a las ${d.start}`;
+  const html = layout({
+    siteUrl,
+    subject,
+    preheader: `${d.e.className} · ${escapeHtml(d.day)} · ${d.time} se canceló. Motivo: ${reason}.`,
+    eyebrow: 'Clase cancelada',
+    heading: `${escapeHtml(d.firstName)}, cancelamos esta clase`,
+    d,
+    qr: false,
+    note: `Motivo: <strong style="color:#ffffff;">${reason}</strong>. Tu reserva quedó cancelada y no
+              necesitas hacer nada. Disculpa las molestias: puedes elegir otro horario en
+              <a href="${siteUrl}/clases" style="color:#a78bfa;">las clases disponibles</a>.`,
+    footer: 'Recibes este correo porque tenías una reserva en esta clase.',
+  });
+  const text = [
+    `${d.firstName}, cancelamos tu clase en TITAN GYM.`,
+    '',
+    `Clase: ${reservation.class_name}`,
+    `Horario: ${d.day} · ${d.time}`,
+    `Sala: ${reservation.room}`,
+    `Motivo: ${reservation.cancel_reason}`,
+    '',
+    'Tu reserva quedó cancelada; no necesitas hacer nada.',
+    `Elige otro horario: ${siteUrl}/clases`,
   ].join('\n');
   return { subject, html, text };
 }

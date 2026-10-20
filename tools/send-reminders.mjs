@@ -1,5 +1,6 @@
 // HU07 · Envía el recordatorio por correo 3 horas antes de cada clase reservada.
 // US08 · Avisa por correo a quien recibió un cupo desde la lista de espera.
+// Panel · Avisa por correo a los inscritos de una sesión cancelada por el gimnasio.
 // Lo ejecuta GitHub Actions cada 15 minutos (.github/workflows/recordatorios.yml).
 //
 // Variables de entorno (secretos del repositorio):
@@ -14,7 +15,7 @@
 import { createClient } from '@supabase/supabase-js';
 import nodemailer from 'nodemailer';
 import QRCode from 'qrcode';
-import { buildPromotionEmail, buildReminderEmail } from './reminder-email.mjs';
+import { buildCancellationEmail, buildPromotionEmail, buildReminderEmail } from './reminder-email.mjs';
 
 const env = process.env;
 const dryRun = process.argv.includes('--dry-run');
@@ -50,18 +51,21 @@ async function sendAll(items, build, release) {
   for (const item of items) {
     try {
       const { subject, html, text } = build(item, { siteUrl });
-      const qr = await QRCode.toBuffer(item.code, {
-        width: 336,
-        margin: 2,
-        color: { dark: '#101114', light: '#ffffff' },
-      });
+      // El QR solo se adjunta si el correo lo muestra (el de cancelación no lo lleva).
+      const qr = html.includes('cid:qr-reserva')
+        ? await QRCode.toBuffer(item.code, {
+            width: 336,
+            margin: 2,
+            color: { dark: '#101114', light: '#ffffff' },
+          })
+        : null;
       await transport.sendMail({
         from: { name: 'TITAN GYM', address: env.SMTP_USER },
         to: item.member_email,
         subject,
         html,
         text,
-        attachments: [{ filename: 'qr-reserva.png', content: qr, cid: 'qr-reserva' }],
+        attachments: qr ? [{ filename: 'qr-reserva.png', content: qr, cid: 'qr-reserva' }] : [],
       });
       sent += 1;
     } catch (sendError) {
@@ -114,8 +118,27 @@ if (waitlistError?.code === 'PGRST202') {
   console.log(`Avisos de lista de espera enviados: ${notices.sent}. Fallidos (se reintentarán): ${notices.failed}.`);
 }
 
-const sent = reminders.sent + notices.sent;
-const failed = reminders.failed + notices.failed;
+// Panel · Aviso de sesión cancelada por el gimnasio.
+let cancellations = { sent: 0, failed: 0 };
+const { data: cancelled, error: cancelError } = await supabase.rpc('claim_cancellation_notices', {
+  p_preview: dryRun,
+});
+if (cancelError?.code === 'PGRST202') {
+  console.log('::warning::Cancelación de sesiones sin migrar: se omiten sus avisos.');
+} else if (cancelError) {
+  console.error('No se pudieron obtener los avisos de cancelación:', cancelError.message);
+} else if (dryRun) {
+  console.log(`Prueba en seco: ${cancelled.length} aviso(s) de cancelación pendiente(s).`);
+} else if (cancelled.length) {
+  cancellations = await sendAll(cancelled, buildCancellationEmail, (c) =>
+    supabase.rpc('release_cancellation_notice', { p_reservation_id: c.reservation_id }),
+  );
+  console.log(`Avisos de cancelación enviados: ${cancellations.sent}. Fallidos (se reintentarán): ${cancellations.failed}.`);
+}
+
+const sent = reminders.sent + notices.sent + cancellations.sent;
+const failed = reminders.failed + notices.failed + cancellations.failed;
 // Una consulta fallida de la lista de espera sí es un fallo; la migración pendiente, no.
 const waitlistFailed = Boolean(waitlistError) && waitlistError.code !== 'PGRST202';
-process.exit((failed && !sent) || waitlistFailed ? 1 : 0);
+const cancelFailed = Boolean(cancelError) && cancelError.code !== 'PGRST202';
+process.exit((failed && !sent) || waitlistFailed || cancelFailed ? 1 : 0);

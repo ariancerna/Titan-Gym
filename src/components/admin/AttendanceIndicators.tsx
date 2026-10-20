@@ -4,6 +4,8 @@ import { useAuth } from '../../app/AuthProvider';
 import { getDataset } from '../../features/admin/api';
 import { datasetToCsv, formatPercent, summarizeAttendance } from '../../features/admin/indicators';
 import { dateKey } from '../../utils/sessions';
+import { weeklyNoShows } from '../../features/admin/insights';
+import { NoShowTrend } from './NoShowTrend';
 import { ErrorState, LoadingState } from '../ui/States';
 import { Button } from '../ui/Button';
 
@@ -86,6 +88,8 @@ export function AttendanceIndicators() {
           {' · '}sin recordatorio: <strong>{formatPercent(summary.sinRecordatorio)}</strong>
         </p>
       )}
+
+      <NoShowTrend weeks={weeklyNoShows(rows)} />
 
       {summary.porClase.length > 0 && (
         <div className="table-scroll">

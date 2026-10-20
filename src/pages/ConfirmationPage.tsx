@@ -47,14 +47,18 @@ function Receipt({ id }: { id: string }) {
       <p className="eyebrow accent">Comprobante de reserva</p>
       <h1>
         {cancelled
-          ? 'Reserva cancelada'
+          ? r.cancelled_by_gym
+            ? 'Clase cancelada por el gimnasio'
+            : 'Reserva cancelada'
           : r.status === 'confirmed'
             ? '¡Reserva confirmada!'
             : 'Comprobante de reserva'}
       </h1>
       <p>
         {cancelled
-          ? 'Cancelaste esta reserva y el cupo quedó libre. El código ya no es válido para ingresar.'
+          ? r.cancelled_by_gym
+            ? `El gimnasio canceló esta clase${s.cancel_reason ? `: ${s.cancel_reason}` : ''}. No necesitas hacer nada; elige otro horario cuando quieras.`
+            : 'Cancelaste esta reserva y el cupo quedó libre. El código ya no es válido para ingresar.'
           : 'Tu reserva está guardada. En recepción escanearán tu QR para registrar tu asistencia.'}
       </p>
       <article className="receipt panel">

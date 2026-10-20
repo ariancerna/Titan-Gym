@@ -12,6 +12,7 @@ await harness.admin.query(`insert into public.reservations(session_id,user_id,me
   values($1,'60000000-0000-4000-8000-000000000001','Alumno de asistencia','socio-demo-1@titan.invalid')`,[pastSession]);
 const initialClasses=(await harness.admin.query('select id from public.classes')).rows.map(r=>r.id);
 const initialSessions=(await harness.admin.query('select id from public.class_sessions')).rows.map(r=>r.id);
+const initialInstructors=(await harness.admin.query('select id from public.instructors')).rows.map(r=>r.id);
 const users = harness.users.map((id,i)=>({id,aud:'authenticated',role:'authenticated',email:`test${i+1}@example.com`,email_confirmed_at:new Date().toISOString(),app_metadata:{provider:'email',providers:['email']},user_metadata:{},identities:[],created_at:new Date().toISOString()}));
 function identify(req) {
   try { const token = req.headers.authorization?.replace(/^Bearer /,''); const sub=JSON.parse(Buffer.from(token.split('.')[1],'base64url').toString()).sub; return users.find(u=>u.id===sub); } catch { return null; }
@@ -32,6 +33,8 @@ const server = createServer(async(req,res)=>{
     await harness.admin.query('delete from public.waitlist');
     await harness.admin.query('delete from public.reservations where user_id=any($1::uuid[])',[harness.users]);
     await harness.admin.query('delete from public.class_sessions where not(id=any($1::uuid[]))',[initialSessions]);
+    await harness.admin.query('update public.class_sessions set cancelled_at=null,cancel_reason=null where cancelled_at is not null');
+    await harness.admin.query('delete from public.instructors where not(id=any($1::uuid[]))',[initialInstructors]);
     await harness.admin.query('delete from public.member_preferences');
     await harness.admin.query('delete from public.classes where not(id=any($1::uuid[]))',[initialClasses]);
     res.end('{"ok":true}');return;
@@ -59,6 +62,10 @@ const server = createServer(async(req,res)=>{
       else if(url.pathname.endsWith('/join_waitlist'))data=(await client.query('select public.join_waitlist($1,$2,$3) id',[args.p_session_id,args.p_member_name,args.p_email])).rows[0].id;
       else if(url.pathname.endsWith('/leave_waitlist')){await client.query('select public.leave_waitlist($1)',[args.p_entry_id]);data=null;}
       else if(url.pathname.endsWith('/my_waitlist'))data=(await client.query('select * from public.my_waitlist()')).rows;
+      else if(url.pathname.endsWith('/admin_waitlist'))data=(await client.query('select public.admin_waitlist($1) value',[args.p_session_id])).rows[0].value;
+      else if(url.pathname.endsWith('/admin_cancel_session'))data=(await client.query('select public.admin_cancel_session($1,$2) value',[args.p_session_id,args.p_reason])).rows[0].value;
+      else if(url.pathname.endsWith('/admin_create_recurring_sessions'))data=(await client.query('select public.admin_create_recurring_sessions($1,$2) value',[args.p_data,args.p_until])).rows[0].value;
+      else if(url.pathname.endsWith('/admin_save_instructor'))data=(await client.query('select public.admin_save_instructor($1,$2) value',[args.p_data,args.p_id||null])).rows[0].value;
       else throw new Error('Unknown test RPC');
     }else if(req.method==='GET' && url.pathname==='/rest/v1/privacy_consents'){
       const version=url.searchParams.get('policy_version')?.replace(/^eq\./,'');
@@ -71,8 +78,8 @@ const server = createServer(async(req,res)=>{
       const id=url.searchParams.get('id')?.replace(/^eq\./,'');
       // Embedding de PostgREST (session:class_sessions(...)): mismo JSON anidado y mismo RLS del usuario.
       const embed=url.searchParams.get('select')?.includes('session:');
-      data=(await client.query(`select r.id,r.code,r.session_id,r.member_name,r.member_email,r.status,r.created_at${embed?`,
-        case when s.id is null then null else json_build_object('starts_at',s.starts_at,'duration_minutes',s.duration_minutes,'room',s.room,
+      data=(await client.query(`select r.id,r.code,r.session_id,r.member_name,r.member_email,r.status,r.cancelled_by_gym,r.created_at${embed?`,
+        case when s.id is null then null else json_build_object('starts_at',s.starts_at,'duration_minutes',s.duration_minutes,'room',s.room,'cancel_reason',s.cancel_reason,
           'class',json_build_object('name',c.name),'instructor',json_build_object('name',i.name)) end session`:''}
         from public.reservations r
         left join public.class_sessions s on s.id=r.session_id

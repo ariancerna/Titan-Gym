@@ -149,4 +149,6 @@ Estado de los hallazgos y pendientes de este informe después de los cambios del
 
 Además se agregaron el asistente guiado (sin IA), la página Mi perfil y el menú de cuenta en la barra de navegación ([backlog](PRODUCT_BACKLOG.md)).
 
+El 19/10 por la noche se reorganizó el panel de administración en pestañas (Hoy, Agenda, Catálogo, Indicadores) y se agregaron la cancelación de sesiones con aviso por correo, las sesiones semanales, la gestión de instructores, la lista de espera visible para el administrador y el gráfico semanal de no-shows ([Administración](ADMINISTRACION.md)). Requiere aplicar `20261023000000_panel_admin.sql` en Supabase.
+
 Pruebas del 19/10: ver la tabla del [README](../README.md#pruebas-y-evidencia).

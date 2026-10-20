@@ -59,7 +59,7 @@ function ReservationCard({
       </div>
       <div className="reservation-info">
         <span className={`badge ${r.status === 'cancelled' ? 'full' : 'available'}`}>
-          {statusLabel[r.status]}
+          {r.cancelled_by_gym ? 'Cancelada por el gimnasio' : statusLabel[r.status]}
         </span>
         <h2>{s.name}</h2>
         <p className="meta">
@@ -69,6 +69,9 @@ function ReservationCard({
           {s.room}
         </p>
         <p className="reservation-code">{r.code}</p>
+        {r.cancelled_by_gym && s.cancel_reason && (
+          <p className="reservation-note">Motivo: {s.cancel_reason}</p>
+        )}
       </div>
       <div className="reservation-actions">
         <Link className="btn btn-primary" to={`/reserva-confirmada/${r.id}`}>

@@ -19,6 +19,7 @@ type SessionRow = {
   starts_at: string;
   duration_minutes: number;
   room: string;
+  cancel_reason: string | null;
   class: { name: string } | null;
   instructor: { name: string } | null;
 };
@@ -30,8 +31,8 @@ export async function getReservations(): Promise<ReservationWithSession[]> {
   const { data, error } = await requireSupabase()
     .from('reservations')
     .select(
-      'id,code,session_id,member_name,member_email,status,created_at,' +
-        'session:class_sessions(starts_at,duration_minutes,room,class:classes(name),instructor:instructors(name))',
+      'id,code,session_id,member_name,member_email,status,cancelled_by_gym,created_at,' +
+        'session:class_sessions(starts_at,duration_minutes,room,cancel_reason,class:classes(name),instructor:instructors(name))',
     )
     .order('created_at', { ascending: false });
   if (error) throw error;
@@ -42,6 +43,7 @@ export async function getReservations(): Promise<ReservationWithSession[]> {
         starts_at: session.starts_at,
         duration_minutes: session.duration_minutes,
         room: session.room,
+        cancel_reason: session.cancel_reason,
         name: session.class?.name ?? '',
         instructor: session.instructor?.name ?? '',
       },
@@ -51,7 +53,7 @@ export async function getReservations(): Promise<ReservationWithSession[]> {
 export async function getReservation(id: string): Promise<Reservation | null> {
   const { data, error } = await requireSupabase()
     .from('reservations')
-    .select('id,code,session_id,member_name,member_email,status,created_at')
+    .select('id,code,session_id,member_name,member_email,status,cancelled_by_gym,created_at')
     .eq('id', id)
     .maybeSingle();
   if (error) throw error;

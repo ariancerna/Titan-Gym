@@ -34,15 +34,42 @@ delete from private.administrators where user_id = 'UUID_VERIFICADO';
 
 La siguiente operación administrativa se rechaza inmediatamente; no depende de renovar claims del JWT. La interfaz puede conservar contenido ya visto hasta la próxima consulta o cambio de identidad, pero no puede ejecutar nuevas operaciones autorizadas.
 
+## Organización del panel
+
+El panel se divide en cuatro pestañas. La pestaña elegida queda en la URL (`/admin?vista=agenda`), así que recargar o compartir el enlace abre la misma vista. Las flechas del teclado cambian de pestaña.
+
+- **Hoy:** cuatro indicadores (clases de hoy, llegadas registradas hoy, no-shows de los últimos 30 días y ocupación de las próximas clases), el registro de llegada con QR y las clases del día.
+- **Agenda:** sesiones agrupadas por día, con filtro Próximas / Pasadas / Todas y búsqueda por clase, instructor o sala. Cada fila muestra el horario («18:00–18:50»), la barra de ocupación, las etiquetas *Llena*, *Borrador*, *Cancelada* y *N en espera*, y los presentes cuando la clase ya empezó.
+- **Catálogo:** clases e instructores.
+- **Indicadores:** tasa de no-shows, comparación con y sin recordatorio, gráfico semanal y tabla por clase.
+
+El cambio de correo y contraseña ya no está en el panel; se hace desde **Mi perfil**, igual que para cualquier socio.
+
 ## Gestión del catálogo
 
 - **Nueva clase:** nombre, descripción, disciplina y fotografía del catálogo. Ahora incluye imágenes ilustrativas generadas a petición del propietario. No se implementó carga de imágenes nuevas desde el formulario.
 - **Nueva sesión:** clase, instructor, sede, sala, fecha/hora de Lima, duración de 10–240 minutos, capacidad de 1–500 y publicación.
+- **Sesiones semanales:** al crear una sesión se puede marcar «Repetir cada semana, mismo día y hora» e indicar hasta qué fecha (máximo 6 meses). `admin_create_recurring_sessions` crea todas las semanas en una sola transacción y omite las fechas en las que la sala ya está ocupada a esa hora; el panel informa cuántas se crearon y cuántas se omitieron.
+- **Instructores:** alta y edición de nombre (3–80 caracteres) y presentación (hasta 300) con `admin_save_instructor`. No se borran, porque las sesiones pasadas los referencian.
 - Las reservas se abren 7 días antes de cada clase: el catálogo muestra solo las sesiones publicadas de los próximos 7 días y la base de datos rechaza reservas anteriores (`BOOKING_NOT_OPEN`). El panel muestra todas, para programar con anticipación.
 - Las sesiones futuras publicadas aparecen en el catálogo con aforo calculado por SQL. Los borradores solo aparecen en administración.
 - Las sesiones con reservas conservan clase, instructor, sede, sala, horario, duración y publicación. Solo se admite modificar la capacidad de una sesión futura, sin reducirla por debajo de las reservas activas.
-- No se implementó borrado ni cancelación de sesiones. La interfaz no permite editar sesiones pasadas.
+- Las sesiones no se borran; se **cancelan** (ver abajo). La interfaz no permite editar sesiones pasadas ni canceladas.
 - La restricción de sala/horario evita inicios idénticos en una sala; no detecta solapamiento de intervalos.
+
+## Cancelar una sesión
+
+**Cancelar sesión** pide un motivo (3–200 caracteres) y muestra cuántas reservas y personas en espera se verán afectadas. `admin_cancel_session`, en una sola transacción:
+
+- marca la sesión como cancelada con fecha y motivo; desaparece del catálogo y no admite reservas ni lista de espera;
+- cancela las reservas activas marcándolas como *canceladas por el gimnasio* (no cuentan como cancelaciones del socio en el dataset);
+- cierra la lista de espera.
+
+Solo se pueden cancelar sesiones que todavía no empezaron. El socio ve la reserva como «Cancelada por el gimnasio» con el motivo en Mis reservas, en el comprobante y en el detalle de la clase. La tarea de recordatorios le envía además un correo con el motivo (ver [Recordatorios](RECORDATORIOS.md)).
+
+## Lista de espera en el panel
+
+La fila de la agenda indica cuántas personas esperan, y **Ver inscritos** muestra la lista de espera con orden, nombre, correo y estado (esperando o cupo asignado).
 
 ## Registro de llegada con QR
 
@@ -62,9 +89,9 @@ Fuera de ese horario, o para marcar **Ausente**, se usa **Ver inscritos**.
 
 **Ver inscritos** consulta las reservas de una sesión, no un padrón general de membresías. Devuelve nombre, correo, código y estado exclusivamente al administrador autorizado.
 
-La asistencia se habilita al comenzar la sesión: **Pendiente**, **Presente** o **Ausente**. No se admite para reservas canceladas. Cada corrección agrega estado anterior, nuevo estado, `auth.uid()` del administrador y timestamp al historial. Repetir el mismo estado no duplica el historial.
+La asistencia se habilita al comenzar la sesión: **Pendiente**, **Presente** o **Ausente**. No se admite para reservas canceladas. Cada corrección agrega estado anterior, nuevo estado, `auth.uid()` del administrador y timestamp al historial; el panel muestra el correo de quien registró el cambio. Repetir el mismo estado no duplica el historial.
 
-La asistencia se guarda en `public.attendance`, separada de `reservations.status`: una ausencia no cancela reservas ni libera artificialmente cupos. El historial vive en `private.attendance_history`. No se implementaron recordatorios ni estadísticas de inasistencia.
+La asistencia se guarda en `public.attendance`, separada de `reservations.status`: una ausencia no cancela reservas ni libera artificialmente cupos. El historial vive en `private.attendance_history`. Los recordatorios y los indicadores de inasistencia se describen en [Recordatorios](RECORDATORIOS.md) y [Dataset](DATASET_APF3.md).
 
 ## Correo, SMTP y altas manuales
 

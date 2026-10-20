@@ -1,5 +1,5 @@
 {
-  "executedAt": "2026-10-19T18:16:56.358Z",
+  "executedAt": "2026-10-20T02:58:08.493Z",
   "engine": "PostgreSQL 17.6 on x86_64-windows, compiled by msvc-19.44.35213, 64-bit",
   "scope": "PostgreSQL real; auth.uid y auth.users mínimos de pruebas. Sin servicio Supabase Auth.",
   "results": [
@@ -145,6 +145,18 @@
     },
     {
       "name": "US08: dos cancelaciones simultáneas se serializan y la fila nunca supera el aforo",
+      "passed": true
+    },
+    {
+      "name": "Panel: cancelar una sesión cancela sus reservas, cierra la lista de espera y prepara el aviso",
+      "passed": true
+    },
+    {
+      "name": "Panel: sesiones semanales hasta una fecha, omitiendo las salas ocupadas",
+      "passed": true
+    },
+    {
+      "name": "Panel: instructores, datos de la vista Hoy y correo del responsable en el historial",
       "passed": true
     },
     {

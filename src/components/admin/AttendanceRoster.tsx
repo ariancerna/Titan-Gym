@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   getRoster,
+  getWaitlist,
   setAttendance,
   attendanceLabel,
   type AttendanceStatus,
@@ -10,6 +11,7 @@ import { useAuth } from '../../app/AuthProvider';
 import { LoadingState, ErrorState, EmptyState } from '../ui/States';
 import { Button } from '../ui/Button';
 import { errorMessage } from '../../lib/errors';
+import { formatDate, formatSessionWhen, formatTime } from '../../utils/sessions';
 export function AttendanceRoster({
   session,
   onClose,
@@ -34,7 +36,13 @@ export function AttendanceRoster({
       await cache.invalidateQueries({ queryKey: ['admin', 'dataset'] });
     },
   });
+  const waitlist = useQuery({
+    queryKey: ['admin', 'waitlist', user?.id, session.id],
+    queryFn: () => getWaitlist(session.id),
+    refetchInterval: 30000,
+  });
   const future = new Date(session.starts_at).getTime() > Date.now();
+  const waiting = waitlist.data?.filter((w) => w.status === 'waiting') ?? [];
   return (
     <section className="panel admin-roster" aria-label="Inscritos y asistencia">
       <div className="admin-section-heading">
@@ -42,8 +50,7 @@ export function AttendanceRoster({
           <p className="eyebrow accent">Control de asistencia</p>
           <h2>{session.name}</h2>
           <p>
-            {new Date(session.starts_at).toLocaleString('es-PE', { timeZone: 'America/Lima' })} ·{' '}
-            {session.room}
+            {formatSessionWhen(session.starts_at, session.duration_minutes)} · {session.room}
           </p>
         </div>
         <Button variant="secondary" onClick={onClose}>
@@ -106,15 +113,13 @@ export function AttendanceRoster({
                     <ol>
                       {r.history.map((h, i) => (
                         <li key={`${h.created_at}-${i}`}>
-                          {attendanceLabel[h.status]} ·{' '}
-                          {new Date(h.created_at).toLocaleString('es-PE', {
-                            timeZone: 'America/Lima',
-                          })}
+                          {attendanceLabel[h.status]} · {formatDate(h.created_at)},{' '}
+                          {formatTime(h.created_at)}
                           <br />
                           <small>
                             {h.recorded_by === user?.id
                               ? 'Registrado por ti'
-                              : `Administrador ${h.recorded_by.slice(0, 8)}`}
+                              : `Registrado por ${h.recorded_by_email ?? 'otro administrador'}`}
                           </small>
                         </li>
                       ))}
@@ -125,6 +130,27 @@ export function AttendanceRoster({
             ))}
           </div>
         </>
+      )}
+      {waitlist.isSuccess && (waiting.length > 0 || waitlist.data.length > 0) && (
+        <section className="admin-waitlist" aria-label="Lista de espera">
+          <h3>Lista de espera · {waiting.length} esperando</h3>
+          <p>
+            Cuando se libera un cupo, el primero de la fila recibe la reserva y un aviso por correo.
+            Si la fila es larga, considera subir la capacidad de la sesión.
+          </p>
+          <ol>
+            {waitlist.data.map((w) => (
+              <li key={w.id}>
+                <strong>{w.member_name}</strong> · {w.member_email}
+                <small>
+                  {w.status === 'promoted'
+                    ? ' · recibió un cupo'
+                    : ` · se apuntó el ${formatDate(w.created_at)}, ${formatTime(w.created_at)}`}
+                </small>
+              </li>
+            ))}
+          </ol>
+        </section>
       )}
     </section>
   );

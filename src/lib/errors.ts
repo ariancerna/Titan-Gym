@@ -33,6 +33,16 @@ export function errorMessage(error: unknown): string {
     return 'La asistencia puede registrarse cuando comienza la sesión.';
   if (raw.includes('BOOKING_NOT_OPEN'))
     return 'Las reservas para esta clase todavía no están abiertas: se abren 7 días antes del inicio.';
+  if (raw.includes('INVALID_RECURRENCE'))
+    return 'Revisa la repetición: la fecha final debe estar entre el inicio y 6 meses después.';
+  if (raw.includes('SESSION_CANCELLED'))
+    return 'Esta sesión fue cancelada por el gimnasio y ya no se puede modificar.';
+  if (raw.includes('SESSION_STARTED'))
+    return 'La sesión ya comenzó: solo se pueden cancelar sesiones futuras.';
+  if (raw.includes('INVALID_REASON'))
+    return 'Escribe el motivo de la cancelación (entre 3 y 200 caracteres); se enviará a los inscritos.';
+  if (/INVALID_INSTRUCTOR|INSTRUCTOR_NOT_FOUND/.test(raw))
+    return 'Revisa los datos del instructor: nombre de 3 a 80 caracteres y presentación de hasta 300.';
   if (raw.includes('CODE_NOT_FOUND'))
     return 'No existe una reserva con ese código. Revisa que esté bien escrito.';
   if (raw.includes('CHECKIN_TOO_EARLY'))
