@@ -13,6 +13,7 @@ await harness.admin.query(`insert into public.reservations(session_id,user_id,me
 const initialClasses=(await harness.admin.query('select id from public.classes')).rows.map(r=>r.id);
 const initialSessions=(await harness.admin.query('select id from public.class_sessions')).rows.map(r=>r.id);
 const initialInstructors=(await harness.admin.query('select id from public.instructors')).rows.map(r=>r.id);
+const initialCapacity=(await harness.admin.query('select id,capacity from public.class_sessions')).rows;
 const users = harness.users.map((id,i)=>({id,aud:'authenticated',role:'authenticated',email:`test${i+1}@example.com`,email_confirmed_at:new Date().toISOString(),app_metadata:{provider:'email',providers:['email']},user_metadata:{},identities:[],created_at:new Date().toISOString()}));
 function identify(req) {
   try { const token = req.headers.authorization?.replace(/^Bearer /,''); const sub=JSON.parse(Buffer.from(token.split('.')[1],'base64url').toString()).sub; return users.find(u=>u.id===sub); } catch { return null; }
@@ -34,6 +35,7 @@ const server = createServer(async(req,res)=>{
     await harness.admin.query('delete from public.reservations where user_id=any($1::uuid[])',[harness.users]);
     await harness.admin.query('delete from public.class_sessions where not(id=any($1::uuid[]))',[initialSessions]);
     await harness.admin.query('update public.class_sessions set cancelled_at=null,cancel_reason=null where cancelled_at is not null');
+    await harness.admin.query('update public.class_sessions s set capacity=v.capacity from unnest($1::uuid[],$2::int[]) v(id,capacity) where s.id=v.id and s.capacity<>v.capacity',[initialCapacity.map(r=>r.id),initialCapacity.map(r=>r.capacity)]);
     await harness.admin.query('delete from public.instructors where not(id=any($1::uuid[]))',[initialInstructors]);
     await harness.admin.query('delete from public.member_preferences');
     await harness.admin.query('delete from public.classes where not(id=any($1::uuid[]))',[initialClasses]);

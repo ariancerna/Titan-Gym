@@ -39,7 +39,7 @@ La siguiente operación administrativa se rechaza inmediatamente; no depende de 
 El panel se divide en cuatro pestañas. La pestaña elegida queda en la URL (`/admin?vista=agenda`), así que recargar o compartir el enlace abre la misma vista. Las flechas del teclado cambian de pestaña.
 
 - **Hoy:** cuatro indicadores (clases de hoy, llegadas registradas hoy, no-shows de los últimos 30 días y ocupación de las próximas clases), el registro de llegada con QR y las clases del día.
-- **Agenda:** sesiones agrupadas por día, con filtro Próximas / Pasadas / Todas y búsqueda por clase, instructor o sala. Cada fila muestra el horario («18:00–18:50»), la barra de ocupación, las etiquetas *Llena*, *Borrador*, *Cancelada* y *N en espera*, y los presentes cuando la clase ya empezó.
+- **Agenda:** sesiones agrupadas por día, con filtro Próximas / Pasadas / Todas y búsqueda por clase, instructor o sala. Se muestran 7 días con clases a la vez (botón «Mostrar 7 días más») y las pasadas llegan hasta 90 días atrás; el historial completo está en Indicadores. Cada fila muestra el horario («18:00–18:50»), la barra de ocupación, las etiquetas *Llena*, *Borrador*, *Cancelada* y *N en espera*, y los presentes cuando la clase ya empezó.
 - **Catálogo:** clases e instructores.
 - **Indicadores:** tasa de no-shows, comparación con y sin recordatorio, gráfico semanal y tabla por clase.
 

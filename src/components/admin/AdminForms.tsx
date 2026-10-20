@@ -247,12 +247,12 @@ export function SessionEditor({
               label={['Clase', 'Instructor', 'Sede'][index]}
               error={form.formState.errors[key]?.message}
             >
+              {/* Bloqueado: se muestra el valor guardado sin registrarlo; el formulario envía el
+                  de defaultValues, así que no puede cambiar ni a la vista ni en lo que se guarda. */}
               <select
-                {...form.register(key)}
-                aria-disabled={locked}
-                onChange={(e) => {
-                  if (!locked) void form.register(key).onChange(e);
-                }}
+                {...(locked && current
+                  ? { name: key, value: current[key], disabled: true }
+                  : form.register(key))}
               >
                 <option value="">Selecciona una opción</option>
                 {(index === 0 ? data.classes : index === 1 ? data.instructors : data.locations).map(
@@ -303,11 +303,9 @@ export function SessionEditor({
         <label className="checkbox-label">
           <input
             type="checkbox"
-            {...form.register('published')}
-            aria-disabled={locked}
-            onChange={(e) => {
-              if (!locked) void form.register('published').onChange(e);
-            }}
+            {...(locked && current
+              ? { name: 'published', checked: current.published, disabled: true }
+              : form.register('published'))}
           />
           Publicar en el catálogo
         </label>

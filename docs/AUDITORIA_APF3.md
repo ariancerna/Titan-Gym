@@ -141,10 +141,11 @@ Estado de los hallazgos y pendientes de este informe después de los cambios del
 | Q4 recursos sin uso | ✅ Corregido | Fotos en WebP (1972 KB → 851 KB) con el JPG de respaldo; 116 recursos de Figma sin uso movidos a `design/figma`. |
 | F2 sesiones en producción | ✅ Verificado | El catálogo público alojado devolvía 16 sesiones futuras el 19/10. |
 | D1 documentación | ✅ Corregido | README, despliegue y backlog indican la URL publicada y el estado real de cada historia. |
-| S2 longitud mínima de contraseña | ❌ Titular | Subir «Minimum password length» a 12 en Supabase → Authentication → Providers → Email. |
+| S2 longitud mínima de contraseña | ✅ Corregido | El titular subió «Minimum password length» a 12 en Supabase el 19/10: el servidor ya exige lo mismo que la app. |
 | Administrador real | ❔ Titular | Autorizar una cuenta según [Administración](ADMINISTRACION.md) para poder demostrar `/admin`. |
 | S1 contraseña de evaluación | ❔ Titular | Cambiarla después de la evaluación. |
-| Q3, Q5 | Pendiente | Sin cambios. |
+| Q3 panel sin paginar | ✅ Corregido | `admin_snapshot` trae las sesiones futuras y las de los últimos 90 días (migración `20261024000000_panel_admin_ventana.sql`); el historial completo sigue en Indicadores. La agenda se dibuja por tandas de 7 días. |
+| Q5 campos bloqueados | ✅ Corregido | En una sesión con reservas, los campos bloqueados usan `disabled` real y muestran el valor guardado: ya no cambian a la vista. Prueba en navegador. |
 | Modelo predictivo | ❌ | Sigue sin datos reales de asistencia; no se entrenó con datos sintéticos. |
 
 Además se agregaron el asistente guiado (sin IA), la página Mi perfil y el menú de cuenta en la barra de navegación ([backlog](PRODUCT_BACKLOG.md)).

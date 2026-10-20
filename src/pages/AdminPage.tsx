@@ -33,6 +33,8 @@ import { Button } from '../components/ui/Button';
 
 const capitalize = (v: string) => v.charAt(0).toUpperCase() + v.slice(1);
 
+const AGENDA_PAGE = 7;
+
 type View = 'hoy' | 'agenda' | 'catalogo' | 'indicadores';
 const views: [View, string][] = [
   ['hoy', 'Hoy'],
@@ -94,6 +96,9 @@ function AdminDashboard() {
   const [rosterId, setRosterId] = useState<string>();
   const [filter, setFilter] = useState('');
   const [period, setPeriod] = useState<Period>('upcoming');
+  // La agenda se dibuja por tandas de días (hallazgo Q3): con meses programados no se pintan
+  // cientos de filas de golpe.
+  const [days, setDays] = useState(AGENDA_PAGE);
   const [saved, setSaved] = useState('');
   const roster = useRef<HTMLDivElement>(null);
 
@@ -165,6 +170,7 @@ function AdminDashboard() {
     .filter((s) =>
       `${s.name} ${s.instructor} ${s.room}`.toLowerCase().includes(filter.toLowerCase()),
     );
+  const agendaDays = groupByDay(agenda);
   const today = data.sessions
     .filter((s) => dateKey(s.starts_at) === todayKey)
     .sort((a, b) => a.starts_at.localeCompare(b.starts_at));
@@ -280,7 +286,10 @@ function AdminDashboard() {
                     type="button"
                     className={`chip ${period === value ? 'selected' : ''}`}
                     aria-pressed={period === value}
-                    onClick={() => setPeriod(value)}
+                    onClick={() => {
+                      setPeriod(value);
+                      setDays(AGENDA_PAGE);
+                    }}
                   >
                     {label}
                   </button>
@@ -290,14 +299,23 @@ function AdminDashboard() {
                 <span className="sr-only">Buscar sesiones</span>
                 <input
                   value={filter}
-                  onChange={(e) => setFilter(e.target.value)}
+                  onChange={(e) => {
+                    setFilter(e.target.value);
+                    setDays(AGENDA_PAGE);
+                  }}
                   type="search"
                   placeholder="Buscar por clase, instructor o sala…"
                 />
               </label>
             </div>
+            {period !== 'upcoming' && (
+              <p className="admin-hint">
+                Se muestran las sesiones pasadas de los últimos 90 días. El historial completo está
+                en Indicadores.
+              </p>
+            )}
             {agenda.length ? (
-              groupByDay(agenda).map(([day, sessions]) => (
+              agendaDays.slice(0, days).map(([day, sessions]) => (
                 <section key={day} className="admin-day" aria-labelledby={`day-${day}`}>
                   <h3 id={`day-${day}`}>
                     {capitalize(dayLabel(`${day}T12:00:00-05:00`))} ·{' '}
@@ -311,6 +329,16 @@ function AdminDashboard() {
               ))
             ) : (
               <p className="notice">No hay sesiones con estos filtros.</p>
+            )}
+            {agendaDays.length > days && (
+              <div className="admin-more">
+                <Button variant="secondary" onClick={() => setDays((n) => n + AGENDA_PAGE)}>
+                  Mostrar {AGENDA_PAGE} días más
+                </Button>
+                <small>
+                  {days} de {agendaDays.length} días con sesiones
+                </small>
+              </div>
             )}
           </section>
         )}

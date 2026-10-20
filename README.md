@@ -118,7 +118,7 @@ Row Level Security protege las tablas. Los socios solo pueden consultar sus prop
 | --- | --- |
 | Vitest / pruebas unitarias | 65 aprobadas |
 | Integración SQL en PostgreSQL 17.6 | 40 aprobadas (incluye lista de espera, concurrencia, cancelación de sesiones y sesiones semanales) |
-| Playwright en 1440, 768 y 390 px | 150 de 150 aprobadas (incluye el panel en pestañas, cancelación de sesiones, sesiones semanales, instructores y lista de espera en el panel) |
+| Playwright en 1440, 768 y 390 px | 153 de 153 aprobadas (incluye el panel en pestañas, cancelación de sesiones, sesiones semanales, instructores y lista de espera en el panel) |
 | Build de producción | Aprobado |
 | Auditoría de dependencias de producción | 0 vulnerabilidades reportadas |
 

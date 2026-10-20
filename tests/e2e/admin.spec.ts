@@ -199,6 +199,55 @@ test('asistencia futura deshabilitada y sesión reservada protegida', async ({ p
   await future.getByRole('button', { name: 'Editar sesión' }).click();
   await expect(page.getByLabel('Sala', { exact: true })).toHaveAttribute('readonly', '');
   await expect(page.getByLabel('Capacidad máxima', { exact: true })).toHaveAttribute('min', '21');
+  // Q5: los campos bloqueados están deshabilitados de verdad y no cambian al hacer clic.
+  const editor = page.getByRole('region', { name: 'Editor de sesión' });
+  await expect(editor.getByLabel('Instructor')).toBeDisabled();
+  const publish = editor.getByLabel('Publicar en el catálogo');
+  await expect(publish).toBeDisabled();
+  await publish.click({ force: true });
+  await expect(publish).toBeChecked();
+  await editor.getByLabel('Capacidad máxima', { exact: true }).fill('26');
+  await editor.getByRole('button', { name: 'Guardar sesión' }).click();
+  await expect(page.getByText('Cambios guardados en la base de datos.')).toBeVisible();
+  await expect(
+    page
+      .locator('.admin-session')
+      .filter({ hasText: 'Sala de Ciclismo' })
+      .filter({ hasText: '21/26' }),
+  ).toHaveCount(1);
+});
+
+test('la agenda se muestra por tandas de 7 días', async ({ page, request }) => {
+  const headers = { Authorization: `Bearer ${identity(3).access_token}` };
+  for (let day = 2; day <= 10; day++) {
+    const response = await request.post('http://127.0.0.1:54331/rest/v1/rpc/admin_save_session', {
+      headers,
+      data: {
+        p_data: {
+          class_id: '40000000-0000-4000-8000-000000000002',
+          instructor_id: '30000000-0000-4000-8000-000000000002',
+          location_id: '20000000-0000-4000-8000-000000000001',
+          room: 'Sala por tandas',
+          starts_at: new Date(Date.now() + day * 86400000).toISOString(),
+          capacity: 10,
+          duration_minutes: 45,
+          published: true,
+        },
+        p_id: null,
+      },
+    });
+    expect(response.ok()).toBe(true);
+  }
+  await signIn(page);
+  await page.goto('/admin?vista=agenda');
+  await expect(page.locator('.admin-day')).toHaveCount(7);
+  await page.getByRole('button', { name: 'Mostrar 7 días más' }).click();
+  await expect(page.locator('.admin-day').nth(7)).toBeVisible();
+  await expect(page.locator('.admin-session').filter({ hasText: 'Sala por tandas' })).toHaveCount(
+    9,
+  );
+  await page.getByRole('button', { name: 'Pasadas', exact: true }).click();
+  await expect(page.getByText(/últimos 90 días/)).toBeVisible();
 });
 
 test('acceso administrativo ofrece Google y regresa a /admin sin conceder el rol', async ({

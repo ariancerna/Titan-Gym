@@ -369,6 +369,12 @@ try {
     assert(past,'una sesión con asistencia registrada informa sus presentes');
     const roster=(await manager.query('select public.admin_roster($1) data',[past.id])).rows[0].data;
     assert(roster.some(m=>m.history.some(h=>h.recorded_by_email==='test3@example.com')));
+    // Q3: el panel no carga sesiones de hace más de 90 días; el dataset sí las conserva.
+    const old=(await admin.query("insert into public.class_sessions(class_id,instructor_id,location_id,room,starts_at,capacity,duration_minutes,published) select class_id,instructor_id,location_id,'Sala antigua',now()-interval '100 days',10,45,true from public.class_sessions limit 1 returning id")).rows[0].id;
+    const recent=(await manager.query('select public.admin_snapshot() data')).rows[0].data;
+    assert(!recent.sessions.some(x=>x.id===old),'la sesión de hace 100 días no viaja al panel');
+    assert(recent.sessions.some(x=>x.id===past.id));
+    await admin.query('delete from public.class_sessions where id=$1',[old]);
   });
   await check('Admin: revocación inmediata sin renovar JWT',async()=>{
     await admin.query('delete from private.administrators where user_id=$1',[users[2]]);

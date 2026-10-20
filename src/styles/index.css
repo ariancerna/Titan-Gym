@@ -3298,6 +3298,22 @@
 .admin-day {
   margin-bottom: 28px;
 }
+.admin-hint {
+  margin: -8px 0 20px;
+  font-size: 13px;
+  color: #a1a1aa;
+}
+.admin-more {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 28px;
+}
+.admin-more small {
+  font-size: 13px;
+  color: #a1a1aa;
+}
 .admin-day > h2,
 .admin-day > h3 {
   display: flex;
