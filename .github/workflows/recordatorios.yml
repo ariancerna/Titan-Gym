@@ -1,7 +1,7 @@
 # HU07: recordatorio por correo 3 horas antes de cada clase reservada.
-# El disparador principal es Supabase (pg_cron llama a workflow_dispatch cada 10 minutos, ver
-# docs/RECORDATORIOS.md): GitHub retrasa o salta el cron propio, a veces durante horas. El cron
-# de abajo queda solo como respaldo. Cada reserva se marca al enviarse, así que no hay duplicados.
+# El envío principal lo hace la función de Vercel /api/recordatorios, que Supabase (pg_cron) llama
+# cada 10 minutos (ver docs/RECORDATORIOS.md): GitHub retrasa o salta este cron, a veces durante
+# horas, así que aquí queda solo como respaldo. Cada reserva se marca al enviarse: no hay duplicados.
 name: Recordatorios de clases
 
 on:
