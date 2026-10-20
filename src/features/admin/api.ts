@@ -47,6 +47,10 @@ export interface RosterMember {
   status: string;
   attendance_status: AttendanceStatus;
   attendance_updated_at: string | null;
+  /** Datos para el riesgo de no-show (migración 20261025000000); ausentes si no está aplicada. */
+  booked_at?: string;
+  prior_reservations?: number;
+  prior_absences?: number;
   history: {
     status: AttendanceStatus;
     previous_status: AttendanceStatus | null;

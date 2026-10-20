@@ -146,7 +146,7 @@ Estado de los hallazgos y pendientes de este informe después de los cambios del
 | S1 contraseña de evaluación | ❔ Titular | Cambiarla después de la evaluación. |
 | Q3 panel sin paginar | ✅ Corregido | `admin_snapshot` trae las sesiones futuras y las de los últimos 90 días (migración `20261024000000_panel_admin_ventana.sql`); el historial completo sigue en Indicadores. La agenda se dibuja por tandas de 7 días. |
 | Q5 campos bloqueados | ✅ Corregido | En una sesión con reservas, los campos bloqueados usan `disabled` real y muestran el valor guardado: ya no cambian a la vista. Prueba en navegador. |
-| Modelo predictivo | ❌ | Sigue sin datos reales de asistencia; no se entrenó con datos sintéticos. |
+| Modelo predictivo | 🟡 Línea base | Riesgo de no-show bajo / medio / alto por reglas explicables en «Ver inscritos», con comprobación contra clases pasadas en Indicadores ([Riesgo de no-show](RIESGO_NOSHOW.md)). Con los datos simulados, el riesgo alto falta 2,4 veces más que el bajo, pero eso solo valida el cálculo. El modelo entrenado sigue pendiente de asistencia real. |
 
 Además se agregaron el asistente guiado (sin IA), la página Mi perfil y el menú de cuenta en la barra de navegación ([backlog](PRODUCT_BACKLOG.md)).
 

@@ -6,12 +6,25 @@ import {
   attendanceLabel,
   type AttendanceStatus,
   type ManagedSession,
+  type RosterMember,
 } from '../../features/admin/api';
 import { useAuth } from '../../app/AuthProvider';
 import { LoadingState, ErrorState, EmptyState } from '../ui/States';
 import { Button } from '../ui/Button';
 import { errorMessage } from '../../lib/errors';
 import { formatDate, formatSessionWhen, formatTime } from '../../utils/sessions';
+import { limaHour, noShowRisk, type Risk } from '../../features/admin/risk';
+
+const riskBadge = { bajo: 'available', medio: 'low', alto: 'risk-high' } as const;
+
+function RiskNote({ risk }: { risk: Risk }) {
+  return (
+    <p className="admin-risk">
+      <span className={`badge ${riskBadge[risk.level]}`}>Riesgo {risk.level}</span>
+      {risk.reasons.length ? risk.reasons.join(' · ') : 'Sin factores de riesgo'}
+    </p>
+  );
+}
 export function AttendanceRoster({
   session,
   onClose,
@@ -43,6 +56,20 @@ export function AttendanceRoster({
   });
   const future = new Date(session.starts_at).getTime() > Date.now();
   const waiting = waitlist.data?.filter((w) => w.status === 'waiting') ?? [];
+  // Riesgo solo para reservas activas y cuando la base ya entrega los datos necesarios.
+  const startHour = limaHour(session.starts_at);
+  const riskOf = (r: RosterMember) =>
+    r.status !== 'cancelled' && typeof r.prior_reservations === 'number' && r.booked_at
+      ? noShowRisk({
+          priorReservations: r.prior_reservations,
+          priorAbsences: r.prior_absences ?? 0,
+          hoursAhead:
+            (new Date(session.starts_at).getTime() - new Date(r.booked_at).getTime()) / 3600000,
+          startHour,
+        })
+      : null;
+  const risks = new Map((query.data ?? []).map((r) => [r.id, riskOf(r)]));
+  const highRisk = [...risks.values()].filter((r) => r?.level === 'alto').length;
   return (
     <section className="panel admin-roster" aria-label="Inscritos y asistencia">
       <div className="admin-section-heading">
@@ -81,12 +108,28 @@ export function AttendanceRoster({
             {query.data.length} reservas ·{' '}
             {query.data.filter((r) => r.attendance_status === 'present').length} presentes
           </p>
+          {[...risks.values()].some(Boolean) && (
+            <p className="admin-risk-summary">
+              {future && highRisk > 0 ? (
+                <>
+                  <strong>
+                    {highRisk} {highRisk === 1 ? 'inscrito tiene' : 'inscritos tienen'} riesgo alto
+                    de no-show.
+                  </strong>{' '}
+                  Conviene confirmarles la asistencia por correo o WhatsApp.{' '}
+                </>
+              ) : null}
+              El riesgo se estima con reglas simples: faltas anteriores sin avisar, primera reserva,
+              anticipación y horario de la clase.
+            </p>
+          )}
           <div className="admin-roster-grid">
             {query.data.map((r) => (
               <article className="admin-member" key={r.id}>
                 <h3>{r.member_name}</h3>
                 <p>{r.member_email}</p>
                 <p className="reservation-code">{r.code}</p>
+                {risks.get(r.id) && <RiskNote risk={risks.get(r.id)!} />}
                 <p>
                   Reserva: {r.status === 'cancelled' ? 'Cancelada' : 'Confirmada'} · Asistencia:{' '}
                   <strong>{attendanceLabel[r.attendance_status]}</strong>

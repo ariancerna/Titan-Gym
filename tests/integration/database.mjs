@@ -369,6 +369,13 @@ try {
     assert(past,'una sesión con asistencia registrada informa sus presentes');
     const roster=(await manager.query('select public.admin_roster($1) data',[past.id])).rows[0].data;
     assert(roster.some(m=>m.history.some(h=>h.recorded_by_email==='test3@example.com')));
+    // Riesgo de no-show: el inscrito trae los mismos datos previos que el dataset.
+    assert(roster.every(m=>typeof m.prior_reservations==='number'&&typeof m.prior_absences==='number'&&m.booked_at));
+    const ds=(await manager.query('select * from public.admin_dataset() where sesion_id=$1',[past.id])).rows;
+    for(const m of roster){
+      const row=ds.find(x=>x.reserva_id===m.id);
+      if(row){assert.equal(m.prior_reservations,row.reservas_previas);assert.equal(m.prior_absences,row.inasistencias_previas);}
+    }
     // Q3: el panel no carga sesiones de hace más de 90 días; el dataset sí las conserva.
     const old=(await admin.query("insert into public.class_sessions(class_id,instructor_id,location_id,room,starts_at,capacity,duration_minutes,published) select class_id,instructor_id,location_id,'Sala antigua',now()-interval '100 days',10,45,true from public.class_sessions limit 1 returning id")).rows[0].id;
     const recent=(await manager.query('select public.admin_snapshot() data')).rows[0].data;

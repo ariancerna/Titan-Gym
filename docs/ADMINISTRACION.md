@@ -87,7 +87,7 @@ Fuera de ese horario, o para marcar **Ausente**, se usa **Ver inscritos**.
 
 ## Inscritos y asistencia
 
-**Ver inscritos** consulta las reservas de una sesión, no un padrón general de membresías. Devuelve nombre, correo, código y estado exclusivamente al administrador autorizado.
+**Ver inscritos** consulta las reservas de una sesión, no un padrón general de membresías. Devuelve nombre, correo, código y estado exclusivamente al administrador autorizado. Junto a cada reserva activa muestra el riesgo de no-show (bajo, medio o alto) y su motivo ([Riesgo de no-show](RIESGO_NOSHOW.md)).
 
 La asistencia se habilita al comenzar la sesión: **Pendiente**, **Presente** o **Ausente**. No se admite para reservas canceladas. Cada corrección agrega estado anterior, nuevo estado, `auth.uid()` del administrador y timestamp al historial; el panel muestra el correo de quien registró el cambio. Repetir el mismo estado no duplica el historial.
 

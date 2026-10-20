@@ -205,6 +205,10 @@ test('la lista de espera es visible para el administrador en la agenda y en los 
   await expect(row).toContainText('Llena');
   await expect(row).toContainText('1 en espera');
   await row.getByRole('button', { name: 'Ver inscritos' }).click();
+  // Riesgo de no-show junto a cada inscrito, con su explicación.
+  const member = page.locator('.admin-member').filter({ hasText: 'Ana López' });
+  await expect(member.locator('.admin-risk')).toContainText(/Riesgo (bajo|medio|alto)/);
+  await expect(page.getByText(/El riesgo se estima con reglas simples/)).toBeVisible();
   const waitlist = page.getByRole('region', { name: 'Lista de espera' });
   await expect(
     waitlist.getByRole('heading', { name: 'Lista de espera · 1 esperando' }),

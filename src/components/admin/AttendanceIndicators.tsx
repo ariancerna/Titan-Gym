@@ -5,6 +5,7 @@ import { getDataset } from '../../features/admin/api';
 import { datasetToCsv, formatPercent, summarizeAttendance } from '../../features/admin/indicators';
 import { dateKey } from '../../utils/sessions';
 import { weeklyNoShows } from '../../features/admin/insights';
+import { riskBacktest } from '../../features/admin/risk';
 import { NoShowTrend } from './NoShowTrend';
 import { ErrorState, LoadingState } from '../ui/States';
 import { Button } from '../ui/Button';
@@ -30,6 +31,8 @@ export function AttendanceIndicators() {
   const rows = query.data;
   const summary = summarizeAttendance(rows);
   const registered = summary.presentes + summary.ausentes;
+  const backtest = riskBacktest(rows);
+  const [low, , high] = backtest;
 
   return (
     <section className="panel admin-indicators" aria-labelledby="indicators-title">
@@ -115,6 +118,56 @@ export function AttendanceIndicators() {
             </tbody>
           </table>
         </div>
+      )}
+
+      {registered > 0 && (
+        <section className="risk-backtest" aria-labelledby="risk-backtest-title">
+          <h3 id="risk-backtest-title">¿Acierta el riesgo de no-show?</h3>
+          <p>
+            La regla que se muestra en «Ver inscritos», aplicada a las clases ya dictadas con los
+            datos que había antes de cada una. Si funciona, el riesgo alto falta más que el bajo.
+          </p>
+          <div className="table-scroll">
+            <table className="indicator-table">
+              <thead>
+                <tr>
+                  <th scope="col">Riesgo estimado</th>
+                  <th scope="col">Registradas</th>
+                  <th scope="col">Ausentes</th>
+                  <th scope="col">No-shows reales</th>
+                </tr>
+              </thead>
+              <tbody>
+                {backtest.map((b) => (
+                  <tr key={b.level}>
+                    <th scope="row">{b.level[0].toUpperCase() + b.level.slice(1)}</th>
+                    <td>{b.registered}</td>
+                    <td>{b.absent}</td>
+                    <td>{formatPercent(b.rate)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          {low.rate !== null && high.rate !== null && (
+            <p className="indicator-compare">
+              {high.rate > low.rate ? (
+                <>
+                  Los socios con riesgo alto faltaron{' '}
+                  <strong>
+                    {(high.rate / Math.max(low.rate, 0.001)).toLocaleString('es-PE', {
+                      maximumFractionDigits: 1,
+                    })}{' '}
+                    veces más
+                  </strong>{' '}
+                  que los de riesgo bajo.
+                </>
+              ) : (
+                <>Con estos datos, la regla todavía no distingue a quienes faltan.</>
+              )}
+            </p>
+          )}
+        </section>
       )}
     </section>
   );

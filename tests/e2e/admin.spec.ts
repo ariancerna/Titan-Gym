@@ -159,6 +159,8 @@ test('HU09: indicador de no-shows y exportación del dataset seudonimizado', asy
   await page.getByRole('tab', { name: 'Indicadores' }).click();
   await expect(indicators.locator('.indicator-main dd')).toHaveText('100%');
   await expect(indicators.getByText('1 de 1 asistencias registradas')).toBeVisible();
+  const backtest = indicators.getByRole('region', { name: '¿Acierta el riesgo de no-show?' });
+  await expect(backtest.getByRole('row')).toHaveCount(4); // cabecera + bajo, medio, alto
   const [download] = await Promise.all([
     page.waitForEvent('download'),
     indicators.getByRole('button', { name: 'Exportar dataset CSV' }).click(),

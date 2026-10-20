@@ -116,7 +116,7 @@ Row Level Security protege las tablas. Los socios solo pueden consultar sus prop
 
 | Comprobación | Resultado |
 | --- | --- |
-| Vitest / pruebas unitarias | 65 aprobadas |
+| Vitest / pruebas unitarias | 71 aprobadas |
 | Integración SQL en PostgreSQL 17.6 | 40 aprobadas (incluye lista de espera, concurrencia, cancelación de sesiones y sesiones semanales) |
 | Playwright en 1440, 768 y 390 px | 153 de 153 aprobadas (incluye el panel en pestañas, cancelación de sesiones, sesiones semanales, instructores y lista de espera en el panel) |
 | Build de producción | Aprobado |
@@ -166,6 +166,7 @@ La app está publicada en https://titan-gym-tau.vercel.app; Site URL y su redire
 - [Privacidad y consentimiento](docs/PRIVACIDAD.md)
 - [Recordatorios por correo](docs/RECORDATORIOS.md)
 - [Lista de espera](docs/LISTA_ESPERA.md)
+- [Riesgo de no-show](docs/RIESGO_NOSHOW.md)
 - [Cuenta de evaluación y demostración pública APF2](docs/DEMO_VERCEL_APF2.md)
 - [Anexo de prompts de IA y validación](docs/ANEXO_PROMPTS_IA.md)
 - [Configuración de Supabase](docs/SUPABASE.md)
