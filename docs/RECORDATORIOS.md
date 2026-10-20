@@ -4,7 +4,7 @@ Cada socio recibe un correo **3 horas antes** de cada clase reservada, con la cl
 
 ## Cómo funciona
 
-1. `.github/workflows/recordatorios.yml` se ejecuta cada 15 minutos en GitHub Actions.
+1. Cada 10 minutos, Supabase (`pg_cron`) inicia la tarea `.github/workflows/recordatorios.yml` de GitHub Actions. La tarea también tiene un cron propio de GitHub, pero solo como respaldo (ver [Disparador puntual](#disparador-puntual-supabase-pg_cron)).
 2. `tools/send-reminders.mjs` llama a `claim_reminders(3)`. La función devuelve las reservas confirmadas de clases que empiezan entre 15 minutos y 3 horas desde ese momento, y en la misma operación las marca con `reminder_sent_at`. Dos ejecuciones simultáneas nunca envían el mismo correo.
 3. Se envía el correo por SMTP (Gmail) con el QR adjunto en línea. Si el envío falla, `release_reminder` deja la reserva pendiente para el siguiente intento.
 
@@ -33,7 +33,24 @@ También envía el aviso de **clase cancelada por el gimnasio** (`claim_cancella
 `SUPABASE_URL` ya existe (lo usa la tarea que mantiene activo Supabase).
 
 3. Prueba en seco: GitHub → **Actions → Recordatorios de clases → Run workflow**, con "Prueba en seco" marcado. Muestra cuántos recordatorios hay pendientes, sin enviar nada.
-4. Desde ese momento la tarea envía sola. Para probar un envío real, reserva una clase que empiece dentro de las próximas 3 horas con una cuenta tuya y espera hasta 15–30 minutos, o ejecuta el flujo sin marcar "Prueba en seco".
+4. Configura el [disparador puntual](#disparador-puntual-supabase-pg_cron).
+5. Desde ese momento la tarea envía sola. Para probar un envío real, reserva una clase que empiece dentro de las próximas 3 horas con una cuenta tuya y espera hasta 10 minutos, o ejecuta el flujo sin marcar "Prueba en seco".
+
+## Disparador puntual (Supabase pg_cron)
+
+El cron de GitHub Actions no es confiable en repositorios gratuitos: GitHub retrasa o salta las ejecuciones programadas. El 20/10/2026 la tarea configurada «cada 15 minutos» corrió a las 12:52 y luego a las 16:09 (hora de Lima). Por eso el recordatorio de una clase de las 17:30 llegó a las 16:10, 1 h 20 min antes, en vez de 3 h antes. Hubo huecos de hasta 5 horas.
+
+La solución es que Supabase dispare la tarea: `pg_cron` es puntual y `pg_net` llama a la API de GitHub (`workflow_dispatch`) cada 10 minutos. Así el correo sale entre 3 h y 2 h 50 min antes de la clase. No hace falta ningún servidor nuevo, y las ejecuciones manuales siguen funcionando.
+
+1. **Token de GitHub:** GitHub → foto de perfil → **Settings → Developer settings → Personal access tokens → Fine-grained tokens → Generate new token**.
+   - *Repository access:* **Only select repositories** → `ariancerna/Titan-Gym`.
+   - *Permissions → Repository permissions → Actions:* **Read and write**. Nada más.
+   - *Expiration:* hasta después de la evaluación (por ejemplo, 90 días).
+   Este token solo puede iniciar o cancelar tareas de este repositorio; no puede cambiar el código.
+2. **Supabase → SQL Editor:** pega [`supabase/reparaciones/recordatorios_pg_cron.sql`](../supabase/reparaciones/recordatorios_pg_cron.sql), reemplaza `PEGA_AQUI_EL_TOKEN` por el token y ejecútalo. El token queda cifrado en Supabase Vault. No lo guardes en el repositorio.
+3. **Comprobar:** a los 10 minutos, en GitHub → **Actions → Recordatorios de clases** aparece una ejecución con el evento `workflow_dispatch`. En el SQL Editor, `select created, status_code from net._http_response order by created desc limit 5;` debe devolver `204`. Un `401` significa token inválido; un `403` o `404`, que le falta el permiso de Actions.
+
+Al final del script están las consultas para cambiar el token cuando venza y para desactivar el disparador.
 
 ## Medición
 

@@ -1,6 +1,7 @@
 # HU07: recordatorio por correo 3 horas antes de cada clase reservada.
-# Se ejecuta cada 15 minutos; GitHub puede retrasar las ejecuciones programadas unos minutos,
-# por eso la ventana de búsqueda es de 3 horas y cada reserva se marca al enviarse.
+# El disparador principal es Supabase (pg_cron llama a workflow_dispatch cada 10 minutos, ver
+# docs/RECORDATORIOS.md): GitHub retrasa o salta el cron propio, a veces durante horas. El cron
+# de abajo queda solo como respaldo. Cada reserva se marca al enviarse, así que no hay duplicados.
 name: Recordatorios de clases
 
 on:
@@ -29,7 +30,8 @@ jobs:
       # Solo las dependencias de producción, sin scripts de instalación (no hace falta Playwright).
       - run: npm ci --omit=dev --ignore-scripts
       - name: Enviar recordatorios
-        run: node tools/send-reminders.mjs ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run && '--dry-run' || '' }}
+        # Desde la web el valor llega como booleano y desde la API como texto ("false").
+        run: node tools/send-reminders.mjs ${{ github.event_name == 'workflow_dispatch' && (inputs.dry_run == true || inputs.dry_run == 'true') && '--dry-run' || '' }}
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
