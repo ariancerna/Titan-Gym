@@ -4,7 +4,7 @@ Cada socio recibe un correo **3 horas antes** de cada clase reservada, con la cl
 
 ## Cómo funciona
 
-1. Cada 10 minutos, Supabase (`pg_cron`) llama a la función de Vercel `/api/recordatorios`. La tarea `.github/workflows/recordatorios.yml` de GitHub Actions hace lo mismo como respaldo (ver [Disparador puntual](#disparador-puntual-supabase-pg_cron--vercel)).
+1. `.github/workflows/recordatorios.yml` se ejecuta cada 15 minutos en GitHub Actions.
 2. `tools/send-reminders.mjs` llama a `claim_reminders(3)`. La función devuelve las reservas confirmadas de clases que empiezan entre 15 minutos y 3 horas desde ese momento, y en la misma operación las marca con `reminder_sent_at`. Dos ejecuciones simultáneas nunca envían el mismo correo.
 3. Se envía el correo por SMTP (Gmail) con el QR adjunto en línea. Si el envío falla, `release_reminder` deja la reserva pendiente para el siguiente intento.
 
@@ -33,30 +33,7 @@ También envía el aviso de **clase cancelada por el gimnasio** (`claim_cancella
 `SUPABASE_URL` ya existe (lo usa la tarea que mantiene activo Supabase).
 
 3. Prueba en seco: GitHub → **Actions → Recordatorios de clases → Run workflow**, con "Prueba en seco" marcado. Muestra cuántos recordatorios hay pendientes, sin enviar nada.
-4. Configura el [disparador puntual](#disparador-puntual-supabase-pg_cron--vercel).
-5. Desde ese momento la tarea envía sola. Para probar un envío real, reserva una clase que empiece dentro de las próximas 3 horas con una cuenta tuya y espera hasta 10 minutos, o ejecuta el flujo sin marcar "Prueba en seco".
-
-## Disparador puntual (Supabase pg_cron + Vercel)
-
-El cron de GitHub Actions no es confiable en repositorios gratuitos: GitHub retrasa o salta las ejecuciones programadas. El 20/10/2026 la tarea configurada «cada 15 minutos» corrió a las 12:52 y luego a las 16:09 (hora de Lima). Por eso el recordatorio de una clase de las 17:30 llegó a las 16:10, 1 h 20 min antes, en vez de 3 h antes. Hubo huecos de hasta 5 horas.
-
-Ahora el envío lo hace la función de Vercel [`api/recordatorios.js`](../api/recordatorios.js), que se despliega junto con la web, y Supabase la llama cada 10 minutos con `pg_cron` y `pg_net`, que son puntuales. Así el correo sale entre 3 h y 2 h 50 min antes de la clase. La función solo responde a quien presenta la clave secreta `CRON_SECRET` y devuelve cantidades, nunca datos personales. No usa cuentas ni tokens personales. La lógica de envío es la misma ([`tools/reminders-job.mjs`](../tools/reminders-job.mjs)) y GitHub Actions sigue como respaldo; como cada reserva se marca al reclamarla, no hay correos duplicados.
-
-1. **Supabase → SQL Editor:** ejecuta [`supabase/reparaciones/recordatorios_pg_cron.sql`](../supabase/reparaciones/recordatorios_pg_cron.sql) tal cual. Activa `pg_cron` y `pg_net`, genera la clave secreta, la guarda cifrada en Vault, programa la llamada cada 10 minutos y al final muestra la clave (`cron_secret_para_vercel`).
-2. **Vercel → proyecto → Settings → Environment Variables** (entorno *Production*). Agrega:
-
-| Variable | Valor |
-| --- | --- |
-| `CRON_SECRET` | La clave que mostró el paso 1. |
-| `SUPABASE_SERVICE_ROLE_KEY` | Supabase → Project Settings → API Keys → `service_role` (o la clave *secret*). **Sin** el prefijo `VITE_`: con ese prefijo quedaría expuesta en la web. |
-| `SMTP_USER` | El Gmail que envía los correos. |
-| `SMTP_PASS` | Su contraseña de aplicación (16 caracteres, sin espacios). |
-
-   `VITE_SUPABASE_URL` ya existe en Vercel y la función la reutiliza.
-3. **Vercel → Deployments → el último → Redeploy.** Las variables nuevas solo se aplican en un despliegue nuevo.
-4. **Comprobar** a los 10 minutos en el SQL Editor: `select created, status_code, content from net._http_response order by created desc limit 5;`. Un `200` con las cantidades es correcto; `401` = la clave de Vercel no coincide; `503` = falta una variable o el redespliegue.
-
-Para desactivarlo: `select cron.unschedule('recordatorios-cada-10-min');`.
+4. Desde ese momento la tarea envía sola. Para probar un envío real, reserva una clase que empiece dentro de las próximas 3 horas con una cuenta tuya y espera hasta 15–30 minutos, o ejecuta el flujo sin marcar "Prueba en seco".
 
 ## Medición
 
