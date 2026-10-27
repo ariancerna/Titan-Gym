@@ -102,7 +102,7 @@ export default function ProfilePage() {
   return (
     <div className="container page">
       <div className="page-heading">
-        <p className="eyebrow accent">FitSmart Agenda</p>
+        <p className="eyebrow accent">Tu cuenta</p>
         <h1>Mi perfil</h1>
         <p>Tus datos, cómo entras a tu cuenta y tus preferencias.</p>
       </div>

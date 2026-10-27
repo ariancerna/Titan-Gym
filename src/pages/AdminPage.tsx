@@ -370,7 +370,11 @@ function AdminDashboard() {
               <h2 id="classes-title">Clases · {data.classes.length}</h2>
               <div className="admin-catalog">
                 {data.classes.map((c) => (
-                  <article key={c.id} className="panel admin-catalog-item">
+                  <article
+                    key={c.id}
+                    className="panel admin-catalog-item"
+                    data-discipline={data.disciplines.find((d) => d.id === c.discipline_id)?.name}
+                  >
                     <div>
                       <p className="eyebrow accent">
                         {data.disciplines.find((d) => d.id === c.discipline_id)?.name}

@@ -10,7 +10,7 @@ export default function PrivacyPage() {
   return (
     <div className="container page">
       <div className="page-heading">
-        <p className="eyebrow accent">FitSmart Agenda · TITAN GYM</p>
+        <p className="eyebrow accent">TITAN GYM</p>
         <h1>Política de privacidad</h1>
         <p>Versión vigente desde el {formatDate(`${privacyPolicyVersion}T12:00:00-05:00`)}.</p>
       </div>

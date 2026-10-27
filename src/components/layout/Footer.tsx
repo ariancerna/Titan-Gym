@@ -77,13 +77,10 @@ export function Footer() {
 
       <div className="container footer-bottom">
         <p>
-          © {new Date().getFullYear()} {gym.name} · FitSmart Agenda, proyecto académico UTP.
+          © {new Date().getFullYear()} {gym.name} · Carabayllo, Lima
         </p>
         <Link to="/privacidad">Política de privacidad</Link>
       </div>
-      <p className="footer-wordmark" aria-hidden="true">
-        TITAN GYM
-      </p>
     </footer>
   );
 }

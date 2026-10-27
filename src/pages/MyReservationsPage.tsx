@@ -6,7 +6,7 @@ import { useAuth } from '../app/AuthProvider';
 import { cancelReservation, getReservations } from '../features/reservations/api';
 import { leaveWaitlist } from '../features/waitlist/api';
 import { useMyWaitlist, waitlistKey } from '../features/waitlist/queries';
-import { dayLabel, formatDate, timeRange } from '../utils/sessions';
+import { dayLabel, formatDate, formatShortDate, timeRange } from '../utils/sessions';
 import { errorMessage } from '../lib/errors';
 import type { Reservation, ReservationWithSession } from '../types/domain';
 import { AuthGate } from '../components/reservations/AuthGate';
@@ -54,7 +54,8 @@ function ReservationCard({
     <article className="reservation-card panel">
       <div className="reservation-date">
         <span className="eyebrow accent">{dayLabel(s.starts_at)}</span>
-        <strong>{formatDate(s.starts_at)}</strong>
+        <strong>{formatShortDate(s.starts_at).split(' ')[0]}</strong>
+        <span className="reservation-month">{formatShortDate(s.starts_at).split(' ')[1]}</span>
         <span>{timeRange(s)}</span>
       </div>
       <div className="reservation-info">
@@ -247,7 +248,7 @@ export default function MyReservationsPage() {
   return (
     <div className="container page">
       <div className="page-heading">
-        <p className="eyebrow accent">FitSmart Agenda</p>
+        <p className="eyebrow accent">Tu cuenta</p>
         <h1>Mis reservas</h1>
         <p>Tus próximas clases, el historial y los comprobantes de cada reserva.</p>
       </div>

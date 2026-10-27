@@ -8,7 +8,7 @@ export default function NotFoundPage() {
         404
       </p>
       <h1>Página no encontrada</h1>
-      <p>Esta dirección no existe en FitSmart Agenda. Puede que el enlace esté mal escrito.</p>
+      <p>Esta dirección no existe en TITAN GYM. Puede que el enlace esté mal escrito.</p>
       <div className="hero-buttons">
         <ButtonLink to="/clases">
           Ver horarios <ArrowRight size={18} />
