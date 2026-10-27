@@ -67,6 +67,7 @@ export const privacySections: PrivacySection[] = [
       'Supabase: base de datos y autenticación. Sus servidores están en São Paulo, Brasil, por lo que existe una transferencia internacional de datos.',
       'Vercel: alojamiento de la página web.',
       'Google: solo si eliges iniciar sesión con Google.',
+      'Google Maps: el mapa de la portada se carga desde Google, que recibe tu dirección IP y datos técnicos del navegador al mostrarlo.',
       'El proveedor de correo que envía los enlaces de acceso, los recordatorios y los avisos de cupo.',
     ],
   },

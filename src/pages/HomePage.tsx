@@ -210,19 +210,25 @@ export default function HomePage() {
             empiece la clase y tu cupo pasa a otro socio.
           </p>
         </div>
-        <div className="venue-map" aria-hidden="true">
-          <span className="venue-street s1">Av. Isabel Chimpu Ocllo</span>
-          <span className="venue-street s2" />
-          <span className="venue-street s3" />
-          <span className="venue-pin">
-            <img src="/assets/brands/titan-mark.png" alt="" width="40" height="40" />
-          </span>
-          <span className="venue-coords">
-            −11.89061
-            <br />
-            −77.04224
-          </span>
-        </div>
+        <figure className="venue-map">
+          <iframe
+            src={gym.mapsEmbedUrl}
+            title={`Mapa de ${gym.branch}, ${gym.address}`}
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+            allowFullScreen
+          />
+          <figcaption>
+            <span>
+              <MapPin size={16} aria-hidden="true" />
+              {gym.branch}
+            </span>
+            <a href={gym.mapsUrl} target="_blank" rel="noopener noreferrer">
+              Abrir en Google Maps <ArrowUpRight size={14} aria-hidden="true" />
+              <span className="sr-only"> (abre en otra pestaña)</span>
+            </a>
+          </figcaption>
+        </figure>
       </section>
 
       <section className="final-cta" aria-labelledby="cta-title">

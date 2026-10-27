@@ -118,7 +118,7 @@ Botón flotante con respuestas fijas, sin IA y sin enviar datos a terceros. Las 
 
 ## Cabeceras de seguridad e imágenes
 
-`vercel.json` aplica una Content-Security-Policy: scripts, estilos, fuentes e imágenes solo del propio dominio; conexiones al propio dominio y a `*.supabase.co`; workers `blob:` para el lector de QR; `style-src-attr 'unsafe-inline'` solo para atributos `style` (los usa el recuadro de `qr-scanner`). `Permissions-Policy` permite la cámara al propio sitio y desactiva micrófono, ubicación, pagos y USB.
+`vercel.json` aplica una Content-Security-Policy: scripts, estilos, fuentes e imágenes solo del propio dominio; conexiones al propio dominio y a `*.supabase.co`; workers `blob:` para el lector de QR; `frame-src` solo para Google Maps (el mapa de la sede en la portada); `style-src-attr 'unsafe-inline'` solo para atributos `style` (los usa el recuadro de `qr-scanner`). `Permissions-Policy` permite la cámara al propio sitio y desactiva micrófono, ubicación, pagos y USB.
 
 Las fotos de `/assets/generated` tienen una versión `.webp` (57 % menos peso). El componente `Photo` la sirve con el `.jpg` como respaldo, de modo que la base de datos sigue guardando rutas `.jpg`. Los recursos de Figma sin uso están en `design/figma` y no se publican.
 

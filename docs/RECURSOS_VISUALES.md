@@ -100,7 +100,7 @@ El propietario pidió que la web dejara de verse genérica. Cambios principales:
 
 - **Tipografías:** Anton para titulares grandes y Archivo / Archivo Narrow para texto, botones y etiquetas (empaquetadas con `@fontsource`, sin CDN). Reemplazan a Oswald y Space Grotesk.
 - **Paleta:** negro `#0a0a0c`, hueso `#f4f1ea` y morado neón `#8b3dff` (blanco encima: contraste 4.99, AA). El verde lima `#c6ff3d` solo marca "en vivo" y cupos libres. Cada disciplina tiene un color propio (`[data-discipline]` en `src/styles/index.css`) para leer la agenda de un vistazo.
-- **Portada:** titular gigante con relleno animado, tablero "en vivo" con cuenta regresiva a la próxima clase, cinta animada de disciplinas, fichas de disciplinas que filtran la agenda (`/clases?disciplina=…`), reglas de la casa, sede con mapa dibujado y botón de WhatsApp. El mapa es dibujado porque la política de seguridad (`vercel.json`) no permite incrustar Google Maps.
+- **Portada:** titular gigante con relleno animado, tablero "en vivo" con cuenta regresiva a la próxima clase, cinta animada de disciplinas, fichas de disciplinas que filtran la agenda (`/clases?disciplina=…`), reglas de la casa, sede con el mapa de Google Maps incrustado (oscurecido con CSS para combinar con la página; `vercel.json` lo permite con `frame-src`) y botón de WhatsApp.
 - **Agenda:** agrupada por día, con la hora en grande y la ocupación como un segmento por cupo.
 - **Fotos:** grano de película y tratamiento de color en CSS para que las imágenes generadas se vean menos "de banco de imágenes". Todas las animaciones respetan `prefers-reduced-motion`.
 

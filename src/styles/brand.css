@@ -615,98 +615,47 @@
   text-decoration: underline;
   text-underline-offset: 3px;
 }
-/* Mapa dibujado (la política de seguridad no permite incrustar Google Maps). */
+/* Mapa real de Google Maps, oscurecido para que combine con la página. */
 .venue-map {
-  position: relative;
-  aspect-ratio: 5 / 4;
+  margin: 0;
   overflow: hidden;
-  border: 1px solid var(--line);
+  border: 1px solid var(--line-strong);
+  border-top: 3px solid var(--accent);
   border-radius: var(--radius);
-  background-color: var(--ink-2);
-  background-image:
-    linear-gradient(var(--line) 1px, transparent 1px),
-    linear-gradient(90deg, var(--line) 1px, transparent 1px);
-  background-size: 44px 44px;
+  background: var(--ink-2);
 }
-.venue-street {
-  position: absolute;
-  background: #ffffff12;
+.venue-map iframe {
+  display: block;
+  width: 100%;
+  aspect-ratio: 5 / 4;
+  min-height: 320px;
+  border: 0;
+  filter: invert(0.9) hue-rotate(180deg) saturate(0.7) contrast(0.95);
 }
-.venue-street.s1 {
-  left: -10%;
-  right: -10%;
-  top: 46%;
-  height: 34px;
-  transform: rotate(-9deg);
+.venue-map figcaption {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  justify-content: flex-end;
-  padding-right: 18%;
-  font: 600 11px var(--font-heading);
-  letter-spacing: 0.22em;
+  justify-content: space-between;
+  gap: 8px 16px;
+  padding: 12px 16px;
+  border-top: 1px solid var(--line);
+  font: 600 13px var(--font-heading);
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: #ffffff59;
 }
-.venue-street.s2 {
-  top: -10%;
-  bottom: -10%;
-  left: 58%;
-  width: 22px;
-  transform: rotate(12deg);
+.venue-map figcaption span,
+.venue-map figcaption a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
 }
-.venue-street.s3 {
-  left: -10%;
-  right: 30%;
-  top: 20%;
-  height: 14px;
-  transform: rotate(18deg);
+.venue-map figcaption a {
+  min-height: 44px;
+  color: var(--accent-text);
 }
-.venue-pin {
-  position: absolute;
-  top: 50%;
-  left: 56%;
-  display: grid;
-  place-items: center;
-  width: 64px;
-  height: 64px;
-  margin: -32px 0 0 -32px;
-  border-radius: 50%;
-  background: var(--accent);
-  box-shadow: 0 0 0 6px #8b3dff40;
-}
-.venue-pin img {
-  width: 34px;
-  height: 34px;
-}
-.venue-pin::before,
-.venue-pin::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  border: 2px solid var(--accent);
-  animation: pin-pulse 2.6s var(--ease-out) infinite;
-}
-.venue-pin::after {
-  animation-delay: 1.3s;
-}
-@keyframes pin-pulse {
-  from {
-    transform: scale(1);
-    opacity: 0.8;
-  }
-  to {
-    transform: scale(3.2);
-    opacity: 0;
-  }
-}
-.venue-coords {
-  position: absolute;
-  left: 20px;
-  bottom: 18px;
-  font: 600 13px/1.5 var(--font-heading);
-  letter-spacing: 0.14em;
-  color: var(--muted);
+.venue-map figcaption a:hover {
+  color: var(--bone);
 }
 
 .final-cta {
@@ -1100,6 +1049,31 @@
   color: transparent;
   -webkit-text-stroke: 1px #ffffff26;
   user-select: none;
+  /* Es decoración: nunca debe tapar los enlaces de arriba. */
+  position: relative;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.footer-bottom {
+  position: relative;
+  z-index: 1;
+  align-items: center;
+}
+/* Enlaces del pie con área táctil de 44 px. */
+.footer-bottom a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding-inline: 4px;
+  margin-inline: -4px;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: #ffffff40;
+}
+.footer-bottom a:hover {
+  color: var(--bone);
+  text-decoration-color: currentColor;
 }
 
 /* Botón del asistente: mismo lenguaje recto que el resto. */
@@ -1225,8 +1199,6 @@
   .live-board,
   .marquee-track,
   .live-dot::after,
-  .venue-pin::before,
-  .venue-pin::after,
   .hero-photo {
     animation: none !important;
   }
