@@ -909,7 +909,8 @@
 .bar > span {
   display: block;
   height: 100%;
-  background: var(--bone);
+  /* Verde lima con cupos, amarillo con pocos (≥ 80 %) y rojo cuando se llena. */
+  background: var(--volt);
   transition: width 0.8s var(--ease-out);
 }
 .bar-low > span {
