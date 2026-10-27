@@ -138,7 +138,7 @@ function SessionList({
   return (
     <ul className="assistant-sessions">
       {list.map((s) => (
-        <li key={s.id}>
+        <li key={s.id} data-discipline={s.discipline}>
           <Link to={`/clases/${s.id}`}>
             <span>
               <strong>{title(s)}</strong>
@@ -170,7 +170,7 @@ function ClassesAnswer({ onAsk }: { onAsk: Ask }) {
             </p>
             <ul className="assistant-classes">
               {classes.map((s) => (
-                <li key={s.class_id}>
+                <li key={s.class_id} data-discipline={s.discipline}>
                   <strong>{s.name}</strong>
                   <small>
                     {s.discipline} · {s.duration_minutes} min · con {s.instructor}
@@ -319,11 +319,8 @@ function BotMessage({ reply, onAsk }: { reply: Reply; onAsk: Ask }) {
     case 'greeting':
       return (
         <BotRow>
-          <p>
-            ¡Hola! <span aria-hidden="true">👋</span> Te damos la bienvenida a {gym.name}. Estoy
-            aquí para ayudarte a encontrar la clase ideal para ti.
-          </p>
-          <p>¿Qué te gustaría hacer? Elige una opción abajo.</p>
+          <p>Hola. Te ayudo con clases, horarios y reservas de {gym.branch}.</p>
+          <p>¿Qué necesitas?</p>
         </BotRow>
       );
     case 'classes':
@@ -424,7 +421,7 @@ export default function AssistantPanel({ id, onClose }: { id: string; onClose: (
         <div>
           <h2 id="assistant-title">Asistente TITAN</h2>
           <p>
-            <span className="assistant-online" aria-hidden="true" /> Respuestas al instante
+            <span className="assistant-online" aria-hidden="true" /> Agenda al día
           </p>
         </div>
         <button type="button" className="icon-button" onClick={onClose} aria-label="Cerrar">

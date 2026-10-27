@@ -1297,3 +1297,38 @@
     font-size: clamp(40px, 12vw, 56px);
   }
 }
+
+/* ---------- Asistente: mismo lenguaje recto y sobrio que el resto ---------- */
+.assistant-panel {
+  border-radius: var(--radius);
+  border-top: 3px solid var(--accent);
+  background: var(--ink-2);
+}
+.assistant-header h2 {
+  font-size: 22px;
+  letter-spacing: 0.02em;
+}
+.assistant-online {
+  background: var(--volt) !important;
+}
+.assistant-bubble,
+.assistant-user,
+.assistant-chip,
+.assistant-menu button,
+.assistant-classes li,
+.assistant-sessions a {
+  border-radius: var(--radius-sm) !important;
+}
+.assistant-user {
+  background: var(--accent);
+}
+.assistant-chip,
+.assistant-menu button {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+.assistant-classes li[data-discipline],
+.assistant-sessions li[data-discipline] > a {
+  border-left: 3px solid var(--disc);
+}
