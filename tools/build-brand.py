@@ -7,10 +7,15 @@ como manchas. Aquí se reconstruye una silueta limpia en blanco y se exportan:
                                         (blanco en tema oscuro, negro en tema claro)
   public/favicon.png                    48 px de respaldo: casco blanco con contorno oscuro
   public/apple-touch-icon.png          180 px, fondo negro (pantalla de inicio de iPhone)
-  public/og-image.png                  1200 × 630, vista previa al compartir el enlace
+  public/icons/icon-192.png            192 px, fondo negro (app instalada en Android)
+  public/icons/icon-512.png            512 px, fondo negro (pantalla de bienvenida de la app)
+  public/icons/icon-maskable-512.png   512 px con margen amplio: Android lo recorta en círculo
   branding/titan-logo-limpio.png       versión grande y limpia para otros usos
 
 Uso: python tools/build-brand.py branding/titan-logo-original.png
+
+La imagen para compartir (public/og-image.png) se genera aparte con tools/build-og-image.mjs,
+que usa las mismas tipografías y estilos de la web.
 """
 import base64
 import io
@@ -18,9 +23,9 @@ import sys
 from pathlib import Path
 
 import numpy as np
-from PIL import Image, ImageDraw, ImageFilter, ImageFont
+from PIL import Image, ImageDraw, ImageFilter
 
-BLACK = (16, 17, 20, 255)  # #101114, fondo de la web
+BLACK = (10, 10, 12, 255)  # #0a0a0c, fondo de la web
 
 
 def clean_silhouette(original: Image.Image) -> Image.Image:
@@ -90,26 +95,6 @@ def adaptive_svg(logo: Image.Image) -> str:
     )
 
 
-def share_image(logo: Image.Image, root: Path) -> Image.Image:
-    """Imagen para WhatsApp/Facebook: logo, nombre, lema y sede con las fuentes del sitio."""
-    fonts = root / 'node_modules/@fontsource'
-    heading = lambda size: ImageFont.truetype(str(fonts / 'oswald/files/oswald-latin-700-normal.woff'), size)
-    body = lambda size: ImageFont.truetype(str(fonts / 'space-grotesk/files/space-grotesk-latin-500-normal.woff'), size)
-    image = Image.new('RGBA', (1200, 630), BLACK)
-    glow = Image.new('L', (1200, 630), 0)
-    ImageDraw.Draw(glow).ellipse((40, 60, 520, 570), fill=150)
-    violet = Image.new('RGBA', (1200, 630), (124, 58, 237, 255))
-    image.paste(violet, (0, 0), glow.filter(ImageFilter.GaussianBlur(90)))
-    mark = fit(logo, 400)
-    image.alpha_composite(mark, (280 - mark.width // 2, 315 - mark.height // 2))
-    draw = ImageDraw.Draw(image)
-    draw.text((540, 150), 'TITAN GYM', font=heading(124), fill=(255, 255, 255, 255))
-    draw.text((546, 312), 'WAKE THE BEST', font=heading(52), fill=(167, 139, 250, 255))
-    draw.text((546, 410), 'Reserva tus clases grupales en línea', font=body(32), fill=(199, 198, 204, 255))
-    draw.text((546, 460), 'TITAN GYM QATUNA · Carabayllo', font=body(26), fill=(161, 161, 170, 255))
-    return image
-
-
 def main():
     root = Path(__file__).resolve().parent.parent
     original = Image.open(sys.argv[1])
@@ -122,7 +107,12 @@ def main():
         root / 'public/favicon.png', optimize=True
     )
     centered(logo, 180, 0.17, BLACK).save(root / 'public/apple-touch-icon.png', optimize=True)
-    share_image(logo, root).convert('RGB').save(root / 'public/og-image.png', optimize=True)
+    icons = root / 'public/icons'
+    icons.mkdir(exist_ok=True)
+    centered(logo, 192, 0.16, BLACK).save(icons / 'icon-192.png', optimize=True)
+    centered(logo, 512, 0.16, BLACK).save(icons / 'icon-512.png', optimize=True)
+    # Zona segura de los íconos adaptables: el 80 % central. El casco queda dentro con holgura.
+    centered(logo, 512, 0.26, BLACK).save(icons / 'icon-maskable-512.png', optimize=True)
     print('Recursos de marca generados a partir de', sys.argv[1])
 
 

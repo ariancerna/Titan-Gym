@@ -1332,3 +1332,33 @@
 .assistant-sessions li[data-discipline] > a {
   border-left: 3px solid var(--disc);
 }
+
+/* Agregar la clase al calendario (comprobante). */
+.add-calendar {
+  max-width: 760px;
+  margin: 20px auto;
+  padding: 22px 24px;
+  text-align: left;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--volt);
+  border-radius: var(--radius);
+}
+.add-calendar h2 {
+  margin: 0 0 4px;
+  font-size: 28px;
+}
+.add-calendar p {
+  margin: 0 0 16px;
+  font-size: 14px;
+}
+.add-calendar-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+@media (max-width: 639px) {
+  .add-calendar-actions .btn {
+    width: 100%;
+  }
+}

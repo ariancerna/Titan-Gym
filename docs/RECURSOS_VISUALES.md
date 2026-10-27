@@ -109,3 +109,9 @@ Los estilos nuevos están en `src/styles/brand.css`.
 ### Pendiente: fotos reales de la sede
 
 Las fotos siguen siendo las generadas. Para usar fotos reales (por ejemplo, las del perfil de Google Maps de TITAN GYM QATUNA, siempre que sean del propio gimnasio o se tenga permiso del autor), basta con reemplazar los archivos de `public/assets/generated/` manteniendo el nombre y el formato 16:9 (≥ 1600 px de ancho), y regenerar el `.webp` de cada una. Al cambiar `hero.jpg` por una foto real con luz morada, quitar el `hue-rotate` de `.hero-photo` en `src/styles/brand.css`.
+
+### App instalable, calendario e imagen para compartir
+
+- **Instalable:** `public/manifest.webmanifest` permite "Agregar a pantalla de inicio" en Android e iPhone; se abre sin la barra del navegador y con el ícono del casco. Accesos directos: Horarios y Mis reservas. No hay service worker: la web siempre carga la agenda actual. Nota: en iPhone, un enlace mágico abierto desde el correo se abre en Safari, no en la app instalada; dentro de la app conviene entrar con contraseña.
+- **Agregar a mi calendario:** el comprobante de una reserva confirmada ofrece Google Calendar y un archivo `.ics` (iPhone, Outlook) con aviso una hora antes (`src/utils/calendar.ts`).
+- **Imagen para compartir:** `tools/build-og-image.mjs` genera `public/og-image.png` con el estilo nuevo. WhatsApp y Facebook guardan en caché la vista previa anterior por un tiempo.

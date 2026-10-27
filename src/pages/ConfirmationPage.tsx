@@ -9,6 +9,7 @@ import { ReservationSummary } from '../components/reservations/ReservationSummar
 import { AuthGate } from '../components/reservations/AuthGate';
 import { LoadingState, ErrorState, EmptyState } from '../components/ui/States';
 import { ButtonLink } from '../components/ui/Button';
+import { AddToCalendar } from '../components/reservations/AddToCalendar';
 function Receipt({ id }: { id: string }) {
   const { user } = useAuth();
   const reservation = useQuery({
@@ -96,6 +97,9 @@ function Receipt({ id }: { id: string }) {
           <p>{r.member_email}</p>
         </div>
       </article>
+      {r.status === 'confirmed' && new Date(s.starts_at).getTime() > Date.now() && (
+        <AddToCalendar session={s} code={r.code} />
+      )}
       {!cancelled && (
         <div className="notice">
           Llega 10 minutos antes y muestra el QR desde Mis reservas; no necesitas imprimirlo. Si no

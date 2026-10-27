@@ -3,6 +3,7 @@ import { Link, NavLink, useLocation } from 'react-router-dom';
 import type { User } from '@supabase/supabase-js';
 import { CalendarDays, ChevronDown, LogIn, LogOut, Menu, UserRound, X } from 'lucide-react';
 import { useAuth } from '../../app/AuthProvider';
+import { useAdminRole } from '../../features/admin/queries';
 import { savedName } from '../../features/auth/profile';
 import { requireSupabase } from '../../lib/supabase/client';
 import { ButtonLink } from '../ui/Button';
@@ -95,6 +96,9 @@ export function Navbar() {
   const [error, setError] = useState(false);
   const { user, loading } = useAuth();
   const { pathname } = useLocation();
+  // El personal ve un acceso directo al panel; los socios no.
+  const isAdmin = useAdminRole().data === true;
+  const navLinks = isAdmin ? [...links, ['/admin', 'Panel'] as const] : links;
   useEffect(() => setOpen(false), [pathname]);
   async function signOut() {
     const { error } = await requireSupabase().auth.signOut();
@@ -111,7 +115,7 @@ export function Navbar() {
           </span>
         </Link>
         <nav aria-label="Navegación principal" className="nav-links">
-          {links.map(([to, text]) => (
+          {navLinks.map(([to, text]) => (
             <NavLink key={to} to={to} end={to === '/'}>
               {text}
             </NavLink>
@@ -143,7 +147,7 @@ export function Navbar() {
       {open && (
         <div className="nav-panel" id="nav-panel">
           <nav aria-label="Menú" className="container">
-            {links.map(([to, text]) => (
+            {navLinks.map(([to, text]) => (
               <NavLink key={to} to={to} end={to === '/'}>
                 {text}
               </NavLink>
