@@ -5,7 +5,8 @@ test('navegación, identidad visual TITAN y responsive sin desbordamiento', asyn
   await expect(page.locator('.brand img')).toBeVisible();
   await expect(page.getByRole('link', { name: 'Explorar clases', exact: true })).toBeVisible();
   await expect(page.locator('.class-card')).toHaveCount(3);
-  await page.evaluate(async () => { await document.fonts.ready; await Promise.all(Array.from(document.images).map(img => img.decode().catch(() => {}))); });
+  // Las fotos con carga diferida (fichas de disciplinas) solo se descargan al hacer scroll: no se esperan.
+  await page.evaluate(async () => { await document.fonts.ready; await Promise.all(Array.from(document.images).filter(img => img.loading !== 'lazy').map(img => img.decode().catch(() => {}))); });
   await expect(page.locator('.hero-photo')).toHaveAttribute('src', '/assets/generated/hero.jpg');
   await expect.poll(() => page.locator('.hero-photo').evaluate((el: HTMLImageElement) => el.naturalWidth)).toBeGreaterThanOrEqual(1600);
   await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);

@@ -1,10 +1,16 @@
-import { ArrowRight, Clock, MapPin, UserRound } from 'lucide-react';
+import { ArrowRight, MapPin } from 'lucide-react';
 import type { ClassSession } from '../../types/domain';
-import { dayLabel, formatDate, timeRange, isBookable } from '../../utils/sessions';
+import { dayLabel, formatShortDate, formatTime, isBookable } from '../../utils/sessions';
 import { AvailabilityBadge } from './AvailabilityBadge';
 import { OccupancyBar } from './OccupancyBar';
 import { ButtonLink } from '../ui/Button';
 import { Photo } from '../ui/Photo';
+
+function initials(name: string) {
+  const parts = name.split(/\s+/).filter(Boolean);
+  return ((parts[0]?.[0] ?? '') + (parts.at(-1)?.[0] ?? '')).toUpperCase();
+}
+
 export function ClassCard({
   session: s,
   featured = false,
@@ -12,44 +18,59 @@ export function ClassCard({
   session: ClassSession;
   featured?: boolean;
 }) {
+  const image = s.featured_image_url || s.image_url;
+  const end = new Date(new Date(s.starts_at).getTime() + s.duration_minutes * 60000).toISOString();
   return (
-    <article className={`class-card ${featured ? 'featured' : ''}`}>
-      {featured && (s.featured_image_url || s.image_url) && (
-        <div className="card-image">
-          <Photo
-            src={(s.featured_image_url || s.image_url)!}
-            alt={`Entrenamiento de ${s.discipline}`}
-            loading="lazy"
-          />
-          <AvailabilityBadge available={s.available} capacity={s.capacity} />
-          <span className="image-discipline">{s.discipline}</span>
+    <article
+      className={`class-card ${featured ? 'is-featured' : ''}`}
+      data-discipline={s.discipline}
+    >
+      {featured && image && (
+        <div className="cc-media">
+          <Photo src={image} alt={`Entrenamiento de ${s.discipline}`} loading="lazy" />
+          <span className="cc-media-tag">{s.discipline}</span>
         </div>
       )}
-      <div className="card-body">
-        <div className="card-top">
-          <div>
-            <p className="eyebrow">
-              {dayLabel(s.starts_at)} · {formatDate(s.starts_at)}
-            </p>
-            <p className="session-time">{timeRange(s)}</p>
-            <p className="meta">
-              <Clock size={14} />
-              {s.duration_minutes} min · {s.discipline}
-            </p>
-          </div>
-          {!featured && <AvailabilityBadge available={s.available} capacity={s.capacity} />}
+      <div className="cc-body">
+        <div className="cc-head">
+          <p className="cc-day">
+            {dayLabel(s.starts_at)} · {formatShortDate(s.starts_at)}
+          </p>
+          <AvailabilityBadge available={s.available} capacity={s.capacity} />
         </div>
+        <p className="cc-time">
+          <strong>{formatTime(s.starts_at)}</strong>
+          <span>
+            a {formatTime(end)} · {s.duration_minutes} min
+          </span>
+        </p>
         <h3>{s.name}</h3>
-        <p className="meta">
-          <UserRound size={15} />
-          Instructor: <strong>{s.instructor}</strong>
-        </p>
-        <p className="meta">
-          <MapPin size={15} />
-          {s.room}
-        </p>
+        {!featured && (
+          <p className="cc-discipline">
+            <span aria-hidden="true" />
+            {s.discipline}
+          </p>
+        )}
+        <div className="cc-people">
+          <span className="cc-coach">
+            {s.instructor_image ? (
+              <img src={s.instructor_image} alt="" loading="lazy" width="28" height="28" />
+            ) : (
+              <span className="cc-initials" aria-hidden="true">
+                {initials(s.instructor)}
+              </span>
+            )}
+            <span>
+              <small>Instructor</small> {s.instructor}
+            </span>
+          </span>
+          <span className="cc-room">
+            <MapPin size={14} aria-hidden="true" />
+            {s.room}
+          </span>
+        </div>
         <OccupancyBar capacity={s.capacity} reserved={s.reserved} />
-        <div className="card-cta">
+        <div className="cc-cta">
           {isBookable(s) ? (
             <ButtonLink to={`/clases/${s.id}`}>
               Ver detalles y reservar <ArrowRight size={16} />

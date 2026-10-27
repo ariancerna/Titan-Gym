@@ -4,13 +4,11 @@ import { BrowserRouter } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthProvider } from './app/AuthProvider';
 import { App } from './app/App';
-import '@fontsource/oswald/latin-400.css';
-import '@fontsource/oswald/latin-600.css';
-import '@fontsource/oswald/latin-700.css';
-import '@fontsource/space-grotesk/latin-400.css';
-import '@fontsource/space-grotesk/latin-500.css';
-import '@fontsource/space-grotesk/latin-700.css';
+import '@fontsource/anton/latin-400.css';
+import '@fontsource-variable/archivo/index.css';
+import '@fontsource-variable/archivo-narrow/index.css';
 import './styles/index.css';
+import './styles/brand.css';
 const queryClient = new QueryClient({
   defaultOptions: { queries: { staleTime: 10000, retry: 1, refetchOnWindowFocus: true } },
 });

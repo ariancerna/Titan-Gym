@@ -103,3 +103,15 @@ export function formatSessionWhen(startsAt: string, durationMinutes: number): st
   const day = shortWhen.format(start).replace(/\./g, '').replace(',', '');
   return `${day} · ${formatTime(start.toISOString())}–${formatTime(end.toISOString())}`;
 }
+
+/** Tiempo restante hasta `target` en partes, para la cuenta regresiva de la portada. */
+export function countdownParts(target: string, now = Date.now()) {
+  const total = Math.max(0, Math.floor((new Date(target).getTime() - now) / 1000));
+  return {
+    total,
+    days: Math.floor(total / 86400),
+    hours: Math.floor((total % 86400) / 3600),
+    minutes: Math.floor((total % 3600) / 60),
+    seconds: total % 60,
+  };
+}

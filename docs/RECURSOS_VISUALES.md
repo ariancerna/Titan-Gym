@@ -93,3 +93,19 @@ Cada foto de `public/assets/generated` tiene una versión `.webp` generada desde
 
 Los 116 recursos exportados de Figma que la aplicación no usa se movieron de `public/assets` a `design/figma`: ya no se publican. `tools/assets-local.json` conserva su procedencia con la nueva ruta. Se mantienen en `public/assets` los que usan la base de datos, el seed y las pruebas.
 
+
+## Rediseño de la interfaz (octubre de 2026)
+
+El propietario pidió que la web dejara de verse genérica. Cambios principales:
+
+- **Tipografías:** Anton para titulares grandes y Archivo / Archivo Narrow para texto, botones y etiquetas (empaquetadas con `@fontsource`, sin CDN). Reemplazan a Oswald y Space Grotesk.
+- **Paleta:** negro `#0a0a0c`, hueso `#f4f1ea` y morado neón `#8b3dff` (blanco encima: contraste 4.99, AA). El verde lima `#c6ff3d` solo marca "en vivo" y cupos libres. Cada disciplina tiene un color propio (`[data-discipline]` en `src/styles/index.css`) para leer la agenda de un vistazo.
+- **Portada:** titular gigante con relleno animado, tablero "en vivo" con cuenta regresiva a la próxima clase, cinta animada de disciplinas, fichas de disciplinas que filtran la agenda (`/clases?disciplina=…`), reglas de la casa, sede con mapa dibujado y botón de WhatsApp. El mapa es dibujado porque la política de seguridad (`vercel.json`) no permite incrustar Google Maps.
+- **Agenda:** agrupada por día, con la hora en grande y la ocupación como un segmento por cupo.
+- **Fotos:** grano de película y tratamiento de color en CSS para que las imágenes generadas se vean menos "de banco de imágenes". Todas las animaciones respetan `prefers-reduced-motion`.
+
+Los estilos nuevos están en `src/styles/brand.css`.
+
+### Pendiente: fotos reales de la sede
+
+Las fotos siguen siendo las generadas. Para usar fotos reales (por ejemplo, las del perfil de Google Maps de TITAN GYM QATUNA, siempre que sean del propio gimnasio o se tenga permiso del autor), basta con reemplazar los archivos de `public/assets/generated/` manteniendo el nombre y el formato 16:9 (≥ 1600 px de ancho), y regenerar el `.webp` de cada una. Al cambiar `hero.jpg` por una foto real con luz morada, quitar el `hue-rotate` de `.hero-photo` en `src/styles/brand.css`.

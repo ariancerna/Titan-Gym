@@ -1,24 +1,28 @@
 import { Link } from 'react-router-dom';
-import { ArrowRight, CalendarX2, MapPin, Ticket } from 'lucide-react';
-import { dayLabel, formatTime } from '../utils/sessions';
+import { ArrowRight, ArrowUpRight, MapPin, MessageCircle } from 'lucide-react';
 import { useSessions, useGymLocations } from '../features/classes/queries';
 import { ClassCard } from '../components/classes/ClassCard';
 import { ButtonLink } from '../components/ui/Button';
 import { CardGridSkeleton, EmptyState, ErrorState } from '../components/ui/States';
 import { Photo } from '../components/ui/Photo';
+import { LiveBoard } from '../components/home/LiveBoard';
+import { Marquee } from '../components/home/Marquee';
+import { disciplines } from '../content/disciplines';
+import { gym } from '../content/gym';
 
-const steps = [
+// Reglas que el sistema hace cumplir de verdad (ventana de 7 días, refresco cada 15 s, lista de espera).
+const houseRules = [
+  { big: '7', unit: 'días', text: 'Las reservas abren una semana antes de cada clase.' },
+  { big: '15', unit: 's', text: 'Los cupos se actualizan solos. Lo que ves es lo que queda.' },
   {
-    title: 'Elige la clase',
-    text: 'Filtra por disciplina, día o instructor y revisa la duración y la sala.',
+    big: '1',
+    unit: 'código',
+    text: 'Tu reserva tiene un código. Lo enseñas en recepción y entras.',
   },
   {
-    title: 'Revisa los cupos',
-    text: 'Cada sesión muestra cuántos lugares quedan. El aforo se vuelve a comprobar al confirmar.',
-  },
-  {
-    title: 'Confirma y guarda tu código',
-    text: 'Ingresa con tu cuenta, confirma tus datos y presenta el código en recepción.',
+    big: '0',
+    unit: 'cupos?',
+    text: 'Entra a la lista de espera: si alguien cancela, el lugar pasa por orden de llegada.',
   },
 ];
 
@@ -26,78 +30,69 @@ export default function HomePage() {
   const query = useSessions();
   const sessions = query.data ?? [];
   const locationQuery = useGymLocations();
-  const locations = locationQuery.data ?? [];
-  const next = sessions[0];
-  const freeSpots = sessions.reduce((total, s) => total + Math.max(0, s.available), 0);
-  const ready = query.isSuccess;
+  const locations = locationQuery.data?.length
+    ? locationQuery.data
+    : [{ id: 'sede', name: gym.branch, address: gym.address }];
+  const perDiscipline = (name: string) => sessions.filter((s) => s.discipline === name).length;
 
   return (
     <>
-      <section className="hero">
-        <Photo
-          className="hero-photo"
-          src="/assets/generated/hero.jpg"
-          alt="Sala de entrenamiento con iluminación morada"
-          fetchPriority="high"
-        />
-        <div className="hero-overlay" />
-        <div className="container hero-content">
-          <p className="hero-kicker">TITAN GYM · Reserva de clases grupales</p>
-          <h1>
-            WAKE THE <span>BEST</span>
-          </h1>
-          <p>
-            Consulta los horarios, mira cuántos cupos quedan y reserva tu lugar sin escribir por
-            WhatsApp ni esperar a recepción.
-          </p>
-          <div className="hero-buttons">
-            <ButtonLink to="/clases">
-              Explorar clases <ArrowRight size={18} />
-            </ButtonLink>
-            <ButtonLink to="/mis-reservas" variant="secondary">
-              Mis reservas
-            </ButtonLink>
-          </div>
-          <dl className="hero-metrics" aria-live="polite">
-            <div>
-              <dt>Próxima clase</dt>
-              <dd>
-                {ready
-                  ? next
-                    ? `${dayLabel(next.starts_at)} ${formatTime(next.starts_at)}`
-                    : 'Sin horarios'
-                  : '—'}
-              </dd>
-              <small>{next?.name ?? 'Pronto se publicarán nuevas sesiones'}</small>
-            </div>
-            <div>
-              <dt>En la agenda</dt>
-              <dd>
-                {ready
-                  ? `${sessions.length} ${sessions.length === 1 ? 'sesión' : 'sesiones'}`
-                  : '—'}
-              </dd>
-              <small>En los próximos 7 días</small>
-            </div>
-            <div>
-              <dt>Cupos libres</dt>
-              <dd>{ready ? freeSpots : '—'}</dd>
-              <small>Sumando todas las sesiones</small>
-            </div>
-          </dl>
+      <section className="hero" aria-labelledby="hero-title">
+        <div className="hero-media" aria-hidden="true">
+          <Photo
+            className="hero-photo"
+            src="/assets/generated/hero.jpg"
+            alt=""
+            fetchPriority="high"
+          />
         </div>
+        <div className="container hero-grid">
+          <div className="hero-copy">
+            <p className="hero-kicker">
+              <span>{gym.branch}</span>
+              <span>Carabayllo · Lima Norte</span>
+            </p>
+            <h1 id="hero-title" className="hero-title">
+              <span className="hero-line">WAKE THE</span>{' '}
+              <span className="hero-line hero-best">BEST</span>
+            </h1>
+            <p className="hero-lead">
+              Spinning, HIIT, funcional y más. Mira cuántos cupos quedan en tiempo real y asegura tu
+              lugar antes de salir de casa.
+            </p>
+            <div className="hero-buttons">
+              <ButtonLink to="/clases">
+                Explorar clases <ArrowRight size={18} />
+              </ButtonLink>
+              <ButtonLink to="/mis-reservas" variant="secondary">
+                Mis reservas
+              </ButtonLink>
+            </div>
+          </div>
+          <LiveBoard sessions={sessions} status={query.status} />
+        </div>
+        <p className="hero-coords" aria-hidden="true">
+          11.8906° S · 77.0422° O
+        </p>
       </section>
+      <Marquee items={disciplines.map((d) => d.name)} />
 
-      <section className="container section">
-        <div className="section-heading">
-          <div>
-            <p className="eyebrow accent">Agenda</p>
-            <h2>Próximas clases</h2>
+      <section className="container section" aria-labelledby="next-title">
+        <header className="section-head">
+          <h2 id="next-title">
+            Próximas <span className="outline">clases</span>
+          </h2>
+          <div className="section-head-side">
+            <p>
+              {query.isSuccess
+                ? `${sessions.length} ${sessions.length === 1 ? 'sesión' : 'sesiones'} en los próximos 7 días.`
+                : 'La agenda de los próximos 7 días.'}
+            </p>
+            <ButtonLink to="/clases" variant="secondary">
+              Ver toda la agenda <ArrowRight size={16} />
+            </ButtonLink>
           </div>
-          <ButtonLink to="/clases" variant="secondary">
-            Ver todos los horarios <ArrowRight size={16} />
-          </ButtonLink>
-        </div>
+        </header>
         {query.isPending ? (
           <CardGridSkeleton />
         ) : query.isError ? (
@@ -116,67 +111,129 @@ export default function HomePage() {
         )}
       </section>
 
-      <section className="how-section">
-        <div className="container section how-layout">
-          <div>
-            <p className="eyebrow accent">Cómo reservar</p>
-            <h2>Tres pasos, sin llamadas</h2>
-            <p>
-              Antes las reservas se anotaban en un cuaderno o por mensaje. Ahora cada cupo queda
-              registrado y nadie puede reservar por encima del aforo de la sala.
-            </p>
-          </div>
-          <ol className="steps">
-            {steps.map((step) => (
-              <li key={step.title}>
-                <h3>{step.title}</h3>
-                <p>{step.text}</p>
-              </li>
-            ))}
-          </ol>
+      <section className="section disciplines-section" aria-labelledby="disc-title">
+        <div className="container">
+          <header className="section-head">
+            <h2 id="disc-title">
+              Elige tu <span className="outline">disciplina</span>
+            </h2>
+            <div className="section-head-side">
+              <p>Seis formas de sudar en la misma sede. Toca una para ver solo sus horarios.</p>
+            </div>
+          </header>
+          <ul className="discipline-grid">
+            {disciplines.map((d, i) => {
+              const count = perDiscipline(d.name);
+              return (
+                <li key={d.name} data-discipline={d.name}>
+                  <Link
+                    to={`/clases?disciplina=${encodeURIComponent(d.name)}`}
+                    className="discipline-tile"
+                  >
+                    <Photo src={d.image} alt="" loading="lazy" />
+                    <span className="dt-index" aria-hidden="true">
+                      {String(i + 1).padStart(2, '0')}
+                    </span>
+                    <span className="dt-body">
+                      <strong>{d.name}</strong>
+                      <span>{d.line}</span>
+                      {query.isSuccess && (
+                        <small>
+                          {count
+                            ? `${count} ${count === 1 ? 'sesión' : 'sesiones'} esta semana`
+                            : 'Sin sesiones esta semana'}
+                        </small>
+                      )}
+                    </span>
+                    <ArrowUpRight className="dt-arrow" size={22} aria-hidden="true" />
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
         </div>
       </section>
 
-      <section className="container home-info">
-        <article className="panel">
-          <h3>
-            <MapPin size={20} />
-            Nuestra sede
-          </h3>
-          {locationQuery.isPending ? (
-            <p role="status">Consultando la dirección…</p>
-          ) : locationQuery.isError ? (
-            <p>No pudimos consultar la dirección. Inténtalo de nuevo.</p>
-          ) : (
-            locations.map((l) => (
-              <p key={l.id}>
-                <strong>{l.name}</strong>
-                <br />
-                {l.address}
+      <section className="container section" aria-labelledby="rules-title">
+        <header className="section-head">
+          <h2 id="rules-title">
+            Las reglas <span className="outline">de la casa</span>
+          </h2>
+          <div className="section-head-side">
+            <p>Sin cuadernos ni mensajes. El aforo de cada sala se respeta siempre.</p>
+          </div>
+        </header>
+        <ol className="rules">
+          {houseRules.map((r) => (
+            <li key={r.unit}>
+              <p className="rule-big">
+                {r.big}
+                <small>{r.unit}</small>
               </p>
-            ))
-          )}
-        </article>
-        <article className="panel">
-          <h3>
-            <CalendarX2 size={20} />
-            ¿No puedes asistir?
-          </h3>
-          <p>
-            Cancela desde Mis reservas antes de que empiece la clase. Tu cupo queda libre para otro
-            socio.
+              <p>{r.text}</p>
+            </li>
+          ))}
+        </ol>
+      </section>
+
+      <section className="container section venue" aria-labelledby="venue-title">
+        <div className="venue-copy">
+          <h2 id="venue-title">Nuestra sede</h2>
+          {locations.map((l) => (
+            <div key={l.id} className="venue-address">
+              <p className="venue-name">{l.name}</p>
+              <p>{l.address}</p>
+            </div>
+          ))}
+          <div className="hero-buttons">
+            <a
+              className="btn btn-primary"
+              href={gym.mapsUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <MapPin size={18} aria-hidden="true" /> Cómo llegar
+              <span className="sr-only"> (abre Google Maps en otra pestaña)</span>
+            </a>
+            <a
+              className="btn btn-secondary"
+              href={gym.whatsappUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <MessageCircle size={18} aria-hidden="true" /> WhatsApp {gym.whatsapp}
+              <span className="sr-only"> (abre WhatsApp en otra pestaña)</span>
+            </a>
+          </div>
+          <p className="venue-note">
+            ¿No puedes ir? Cancela desde <Link to="/mis-reservas">Mis reservas</Link> antes de que
+            empiece la clase y tu cupo pasa a otro socio.
           </p>
-        </article>
-        <article className="panel">
-          <h3>
-            <Ticket size={20} />
-            Tus comprobantes
-          </h3>
-          <p>Cada reserva tiene un código único que puedes consultar desde tu cuenta.</p>
-          <Link to="/mis-reservas">
-            Ir a Mis reservas <ArrowRight size={14} />
-          </Link>
-        </article>
+        </div>
+        <div className="venue-map" aria-hidden="true">
+          <span className="venue-street s1">Av. Isabel Chimpu Ocllo</span>
+          <span className="venue-street s2" />
+          <span className="venue-street s3" />
+          <span className="venue-pin">
+            <img src="/assets/brands/titan-mark.png" alt="" width="40" height="40" />
+          </span>
+          <span className="venue-coords">
+            −11.89061
+            <br />
+            −77.04224
+          </span>
+        </div>
+      </section>
+
+      <section className="final-cta" aria-labelledby="cta-title">
+        <div className="container final-cta-inner">
+          <h2 id="cta-title">
+            ¿Entrenas <span>hoy?</span>
+          </h2>
+          <ButtonLink to="/clases">
+            Ver horarios <ArrowRight size={18} />
+          </ButtonLink>
+        </div>
       </section>
     </>
   );

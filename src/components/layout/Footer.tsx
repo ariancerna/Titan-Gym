@@ -16,8 +16,8 @@ export function Footer() {
             </strong>
           </Link>
           <p>
-            Reserva tus clases grupales en línea, revisa los cupos antes de ir y cancela si no
-            puedes asistir.
+            Clases grupales en Carabayllo. Reserva en línea, mira los cupos antes de salir y cancela
+            si no llegas.
           </p>
         </div>
 
@@ -81,6 +81,9 @@ export function Footer() {
         </p>
         <Link to="/privacidad">Política de privacidad</Link>
       </div>
+      <p className="footer-wordmark" aria-hidden="true">
+        TITAN GYM
+      </p>
     </footer>
   );
 }

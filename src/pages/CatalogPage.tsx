@@ -1,14 +1,30 @@
 import { useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { Search, SlidersHorizontal } from 'lucide-react';
 import { useSessions } from '../features/classes/queries';
 import { filterSessions, dateKey, dayLabel, formatShortDate } from '../utils/sessions';
 import { ClassCard } from '../components/classes/ClassCard';
 import { CardGridSkeleton, ErrorState, EmptyState } from '../components/ui/States';
 import { Button } from '../components/ui/Button';
+import type { ClassSession } from '../types/domain';
+/** Agrupa las sesiones (ya ordenadas por hora) por día de Lima. */
+function groupByDay(list: ClassSession[]) {
+  const days = new Map<string, ClassSession[]>();
+  for (const s of list) {
+    const key = dateKey(s.starts_at);
+    days.set(key, [...(days.get(key) ?? []), s]);
+  }
+  return [...days.entries()];
+}
+
 export default function CatalogPage() {
   const query = useSessions();
   const [search, setSearch] = useState('');
-  const [discipline, setDiscipline] = useState('');
+  // ?disciplina=Spinning llega desde las fichas de la portada.
+  const [params, setParams] = useSearchParams();
+  const discipline = params.get('disciplina') ?? '';
+  const setDiscipline = (value: string) =>
+    setParams(value ? { disciplina: value } : {}, { replace: true });
   const [date, setDate] = useState('');
   const [availability, setAvailability] = useState('');
   const sessions = query.data ?? [];
@@ -27,13 +43,13 @@ export default function CatalogPage() {
   }
   return (
     <div className="container page">
-      <div className="section-heading page-heading">
-        <div>
-          <p className="eyebrow accent">Agenda de clases</p>
-          <h1>Horarios y clases disponibles</h1>
-          <p>Elige una sesión, revisa los cupos y reserva tu lugar en TITAN GYM.</p>
-        </div>
-      </div>
+      <header className="catalog-head">
+        <h1>Horarios y clases disponibles</h1>
+        <p>
+          Los próximos 7 días en TITAN GYM Qatuna. Filtra por disciplina o por día y reserva en dos
+          toques.
+        </p>
+      </header>
       <section className="filters" aria-label="Filtros de clases">
         <div className="filter-row">
           <label className="search">
@@ -76,6 +92,7 @@ export default function CatalogPage() {
           <div className="date-tabs" aria-label="Fechas disponibles">
             {dates.map((d) => {
               const value = `${d}T12:00:00-05:00`;
+              const count = sessions.filter((s) => dateKey(s.starts_at) === d).length;
               return (
                 <button
                   key={d}
@@ -86,6 +103,9 @@ export default function CatalogPage() {
                 >
                   <span>{dayLabel(value)}</span>
                   <strong>{formatShortDate(value)}</strong>
+                  <small>
+                    {count} {count === 1 ? 'clase' : 'clases'}
+                  </small>
                 </button>
               );
             })}
@@ -108,9 +128,19 @@ export default function CatalogPage() {
             {filtering ? ` de ${sessions.length} con los filtros aplicados` : ' programadas'}
           </p>
           {filtered.length ? (
-            <div className="class-grid">
-              {filtered.map((s) => (
-                <ClassCard key={s.id} session={s} />
+            <div className="agenda">
+              {groupByDay(filtered).map(([day, list]) => (
+                <section key={day} className="agenda-day" aria-labelledby={`day-${day}`}>
+                  <h2 id={`day-${day}`} className="agenda-day-title">
+                    <span>{dayLabel(list[0].starts_at)}</span>
+                    <small>{formatShortDate(list[0].starts_at)}</small>
+                  </h2>
+                  <div className="class-grid">
+                    {list.map((s) => (
+                      <ClassCard key={s.id} session={s} />
+                    ))}
+                  </div>
+                </section>
               ))}
             </div>
           ) : sessions.length ? (

@@ -179,6 +179,6 @@ La app está publicada en https://titan-gym-tau.vercel.app; Site URL y su redire
 
 ## Identidad visual
 
-El diseño se basa en las pantallas inspeccionadas de [Figma](https://www.figma.com/design/IdpjhkmQsR4wAKCOLNcfpG/Sin-t%C3%ADtulo?node-id=0-1) y [Stitch](https://stitch.withgoogle.com/projects/2251858017399190487): modo oscuro, amarillo TITAN GYM y tipografías Oswald y Space Grotesk. Por petición del propietario se renovaron los fondos, las fotografías de seis disciplinas, el logo y el favicon. Logo y favicon tienen transparencia real; los originales de Figma se conservan.
+El diseño se basa en las pantallas inspeccionadas de [Figma](https://www.figma.com/design/IdpjhkmQsR4wAKCOLNcfpG/Sin-t%C3%ADtulo?node-id=0-1) y [Stitch](https://stitch.withgoogle.com/projects/2251858017399190487): modo oscuro y amarillo TITAN GYM. En octubre de 2026 se rediseñó la interfaz (ver `docs/RECURSOS_VISUALES.md`): negro, hueso y morado neón de la sede, tipografías Anton y Archivo. Por petición del propietario se renovaron los fondos, las fotografías de seis disciplinas, el logo y el favicon. Logo y favicon tienen transparencia real; los originales de Figma se conservan.
 
 Los recursos se sirven desde `public/assets`. Su procedencia está registrada en [tools/assets-local.json](tools/assets-local.json); la aplicación no depende de URLs temporales de Figma. La captura de este README procede de la evidencia de pruebas, no de un despliegue público.
