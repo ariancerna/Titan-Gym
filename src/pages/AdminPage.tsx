@@ -137,6 +137,9 @@ function AdminDashboard() {
   if (query.isError) return <ErrorState error={query.error} retry={() => void query.refetch()} />;
   const data = query.data;
   const rosterSession = data.sessions.find((s) => s.id === rosterId);
+  const rosterDiscipline = data.disciplines.find(
+    (d) => d.id === data.classes.find((c) => c.id === rosterSession?.class_id)?.discipline_id,
+  )?.name;
   const now = Date.now();
   const todayKey = dateKey(new Date());
 
@@ -241,6 +244,7 @@ function AdminDashboard() {
             <AttendanceRoster
               key={`roster-${rosterSession.id}`}
               session={rosterSession}
+              discipline={rosterDiscipline}
               onClose={() => setRosterId(undefined)}
             />
           )}

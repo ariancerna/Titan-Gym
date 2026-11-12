@@ -76,9 +76,15 @@ No se exportan nombres, correos ni el UUID real del socio.
 
 El informe APF2 propuso 80 % entrenamiento y 20 % prueba. Se recomienda que la partición sea **temporal**: ordenar por `inicio_sesion`, entrenar con el primer 80 % y evaluar con el último 20 %. Una partición aleatoria mezclaría reservas futuras del mismo socio en el entrenamiento y daría una precisión engañosamente alta, porque `inasistencias_previas` ya resume parte de ese historial.
 
-## Pendiente para el componente de Machine Learning
+## Componente de Machine Learning
+
+Hecho en el APF3 ([ml/](../ml/README.md)): dataset simulado con este mismo esquema más la columna `origen`, verificación
+automática de coherencia, partición temporal 80/20, comparación de 4 modelos contra "todos asisten" y la regla del MVP, y
+reporte de precisión, recall, F1, F2 y PR-AUC de la clase no-show.
+
+Pendiente para PROY:
 
 1. Registrar asistencia real en las clases durante varias semanas (ver cobertura en el panel).
-2. Exportar el CSV y describir el volumen real, la proporción de no-shows y los valores faltantes.
-3. Entrenar un modelo base sencillo (por ejemplo, regresión logística) y compararlo contra la regla trivial "todos asisten".
-4. Reportar precisión, recall y F1 de la clase no-show, no solo la exactitud, porque las clases estarán desbalanceadas.
+2. Exportar el CSV a `ml/data/export_mvp_real.csv` (no se publica: está en `.gitignore`) y volver a ejecutar el notebook,
+   que lo carga con `origen = "real"` y lo compara con lo simulado.
+3. Reentrenar y recalibrar el modelo con los datos reales.

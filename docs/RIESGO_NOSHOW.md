@@ -39,12 +39,16 @@ Los socios con riesgo alto faltaron unas 2,4 veces más que los de riesgo bajo, 
 
 **Límite importante:** los datos simulados se generaron con factores parecidos a los de la regla (historial, anticipación y horario). Por eso este resultado solo demuestra que **el cálculo funciona de punta a punta**. No demuestra que la regla acierte con socios reales. Esa validación se hace con la misma tabla de Indicadores cuando haya semanas de asistencia real registrada.
 
-## Siguiente paso
+## Modelo entrenado (APF3)
 
-Con asistencia real suficiente, del orden de cientos de reservas registradas:
+Desde el APF3, el nivel y la probabilidad que muestra «Ver inscritos» los calcula una **regresión logística** entrenada en
+[`ml/APF3_TD_Grupo6_ML_Innovacion.ipynb`](../ml/README.md) con las variables de esta regla y algunas más (día de la
+semana, ocupación, disciplina, temporada y recordatorio). La regla sigue aportando los motivos legibles y es el respaldo
+si falta algún dato. En la prueba cronológica del notebook (datos simulados) el modelo supera a la regla: PR-AUC 0.319
+frente a 0.230 y recall 0.70 frente a 0.56.
 
-1. Exportar el dataset desde Indicadores (CSV).
-2. Entrenar un modelo simple, por ejemplo una regresión logística, con las mismas variables y algunas más (día de la semana, ocupación, recordatorio enviado).
-3. Compararlo con esta regla en la misma tabla. Solo conviene reemplazarla si separa mejor el riesgo alto del bajo.
+Niveles del modelo: **alto** = 15 % de mayor riesgo (confirmar por WhatsApp y, si no confirma, liberar el cupo);
+**medio** = por encima del umbral de contacto (recordatorio adicional); **bajo** = sin acción. La tabla de Indicadores
+compara modelo y regla con las clases ya dictadas de la base real.
 
-La regla sirve de **línea base**: un modelo entrenado tiene que superarla para justificar su complejidad.
+La regla sigue siendo la **línea base**: el modelo debe superarla también con asistencia real para justificar su complejidad.

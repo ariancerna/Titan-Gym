@@ -1,0 +1,28 @@
+[
+  {
+    "disciplina": "Funcional",
+    "inicio_sesion": "2026-11-16T12:00:00Z",
+    "dia_semana": 1,
+    "hora_inicio": 7,
+    "duracion_min": 60,
+    "capacidad": 18,
+    "reservas_activas": 5,
+    "anticipacion_horas": 96.0,
+    "reservas_previas": 6,
+    "inasistencias_previas": 3,
+    "recordatorio_enviado": false
+  },
+  {
+    "disciplina": "Spinning",
+    "inicio_sesion": "2026-11-18T23:00:00Z",
+    "dia_semana": 3,
+    "hora_inicio": 18,
+    "duracion_min": 50,
+    "capacidad": 25,
+    "reservas_activas": 21,
+    "anticipacion_horas": 5.5,
+    "reservas_previas": 25,
+    "inasistencias_previas": 0,
+    "recordatorio_enviado": true
+  }
+]

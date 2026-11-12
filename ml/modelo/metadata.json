@@ -1,0 +1,42 @@
+{
+  "modelo": "Regresión logística",
+  "version": "apf3-1.0",
+  "fecha_entrenamiento": "2026-11-01",
+  "hiperparametros": {
+    "C": 0.03
+  },
+  "umbral_contacto": 0.1931,
+  "umbral_alto": 0.2682,
+  "campos_entrada": [
+    "disciplina",
+    "inicio_sesion",
+    "dia_semana",
+    "hora_inicio",
+    "duracion_min",
+    "capacidad",
+    "reservas_activas",
+    "anticipacion_horas",
+    "reservas_previas",
+    "inasistencias_previas",
+    "recordatorio_enviado"
+  ],
+  "metricas_prueba": {
+    "accuracy": 0.6366,
+    "precision": 0.2434,
+    "recall": 0.697,
+    "F1": 0.3608,
+    "F2": 0.5077,
+    "PR-AUC": 0.3191,
+    "ROC-AUC": 0.7213,
+    "% marcadas": 0.4214
+  },
+  "tasa_no_show_entrenamiento": 0.187,
+  "datos": "100 % simulados (origen = simulado); reentrenar con datos reales del MVP",
+  "random_state": 2026,
+  "versiones": {
+    "python": "3.11.7",
+    "scikit-learn": "1.5.2",
+    "pandas": "2.2.3",
+    "numpy": "2.1.3"
+  }
+}

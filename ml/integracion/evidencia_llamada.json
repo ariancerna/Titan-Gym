@@ -1,0 +1,25 @@
+{
+  "fecha": "2026-11-12T14:36:57-05:00",
+  "entrada": {
+    "disciplina": "Funcional",
+    "inicio_sesion": "2026-11-16T12:00:00Z",
+    "dia_semana": 1,
+    "hora_inicio": 7,
+    "duracion_min": 60,
+    "capacidad": 18,
+    "reservas_activas": 5,
+    "anticipacion_horas": 96.0,
+    "reservas_previas": 6,
+    "inasistencias_previas": 3,
+    "recordatorio_enviado": false
+  },
+  "salida": {
+    "probabilidad_no_show": 0.549,
+    "riesgo": "alto",
+    "umbral_contacto": 0.1931,
+    "umbral_alto": 0.2682,
+    "accion_sugerida": "Confirmar asistencia por WhatsApp antes de la clase; si no confirma, liberar el cupo a la lista de espera.",
+    "modelo_version": "apf3-1.0"
+  },
+  "http_status": 200
+}

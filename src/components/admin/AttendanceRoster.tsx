@@ -13,23 +13,37 @@ import { LoadingState, ErrorState, EmptyState } from '../ui/States';
 import { Button } from '../ui/Button';
 import { errorMessage } from '../../lib/errors';
 import { formatDate, formatSessionWhen, formatTime } from '../../utils/sessions';
-import { limaHour, noShowRisk, type Risk } from '../../features/admin/risk';
+import { limaHour, noShowRisk, type RiskLevel } from '../../features/admin/risk';
+import { limaWeekday, predictNoShow, reminderStatus } from '../../features/admin/noshowModel';
 
 const riskBadge = { bajo: 'available', medio: 'low', alto: 'risk-high' } as const;
 
-function RiskNote({ risk }: { risk: Risk }) {
+interface MemberRisk {
+  level: RiskLevel;
+  /** Probabilidad del modelo de ML; null si se usó la regla porque faltan datos. */
+  probability: number | null;
+  reasons: string[];
+}
+
+function RiskNote({ risk }: { risk: MemberRisk }) {
   return (
     <p className="admin-risk">
       <span className={`badge ${riskBadge[risk.level]}`}>Riesgo {risk.level}</span>
+      {risk.probability !== null && (
+        <strong>{Math.round(risk.probability * 100)} % de probabilidad de no-show · </strong>
+      )}
       {risk.reasons.length ? risk.reasons.join(' · ') : 'Sin factores de riesgo'}
     </p>
   );
 }
 export function AttendanceRoster({
   session,
+  discipline,
   onClose,
 }: {
   session: ManagedSession;
+  /** Disciplina de la clase: la necesita el modelo de ML. Sin ella se usa la regla simple. */
+  discipline?: string;
   onClose: () => void;
 }) {
   const { user } = useAuth();
@@ -58,18 +72,42 @@ export function AttendanceRoster({
   const waiting = waitlist.data?.filter((w) => w.status === 'waiting') ?? [];
   // Riesgo solo para reservas activas y cuando la base ya entrega los datos necesarios.
   const startHour = limaHour(session.starts_at);
-  const riskOf = (r: RosterMember) =>
-    r.status !== 'cancelled' && typeof r.prior_reservations === 'number' && r.booked_at
-      ? noShowRisk({
-          priorReservations: r.prior_reservations,
-          priorAbsences: r.prior_absences ?? 0,
-          hoursAhead:
-            (new Date(session.starts_at).getTime() - new Date(r.booked_at).getTime()) / 3600000,
-          startHour,
-        })
-      : null;
+  const startsAt = new Date(session.starts_at);
+  // El modelo de ML (APF3) da el nivel y la probabilidad; la regla aporta los motivos legibles y es
+  // el respaldo si falta algún dato (por ejemplo, la disciplina).
+  const riskOf = (r: RosterMember): MemberRisk | null => {
+    if (r.status === 'cancelled' || typeof r.prior_reservations !== 'number' || !r.booked_at) {
+      return null;
+    }
+    const hoursAhead = (startsAt.getTime() - new Date(r.booked_at).getTime()) / 3600000;
+    const rule = noShowRisk({
+      priorReservations: r.prior_reservations,
+      priorAbsences: r.prior_absences ?? 0,
+      hoursAhead,
+      startHour,
+    });
+    if (!discipline) return { level: rule.level, probability: null, reasons: rule.reasons };
+    const reminder = reminderStatus(r, session.starts_at, r.booked_at);
+    const model = predictNoShow({
+      disciplina: discipline,
+      inicio_sesion: session.starts_at,
+      dia_semana: limaWeekday(session.starts_at),
+      hora_inicio: startHour,
+      duracion_min: session.duration_minutes,
+      capacidad: session.capacity,
+      reservas_activas: session.reserved,
+      anticipacion_horas: Math.max(hoursAhead, 0.1),
+      reservas_previas: r.prior_reservations,
+      inasistencias_previas: r.prior_absences ?? 0,
+      recordatorio_enviado: reminder,
+    });
+    const reasons =
+      reminder === false ? [...rule.reasons, 'Sin recordatorio por correo'] : rule.reasons;
+    return { level: model.level, probability: model.probability, reasons };
+  };
   const risks = new Map((query.data ?? []).map((r) => [r.id, riskOf(r)]));
   const highRisk = [...risks.values()].filter((r) => r?.level === 'alto').length;
+  const usesModel = [...risks.values()].some((r) => r && r.probability !== null);
   return (
     <section className="panel admin-roster" aria-label="Inscritos y asistencia">
       <div className="admin-section-heading">
@@ -116,11 +154,23 @@ export function AttendanceRoster({
                     {highRisk} {highRisk === 1 ? 'inscrito tiene' : 'inscritos tienen'} riesgo alto
                     de no-show.
                   </strong>{' '}
-                  Conviene confirmarles la asistencia por correo o WhatsApp.{' '}
+                  Conviene confirmarles la asistencia por WhatsApp y, si no confirman, liberar el
+                  cupo para la lista de espera.{' '}
                 </>
               ) : null}
-              El riesgo se estima con reglas simples: faltas anteriores sin avisar, primera reserva,
-              anticipación y horario de la clase.
+              {usesModel ? (
+                <>
+                  El riesgo lo estima el modelo de Machine Learning del APF3 (regresión logística)
+                  con el historial del socio, la anticipación, el horario, la ocupación y el
+                  recordatorio. Riesgo medio: enviar un recordatorio adicional. Entrenado con datos
+                  simulados: se reentrenará con la asistencia real registrada aquí.
+                </>
+              ) : (
+                <>
+                  El riesgo se estima con reglas simples: faltas anteriores sin avisar, primera
+                  reserva, anticipación y horario de la clase.
+                </>
+              )}
             </p>
           )}
           <div className="admin-roster-grid">

@@ -1,0 +1,23 @@
+variable,tipo,unidad,descripcion,rango_valido,uso
+reserva_id,uuid,—,Identificador de la reserva,UUID único,Identificador
+socio_ref,texto,—,Hash SHA-256 (16 hex) del socio; agrupa sin identificar,^[0-9a-f]{16}$,Identificador
+sesion_id,uuid,—,Sesión reservada,UUID,Identificador
+clase,texto,—,Nombre comercial de la clase,6 clases del catálogo,Redundante (1:1 con disciplina)
+disciplina,categórica,—,"Spinning, HIIT, Funcional, Zumba, Yoga, Cross Training",6 valores,Variable
+instructor,texto,—,Instructor de la sesión,6 instructores,Excluida (1:1 con disciplina; minimización)
+inicio_sesion,timestamp UTC,fecha-hora,Inicio de la clase,≤ fecha de corte,Orden temporal / temporada
+dia_semana,entero,día ISO,1 = lunes … 7 = domingo (hora de Lima),1–7,Variable
+hora_inicio,entero,hora,Hora de inicio en Lima,0–23,Variable (franja)
+duracion_min,entero,minutos,Duración de la sesión,30–120,Variable
+capacidad,entero,personas,Aforo máximo,1–40,Variable
+reservas_activas,entero,personas,Reservas no canceladas de la sesión,0–capacidad,Variable (ocupación)
+fecha_reserva,timestamp UTC,fecha-hora,Momento de la reserva,< inicio_sesion,Base de la anticipación
+anticipacion_horas,decimal,horas,Horas entre la reserva y el inicio,0–168 (ventana de 7 días),Variable
+reservas_previas,entero,reservas,Reservas del socio en sesiones anteriores,≥ 0,Variable (historial)
+inasistencias_previas,entero,reservas,No-shows del socio en sesiones anteriores,0–reservas_previas,Variable (historial)
+recordatorio_enviado,booleano,—,Se envió el recordatorio 3 h antes,TRUE/FALSE,Variable
+estado,categórica,—,"confirmed, cancelled, attended",3 valores,Filtro (fuga si se usa)
+cancelada_en,timestamp UTC,fecha-hora,Cuándo canceló el socio,entre reserva e inicio,Filtro (fuga si se usa)
+asistencia,categórica,—,"present, absent, pending; vacío si canceló",3 valores + vacío,Control de calidad (fuga)
+asistio,booleano,—,"TRUE asistió, FALSE no-show; vacío si canceló o sin registrar",TRUE/FALSE/vacío,Objetivo (invertido: no_show)
+origen,categórica,—,real | simulado,2 valores,Rotulado obligatorio

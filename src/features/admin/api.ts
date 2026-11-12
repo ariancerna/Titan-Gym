@@ -51,6 +51,9 @@ export interface RosterMember {
   booked_at?: string;
   prior_reservations?: number;
   prior_absences?: number;
+  /** Recordatorio para el modelo de ML (migración 20261113000000); ausentes si no está aplicada. */
+  reminder_sent_at?: string | null;
+  email_reminders?: boolean;
   history: {
     status: AttendanceStatus;
     previous_status: AttendanceStatus | null;

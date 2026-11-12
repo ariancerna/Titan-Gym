@@ -16,3 +16,9 @@ docs/evidencias/supabase-url-config.png
 /image.png
 # Informe académico local: contiene credenciales de la cuenta de evaluación.
 /proyecto.md
+# Componente de ML (APF3): entorno virtual y cachés locales.
+ml/.venv/
+__pycache__/
+.ipynb_checkpoints/
+# Export real del panel /admin: puede permitir reidentificar socios (Ley 29733); no se publica.
+ml/data/export_mvp_real.csv

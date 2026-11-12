@@ -375,6 +375,9 @@ try {
     for(const m of roster){
       const row=ds.find(x=>x.reserva_id===m.id);
       if(row){assert.equal(m.prior_reservations,row.reservas_previas);assert.equal(m.prior_absences,row.inasistencias_previas);}
+      // Modelo de ML (APF3): el inscrito trae el recordatorio con la misma definición que el dataset.
+      assert.equal(typeof m.email_reminders,'boolean');
+      if(row)assert.equal(m.reminder_sent_at!==null,row.recordatorio_enviado);
     }
     // Q3: el panel no carga sesiones de hace más de 90 días; el dataset sí las conserva.
     const old=(await admin.query("insert into public.class_sessions(class_id,instructor_id,location_id,room,starts_at,capacity,duration_minutes,published) select class_id,instructor_id,location_id,'Sala antigua',now()-interval '100 days',10,45,true from public.class_sessions limit 1 returning id")).rows[0].id;

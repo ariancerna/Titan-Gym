@@ -42,6 +42,19 @@ Para la entrega, adjuntar además la exportación de la conversación relevante,
 | P18 | “puedes arreglar el navbar, no me gusta” y “no me gusta que no este centrado lo del medio y el boton reservar clase es muy grande y si lo quitamos” | Menú de cuenta, menú móvil con la cuenta, enlaces centrados y retiro de «Reservar clase». | Medición del centrado (0 px de desvío) y pruebas e2e de administración y perfil. |
 | P19 | “q mejoras me recomiendas” y “has todo” | CSP, fotos WebP, Mis reservas en una consulta, lista de espera (US08) y actualización de la documentación. | 37 comprobaciones PostgreSQL, unitarias y e2e; detalle en el README y en la auditoría. |
 | P20 | “si hazlo, ya aplique la migracion, revisare en vercel” (mencionar la lista de espera en la política) | Política de privacidad versión 2026-10-19 y migración `20261022000000_privacidad_lista_espera.sql`: los socios vuelven a aceptarla en su siguiente reserva. | Pruebas SQL «Ley 29733» y e2e de consentimiento aprobadas. |
+| P21 | Con la consigna APF3 adjunta (PDF): “esta es mi consigna, ayudame primero a sacar la maxima nota por parte del codigo, despues continuaremos con la parte del proyecto que es pdf o word” | Componente de ML en `ml/`: simulación del dataset (`simulacion.py`), notebook `APF3_TD_Grupo6_ML_Innovacion.ipynb` (coherencia, EDA, pipeline, 4 modelos de U3 contra 3 líneas base, evaluación, exportación con joblib), integración (`integracion/predict.py`, endpoint FastAPI) y modelo dentro del panel `/admin` (`src/features/admin/noshowModel.ts`, migración `20261113000000_modelo_noshow_roster.sql`). | Notebook ejecutado de inicio a fin sin errores; 25 reglas de coherencia automáticas; prueba de paridad TypeScript vs. scikit-learn (200 casos, diferencia < 1e-9); unitarias, SQL y e2e del panel. **Validación humana pendiente** (ver sección 3.1). |
+| P22 | Con los PDF del APF2 y de su retroalimentación: “te estoy pasando el avance 2 que creo que incluye el avance 1 tambien, y el otro pdf es la revision que nos dio el profesor como una retroalimentacion” | Calibración de la simulación con el Contrato de Datos de APF2 (300–500 reservas/mes, “cientos de socios”, target `asistio`, partición 80/20) y tabla de trazabilidad APF2 → APF3. La tasa de no-show (~17 %) se calibró con el rango sectorial 10–25 % (Vagaro, Glofox, Virtuagym), declarado como supuesto. | Regla automática de escala (promedio mensual dentro de 300–500). Las fuentes sectoriales son blogs de proveedores, no estudios: el equipo debe citarlas como tales. |
+
+### 3.1 Verificación humana requerida para el componente de ML (APF3)
+
+La IA generó el código, la simulación y los textos del notebook; cada integrante debe poder explicarlos en la sustentación. Antes de entregar, el equipo debe:
+
+1. Ejecutar el notebook en un entorno limpio (Colab o `pip install -r ml/requirements.txt`) y confirmar que las métricas coinciden con las del informe.
+2. Revisar los parámetros de `ml/simulacion.py` y confirmar que la escala (≈ 420 reservas/mes, ~240 socios que usan clases) es plausible para TITAN GYM; idealmente, validarlo con el administrador.
+3. Abrir `ml/data/dataset_noshow_titan_simulado.csv` y comprobar a mano 5 filas contra las reglas del diccionario de datos.
+4. Recalcular a mano una predicción con los coeficientes de `ml/modelo/noshow-model.json` (o comprobarla con `python ml/integracion/predict.py ml/integracion/ejemplo_entrada.json`).
+5. Leer las conclusiones de cada figura y las hipótesis del análisis de errores, y corregir lo que no compartan.
+6. Registrar aquí quién verificó cada punto y cuándo.
 
 ## 4. Prompts de imágenes
 

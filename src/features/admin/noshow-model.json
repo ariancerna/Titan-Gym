@@ -1,0 +1,189 @@
+{
+ "version": "apf3-1.0",
+ "modelo": "Regresión logística",
+ "datos": "100 % simulados (origen = simulado); reentrenar con datos reales del MVP",
+ "umbral_contacto": 0.1931,
+ "umbral_alto": 0.2682,
+ "prior_no_show": 0.17,
+ "k_suavizado": 2.0,
+ "numericas": [
+  {
+   "nombre": "log_anticipacion",
+   "imputacion": 3.713572066704308,
+   "media": 3.6925978542780813,
+   "escala": 0.8903656069193988
+  },
+  {
+   "nombre": "reserva_mismo_dia",
+   "imputacion": 0.0,
+   "media": 0.11184755592377796,
+   "escala": 0.3151788066441894
+  },
+  {
+   "nombre": "ocupacion",
+   "imputacion": 0.32,
+   "media": 0.3339158918653533,
+   "escala": 0.14246117634618266
+  },
+  {
+   "nombre": "tasa_inasistencia_suavizada",
+   "imputacion": 0.16714285714285712,
+   "media": 0.17342814943675575,
+   "escala": 0.11395961544012131
+  },
+  {
+   "nombre": "inasistencias_previas",
+   "imputacion": 2.0,
+   "media": 3.356255178127589,
+   "escala": 4.612712248060421
+  },
+  {
+   "nombre": "log_reservas_previas",
+   "imputacion": 2.6390573296152584,
+   "media": 2.48373371782312,
+   "escala": 1.0912747676414745
+  },
+  {
+   "nombre": "es_primera_reserva",
+   "imputacion": 0.0,
+   "media": 0.05274785970726319,
+   "escala": 0.22352969154804933
+  },
+  {
+   "nombre": "recordatorio_enviado",
+   "imputacion": 1.0,
+   "media": 0.8022645677989506,
+   "escala": 0.3982915151661075
+  },
+  {
+   "nombre": "duracion_min",
+   "imputacion": 60.0,
+   "media": 55.52885943109638,
+   "escala": 5.841556933205416
+  },
+  {
+   "nombre": "capacidad",
+   "imputacion": 20.0,
+   "media": 22.15631041148854,
+   "escala": 5.441296984298247
+  }
+ ],
+ "categoricas": [
+  {
+   "nombre": "disciplina",
+   "imputacion": "Spinning",
+   "categorias": [
+    "Cross Training",
+    "Funcional",
+    "HIIT",
+    "Spinning",
+    "Yoga",
+    "Zumba"
+   ]
+  },
+  {
+   "nombre": "franja_horaria",
+   "imputacion": "noche",
+   "categorias": [
+    "manana",
+    "noche",
+    "tarde",
+    "temprano"
+   ]
+  },
+  {
+   "nombre": "dia_semana",
+   "imputacion": "1",
+   "categorias": [
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6"
+   ]
+  },
+  {
+   "nombre": "temporada",
+   "imputacion": "regular",
+   "categorias": [
+    "fiestas",
+    "regular",
+    "verano"
+   ]
+  }
+ ],
+ "variables": [
+  "log_anticipacion",
+  "reserva_mismo_dia",
+  "ocupacion",
+  "tasa_inasistencia_suavizada",
+  "inasistencias_previas",
+  "log_reservas_previas",
+  "es_primera_reserva",
+  "recordatorio_enviado",
+  "duracion_min",
+  "capacidad",
+  "disciplina_Cross Training",
+  "disciplina_Funcional",
+  "disciplina_HIIT",
+  "disciplina_Spinning",
+  "disciplina_Yoga",
+  "disciplina_Zumba",
+  "franja_horaria_manana",
+  "franja_horaria_noche",
+  "franja_horaria_tarde",
+  "franja_horaria_temprano",
+  "dia_semana_1",
+  "dia_semana_2",
+  "dia_semana_3",
+  "dia_semana_4",
+  "dia_semana_5",
+  "dia_semana_6",
+  "temporada_fiestas",
+  "temporada_regular",
+  "temporada_verano"
+ ],
+ "coeficientes": [
+  0.26801567725896974,
+  0.016093512525213974,
+  -0.14106705749454126,
+  0.341820788535144,
+  0.09857760096613154,
+  -0.0342023691876851,
+  0.05061935154867553,
+  -0.13272506126179853,
+  -0.02456773535647672,
+  0.01786201277816187,
+  0.03615816784296799,
+  0.16678643506897786,
+  0.07496040180523328,
+  -0.09807107648085688,
+  -0.19091829520711537,
+  0.011124946653393045,
+  -0.011039357325208487,
+  0.03521179714594578,
+  -0.19091829520711537,
+  0.16678643506897786,
+  0.1421825914370787,
+  -0.009891671123014329,
+  -0.11037327446459051,
+  0.049200318616946244,
+  0.11186644342086614,
+  -0.18294382820468608,
+  0.06277847950228141,
+  0.01852533994814052,
+  -0.0812632397678222
+ ],
+ "intercepto": -1.5774067239491851,
+ "metricas_prueba": {
+  "accuracy": 0.6366,
+  "precision": 0.2434,
+  "recall": 0.697,
+  "F1": 0.3608,
+  "F2": 0.5077,
+  "PR-AUC": 0.3191,
+  "ROC-AUC": 0.7213,
+  "% marcadas": 0.4214
+ }
+}

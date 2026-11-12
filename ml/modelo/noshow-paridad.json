@@ -1,0 +1,3202 @@
+[
+ {
+  "entrada": {
+   "disciplina": "Cross Training",
+   "inicio_sesion": "2026-08-29T15:30:00Z",
+   "dia_semana": 6,
+   "hora_inicio": 10,
+   "duracion_min": 60,
+   "capacidad": 16,
+   "reservas_activas": 5,
+   "anticipacion_horas": 22.6,
+   "reservas_previas": 59,
+   "inasistencias_previas": 12,
+   "recordatorio_enviado": null
+  },
+  "probabilidad": 0.14714424466206644
+ },
+ {
+  "entrada": {
+   "disciplina": "Zumba",
+   "inicio_sesion": "2026-10-31T14:00:00Z",
+   "dia_semana": 6,
+   "hora_inicio": 9,
+   "duracion_min": 60,
+   "capacidad": 30,
+   "reservas_activas": 6,
+   "anticipacion_horas": 89.2,
+   "reservas_previas": 49,
+   "inasistencias_previas": 4,
+   "recordatorio_enviado": null
+  },
+  "probabilidad": 0.14956223870208563
+ },
+ {
+  "entrada": {
+   "disciplina": "Funcional",
+   "inicio_sesion": "2026-08-24T12:00:00Z",
+   "dia_semana": 1,
+   "hora_inicio": 7,
+   "duracion_min": 60,
+   "capacidad": 18,
+   "reservas_activas": 7,
+   "anticipacion_horas": 29.6,
+   "reservas_previas": 24,
+   "inasistencias_previas": 6,
+   "recordatorio_enviado": null
+  },
+  "probabilidad": 0.25149839956577696
+ },
+ {
+  "entrada": {
+   "disciplina": "Spinning",
+   "inicio_sesion": "2026-10-14T23:00:00Z",
+   "dia_semana": 3,
+   "hora_inicio": 18,
+   "duracion_min": 50,
+   "capacidad": 25,
+   "reservas_activas": 12,
+   "anticipacion_horas": 25.4,
+   "reservas_previas": 86,
+   "inasistencias_previas": 25,
+   "recordatorio_enviado": null
+  },
+  "probabilidad": 0.21248938098643258
+ },
+ {
+  "entrada": {
+   "disciplina": "Zumba",
+   "inicio_sesion": "2026-10-27T13:30:00Z",
+   "dia_semana": 2,
+   "hora_inicio": 8,
+   "duracion_min": 60,
+   "capacidad": 30,
+   "reservas_activas": 9,
+   "anticipacion_horas": 28.7,
+   "reservas_previas": 29,
+   "inasistencias_previas": 6,
+   "recordatorio_enviado": null
+  },
+  "probabilidad": 0.17058913649370014
+ },
+ {
+  "entrada": {
+   "disciplina": "Zumba",
+   "inicio_sesion": "2026-10-31T14:00:00Z",
+   "dia_semana": 6,
+   "hora_inicio": 9,
+   "duracion_min": 60,
+   "capacidad": 30,
+   "reservas_activas": 6,
+   "anticipacion_horas": 56.7,
+   "reservas_previas": 62,
+   "inasistencias_previas": 8,
+   "recordatorio_enviado": null
+  },
+  "probabilidad": 0.1599413447045253
+ },
+ {
+  "entrada": {
+   "disciplina": "Funcional",
+   "inicio_sesion": "2026-10-19T12:00:00Z",
+   "dia_semana": 1,
+   "hora_inicio": 7,
+   "duracion_min": 60,
+   "capacidad": 18,
+   "reservas_activas": 6,
+   "anticipacion_horas": 22.3,
+   "reservas_previas": 87,
+   "inasistencias_previas": 25,
+   "recordatorio_enviado": null
+  },
+  "probabilidad": 0.3478588651428723
+ },
+ {
+  "entrada": {
+   "disciplina": "Cross Training",
+   "inicio_sesion": "2026-09-30T00:00:00Z",
+   "dia_semana": 2,
+   "hora_inicio": 19,
+   "duracion_min": 60,
+   "capacidad": 16,
+   "reservas_activas": 3,
+   "anticipacion_horas": 26.5,
+   "reservas_previas": 15,
+   "inasistencias_previas": 1,
+   "recordatorio_enviado": null
+  },
+  "probabilidad": 0.12652222402295066
+ },
+ {
+  "entrada": {
+   "disciplina": "Cross Training",
+   "inicio_sesion": "2026-10-14T00:00:00Z",
+   "dia_semana": 2,
+   "hora_inicio": 19,
+   "duracion_min": 60,
+   "capacidad": 16,
+   "reservas_activas": 2,
+   "anticipacion_horas": 124.6,
+   "reservas_previas": 4,
+   "inasistencias_previas": 1,
+   "recordatorio_enviado": null
+  },
+  "probabilidad": 0.28028567651249187
+ },
+ {
+  "entrada": {
+   "disciplina": "Cross Training",
+   "inicio_sesion": "2026-10-30T00:00:00Z",
+   "dia_semana": 4,
+   "hora_inicio": 19,
+   "duracion_min": 60,
+   "capacidad": 16,
+   "reservas_activas": 4,
+   "anticipacion_horas": 45.5,
+   "reservas_previas": 2,
+   "inasistencias_previas": 0,
+   "recordatorio_enviado": null
+  },
+  "probabilidad": 0.15095555260151122
+ },
+ {
+  "entrada": {
+   "disciplina": "Cross Training",
+   "inicio_sesion": "2026-10-21T00:00:00Z",
+   "dia_semana": 2,
+   "hora_inicio": 19,
+   "duracion_min": 60,
+   "capacidad": 16,
+   "reservas_activas": 7,
+   "anticipacion_horas": 52.5,
+   "reservas_previas": 72,
+   "inasistencias_previas": 12,
+   "recordatorio_enviado": null
+  },
+  "probabilidad": 0.17828200568406577
+ },
+ {
+  "entrada": {
+   "disciplina": "Zumba",
+   "inicio_sesion": "2026-10-10T14:00:00Z",
+   "dia_semana": 6,
+   "hora_inicio": 9,
+   "duracion_min": 60,
+   "capacidad": 30,
+   "reservas_activas": 13,
+   "anticipacion_horas": 35.7,
+   "reservas_previas": 88,
+   "inasistencias_previas": 20,
+   "recordatorio_enviado": null
+  },
+  "probabilidad": 0.18342938059731315
+ },
+ {
+  "entrada": {
+   "disciplina": "HIIT",
+   "inicio_sesion": "2026-10-06T00:30:00Z",
+   "dia_semana": 1,
+   "hora_inicio": 19,
+   "duracion_min": 45,
+   "capacidad": 20,
+   "reservas_activas": 6,
+   "anticipacion_horas": 69.6,
+   "reservas_previas": 20,
+   "inasistencias_previas": 0,
+   "recordatorio_enviado": null
+  },
+  "probabilidad": 0.15283622774385686
+ },
+ {
+  "entrada": {
+   "disciplina": "Zumba",
+   "inicio_sesion": "2026-10-13T13:30:00Z",
+   "dia_semana": 2,
+   "hora_inicio": 8,
+   "duracion_min": 60,
+   "capacidad": 30,
+   "reservas_activas": 3,
+   "anticipacion_horas": 22.8,
+   "reservas_previas": 102,
+   "inasistencias_previas": 35,
+   "recordatorio_enviado": null
+  },
+  "probabilidad": 0.38623193160266
+ },
+ {
+  "entrada": {
+   "disciplina": "Zumba",
+   "inicio_sesion": "2026-09-12T14:00:00Z",
+   "dia_semana": 6,
+   "hora_inicio": 9,
+   "duracion_min": 60,
+   "capacidad": 30,
+   "reservas_activas": 6,
+   "anticipacion_horas": 17.4,
+   "reservas_previas": 20,
+   "inasistencias_previas": 5,
+   "recordatorio_enviado": null
+  },
+  "probabilidad": 0.15509417446376944
+ },
+ {
+  "entrada": {
+   "disciplina": "Zumba",
+   "inicio_sesion": "2026-09-05T14:00:00Z",
+   "dia_semana": 6,
+   "hora_inicio": 9,
+   "duracion_min": 60,
+   "capacidad": 30,
+   "reservas_activas": 10,
+   "anticipacion_horas": 103.6,
+   "reservas_previas": 5,
+   "inasistencias_previas": 1,
+   "recordatorio_enviado": null
+  },
+  "probabilidad": 0.1817992382315897
+ },
+ {
+  "entrada": {
+   "disciplina": "Yoga",
+   "inicio_sesion": "2026-08-25T22:30:00Z",
+   "dia_semana": 2,
+   "hora_inicio": 17,
+   "duracion_min": 60,
+   "capacidad": 15,
+   "reservas_activas": 3,
+   "anticipacion_horas": 40.9,
+   "reservas_previas": 7,
+   "inasistencias_previas": 1,
+   "recordatorio_enviado": null
+  },
+  "probabilidad": 0.11483391696014464
+ },
+ {
+  "entrada": {
+   "disciplina": "Zumba",
+   "inicio_sesion": "2026-09-19T14:00:00Z",
+   "dia_semana": 6,
+   "hora_inicio": 9,
+   "duracion_min": 60,
+   "capacidad": 30,
+   "reservas_activas": 8,
+   "anticipacion_horas": 25.5,
+   "reservas_previas": 5,
+   "inasistencias_previas": 0,
+   "recordatorio_enviado": null
+  },
+  "probabilidad": 0.09101065999995846
+ },
+ {
+  "entrada": {
+   "disciplina": "Zumba",
+   "inicio_sesion": "2026-10-03T14:00:00Z",
+   "dia_semana": 6,
+   "hora_inicio": 9,
+   "duracion_min": 60,
+   "capacidad": 30,
+   "reservas_activas": 6,
+   "anticipacion_horas": 48.7,
+   "reservas_previas": 3,
+   "inasistencias_previas": 0,
+   "recordatorio_enviado": null
+  },
+  "probabilidad": 0.1218463528045492
+ },
+ {
+  "entrada": {
+   "disciplina": "HIIT",
+   "inicio_sesion": "2026-10-13T00:30:00Z",
+   "dia_semana": 1,
+   "hora_inicio": 19,
+   "duracion_min": 45,
+   "capacidad": 20,
+   "reservas_activas": 7,
+   "anticipacion_horas": 39.5,
+   "reservas_previas": 9,
+   "inasistencias_previas": 1,
+   "recordatorio_enviado": null
+  },
+  "probabilidad": 0.17283588777555983
+ },
+ {
+  "entrada": {
+   "disciplina": "Spinning",
+   "inicio_sesion": "2026-10-30T23:00:00Z",
+   "dia_semana": 5,
+   "hora_inicio": 18,
+   "duracion_min": 50,
+   "capacidad": 25,
+   "reservas_activas": 7,
+   "anticipacion_horas": 20.0,
+   "reservas_previas": 43,
+   "inasistencias_previas": 21,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.3860381170484265
+ },
+ {
+  "entrada": {
+   "disciplina": "Spinning",
+   "inicio_sesion": "2026-08-31T23:00:00Z",
+   "dia_semana": 1,
+   "hora_inicio": 18,
+   "duracion_min": 50,
+   "capacidad": 25,
+   "reservas_activas": 10,
+   "anticipacion_horas": 137.2,
+   "reservas_previas": 20,
+   "inasistencias_previas": 10,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.44771763706074186
+ },
+ {
+  "entrada": {
+   "disciplina": "Spinning",
+   "inicio_sesion": "2026-08-31T23:00:00Z",
+   "dia_semana": 1,
+   "hora_inicio": 18,
+   "duracion_min": 50,
+   "capacidad": 25,
+   "reservas_activas": 10,
+   "anticipacion_horas": 16.1,
+   "reservas_previas": 74,
+   "inasistencias_previas": 20,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.2188978914527398
+ },
+ {
+  "entrada": {
+   "disciplina": "Spinning",
+   "inicio_sesion": "2026-09-18T23:00:00Z",
+   "dia_semana": 5,
+   "hora_inicio": 18,
+   "duracion_min": 50,
+   "capacidad": 25,
+   "reservas_activas": 10,
+   "anticipacion_horas": 57.0,
+   "reservas_previas": 18,
+   "inasistencias_previas": 0,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.11195603755175156
+ },
+ {
+  "entrada": {
+   "disciplina": "Zumba",
+   "inicio_sesion": "2026-10-20T13:30:00Z",
+   "dia_semana": 2,
+   "hora_inicio": 8,
+   "duracion_min": 60,
+   "capacidad": 30,
+   "reservas_activas": 6,
+   "anticipacion_horas": 61.9,
+   "reservas_previas": 13,
+   "inasistencias_previas": 2,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.18790614216750892
+ },
+ {
+  "entrada": {
+   "disciplina": "Zumba",
+   "inicio_sesion": "2026-10-17T14:00:00Z",
+   "dia_semana": 6,
+   "hora_inicio": 9,
+   "duracion_min": 60,
+   "capacidad": 30,
+   "reservas_activas": 6,
+   "anticipacion_horas": 45.7,
+   "reservas_previas": 2,
+   "inasistencias_previas": 0,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.12633117679477207
+ },
+ {
+  "entrada": {
+   "disciplina": "Yoga",
+   "inicio_sesion": "2026-09-29T22:30:00Z",
+   "dia_semana": 2,
+   "hora_inicio": 17,
+   "duracion_min": 60,
+   "capacidad": 15,
+   "reservas_activas": 4,
+   "anticipacion_horas": 16.3,
+   "reservas_previas": 43,
+   "inasistencias_previas": 4,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.0743852611585544
+ },
+ {
+  "entrada": {
+   "disciplina": "Spinning",
+   "inicio_sesion": "2026-09-09T23:00:00Z",
+   "dia_semana": 3,
+   "hora_inicio": 18,
+   "duracion_min": 50,
+   "capacidad": 25,
+   "reservas_activas": 10,
+   "anticipacion_horas": 167.5,
+   "reservas_previas": 52,
+   "inasistencias_previas": 3,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.1411673120250895
+ },
+ {
+  "entrada": {
+   "disciplina": "Zumba",
+   "inicio_sesion": "2026-10-24T14:00:00Z",
+   "dia_semana": 6,
+   "hora_inicio": 9,
+   "duracion_min": 60,
+   "capacidad": 30,
+   "reservas_activas": 8,
+   "anticipacion_horas": 26.7,
+   "reservas_previas": 83,
+   "inasistencias_previas": 8,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.1139354684222946
+ },
+ {
+  "entrada": {
+   "disciplina": "Zumba",
+   "inicio_sesion": "2026-08-25T13:30:00Z",
+   "dia_semana": 2,
+   "hora_inicio": 8,
+   "duracion_min": 60,
+   "capacidad": 30,
+   "reservas_activas": 11,
+   "anticipacion_horas": 163.0,
+   "reservas_previas": 11,
+   "inasistencias_previas": 3,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.2667220399270021
+ },
+ {
+  "entrada": {
+   "disciplina": "Cross Training",
+   "inicio_sesion": "2026-09-12T15:30:00Z",
+   "dia_semana": 6,
+   "hora_inicio": 10,
+   "duracion_min": 60,
+   "capacidad": 16,
+   "reservas_activas": 10,
+   "anticipacion_horas": 109.9,
+   "reservas_previas": 29,
+   "inasistencias_previas": 4,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.12598598803638372
+ },
+ {
+  "entrada": {
+   "disciplina": "Cross Training",
+   "inicio_sesion": "2026-09-30T00:00:00Z",
+   "dia_semana": 2,
+   "hora_inicio": 19,
+   "duracion_min": 60,
+   "capacidad": 16,
+   "reservas_activas": 3,
+   "anticipacion_horas": 48.8,
+   "reservas_previas": 5,
+   "inasistencias_previas": 0,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.13768137657832738
+ },
+ {
+  "entrada": {
+   "disciplina": "Cross Training",
+   "inicio_sesion": "2026-10-30T00:00:00Z",
+   "dia_semana": 4,
+   "hora_inicio": 19,
+   "duracion_min": 60,
+   "capacidad": 16,
+   "reservas_activas": 4,
+   "anticipacion_horas": 54.3,
+   "reservas_previas": 8,
+   "inasistencias_previas": 3,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.28937937016549403
+ },
+ {
+  "entrada": {
+   "disciplina": "Spinning",
+   "inicio_sesion": "2026-10-14T23:00:00Z",
+   "dia_semana": 3,
+   "hora_inicio": 18,
+   "duracion_min": 50,
+   "capacidad": 25,
+   "reservas_activas": 12,
+   "anticipacion_horas": 26.2,
+   "reservas_previas": 10,
+   "inasistencias_previas": 2,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.11851906575605453
+ },
+ {
+  "entrada": {
+   "disciplina": "Cross Training",
+   "inicio_sesion": "2026-08-28T00:00:00Z",
+   "dia_semana": 4,
+   "hora_inicio": 19,
+   "duracion_min": 60,
+   "capacidad": 16,
+   "reservas_activas": 2,
+   "anticipacion_horas": 8.2,
+   "reservas_previas": 71,
+   "inasistencias_previas": 15,
+   "recordatorio_enviado": false
+  },
+  "probabilidad": 0.24778315392348055
+ },
+ {
+  "entrada": {
+   "disciplina": "Zumba",
+   "inicio_sesion": "2026-08-25T13:30:00Z",
+   "dia_semana": 2,
+   "hora_inicio": 8,
+   "duracion_min": 60,
+   "capacidad": 30,
+   "reservas_activas": 11,
+   "anticipacion_horas": 167.5,
+   "reservas_previas": 2,
+   "inasistencias_previas": 0,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.1766058107161628
+ },
+ {
+  "entrada": {
+   "disciplina": "Funcional",
+   "inicio_sesion": "2026-10-26T12:00:00Z",
+   "dia_semana": 1,
+   "hora_inicio": 7,
+   "duracion_min": 60,
+   "capacidad": 18,
+   "reservas_activas": 4,
+   "anticipacion_horas": 116.5,
+   "reservas_previas": 32,
+   "inasistencias_previas": 0,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.20441159629284592
+ },
+ {
+  "entrada": {
+   "disciplina": "Zumba",
+   "inicio_sesion": "2026-10-29T13:30:00Z",
+   "dia_semana": 4,
+   "hora_inicio": 8,
+   "duracion_min": 60,
+   "capacidad": 30,
+   "reservas_activas": 8,
+   "anticipacion_horas": 53.2,
+   "reservas_previas": 61,
+   "inasistencias_previas": 8,
+   "recordatorio_enviado": false
+  },
+  "probabilidad": 0.2365966951002804
+ },
+ {
+  "entrada": {
+   "disciplina": "Zumba",
+   "inicio_sesion": "2026-09-15T13:30:00Z",
+   "dia_semana": 2,
+   "hora_inicio": 8,
+   "duracion_min": 60,
+   "capacidad": 30,
+   "reservas_activas": 10,
+   "anticipacion_horas": 24.1,
+   "reservas_previas": 14,
+   "inasistencias_previas": 1,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.10788910387980058
+ },
+ {
+  "entrada": {
+   "disciplina": "Zumba",
+   "inicio_sesion": "2026-10-10T14:00:00Z",
+   "dia_semana": 6,
+   "hora_inicio": 9,
+   "duracion_min": 60,
+   "capacidad": 30,
+   "reservas_activas": 13,
+   "anticipacion_horas": 10.7,
+   "reservas_previas": 9,
+   "inasistencias_previas": 1,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.08044132109121088
+ },
+ {
+  "entrada": {
+   "disciplina": "HIIT",
+   "inicio_sesion": "2026-10-22T00:30:00Z",
+   "dia_semana": 3,
+   "hora_inicio": 19,
+   "duracion_min": 45,
+   "capacidad": 20,
+   "reservas_activas": 5,
+   "anticipacion_horas": 67.3,
+   "reservas_previas": 22,
+   "inasistencias_previas": 4,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.20638456608349426
+ },
+ {
+  "entrada": {
+   "disciplina": "Spinning",
+   "inicio_sesion": "2026-10-21T23:00:00Z",
+   "dia_semana": 3,
+   "hora_inicio": 18,
+   "duracion_min": 50,
+   "capacidad": 25,
+   "reservas_activas": 5,
+   "anticipacion_horas": 25.5,
+   "reservas_previas": 18,
+   "inasistencias_previas": 1,
+   "recordatorio_enviado": false
+  },
+  "probabilidad": 0.13867760077492225
+ },
+ {
+  "entrada": {
+   "disciplina": "HIIT",
+   "inicio_sesion": "2026-09-24T00:30:00Z",
+   "dia_semana": 3,
+   "hora_inicio": 19,
+   "duracion_min": 45,
+   "capacidad": 20,
+   "reservas_activas": 4,
+   "anticipacion_horas": 16.2,
+   "reservas_previas": 13,
+   "inasistencias_previas": 4,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.20238624520075713
+ },
+ {
+  "entrada": {
+   "disciplina": "Zumba",
+   "inicio_sesion": "2026-09-17T13:30:00Z",
+   "dia_semana": 4,
+   "hora_inicio": 8,
+   "duracion_min": 60,
+   "capacidad": 30,
+   "reservas_activas": 6,
+   "anticipacion_horas": 1.8,
+   "reservas_previas": 46,
+   "inasistencias_previas": 2,
+   "recordatorio_enviado": false
+  },
+  "probabilidad": 0.08975080902111003
+ },
+ {
+  "entrada": {
+   "disciplina": "Funcional",
+   "inicio_sesion": "2026-09-09T12:00:00Z",
+   "dia_semana": 3,
+   "hora_inicio": 7,
+   "duracion_min": 60,
+   "capacidad": 18,
+   "reservas_activas": 6,
+   "anticipacion_horas": 74.5,
+   "reservas_previas": 28,
+   "inasistencias_previas": 3,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.1850414868523533
+ },
+ {
+  "entrada": {
+   "disciplina": "HIIT",
+   "inicio_sesion": "2026-08-27T00:30:00Z",
+   "dia_semana": 3,
+   "hora_inicio": 19,
+   "duracion_min": 45,
+   "capacidad": 20,
+   "reservas_activas": 6,
+   "anticipacion_horas": 121.9,
+   "reservas_previas": 17,
+   "inasistencias_previas": 11,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.5462574947663578
+ },
+ {
+  "entrada": {
+   "disciplina": "Zumba",
+   "inicio_sesion": "2026-10-15T13:30:00Z",
+   "dia_semana": 4,
+   "hora_inicio": 8,
+   "duracion_min": 60,
+   "capacidad": 30,
+   "reservas_activas": 5,
+   "anticipacion_horas": 27.7,
+   "reservas_previas": 30,
+   "inasistencias_previas": 0,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.10798656137526352
+ },
+ {
+  "entrada": {
+   "disciplina": "HIIT",
+   "inicio_sesion": "2026-09-10T00:30:00Z",
+   "dia_semana": 3,
+   "hora_inicio": 19,
+   "duracion_min": 45,
+   "capacidad": 20,
+   "reservas_activas": 8,
+   "anticipacion_horas": 42.0,
+   "reservas_previas": 13,
+   "inasistencias_previas": 0,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.10165063423516742
+ },
+ {
+  "entrada": {
+   "disciplina": "Funcional",
+   "inicio_sesion": "2026-09-09T12:00:00Z",
+   "dia_semana": 3,
+   "hora_inicio": 7,
+   "duracion_min": 60,
+   "capacidad": 18,
+   "reservas_activas": 6,
+   "anticipacion_horas": 10.3,
+   "reservas_previas": 5,
+   "inasistencias_previas": 0,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.09919388813648851
+ },
+ {
+  "entrada": {
+   "disciplina": "Cross Training",
+   "inicio_sesion": "2026-08-19T00:00:00Z",
+   "dia_semana": 2,
+   "hora_inicio": 19,
+   "duracion_min": 60,
+   "capacidad": 16,
+   "reservas_activas": 7,
+   "anticipacion_horas": 73.6,
+   "reservas_previas": 25,
+   "inasistencias_previas": 1,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.121105814389102
+ },
+ {
+  "entrada": {
+   "disciplina": "Spinning",
+   "inicio_sesion": "2026-09-16T23:00:00Z",
+   "dia_semana": 3,
+   "hora_inicio": 18,
+   "duracion_min": 50,
+   "capacidad": 25,
+   "reservas_activas": 10,
+   "anticipacion_horas": 8.9,
+   "reservas_previas": 20,
+   "inasistencias_previas": 7,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.15735284511070946
+ },
+ {
+  "entrada": {
+   "disciplina": "Funcional",
+   "inicio_sesion": "2026-10-09T12:00:00Z",
+   "dia_semana": 5,
+   "hora_inicio": 7,
+   "duracion_min": 60,
+   "capacidad": 18,
+   "reservas_activas": 3,
+   "anticipacion_horas": 64.4,
+   "reservas_previas": 64,
+   "inasistencias_previas": 12,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.321999428837075
+ },
+ {
+  "entrada": {
+   "disciplina": "Cross Training",
+   "inicio_sesion": "2026-09-11T00:00:00Z",
+   "dia_semana": 4,
+   "hora_inicio": 19,
+   "duracion_min": 60,
+   "capacidad": 16,
+   "reservas_activas": 7,
+   "anticipacion_horas": 90.7,
+   "reservas_previas": 43,
+   "inasistencias_previas": 7,
+   "recordatorio_enviado": false
+  },
+  "probabilidad": 0.25437292150167395
+ },
+ {
+  "entrada": {
+   "disciplina": "Funcional",
+   "inicio_sesion": "2026-10-02T12:00:00Z",
+   "dia_semana": 5,
+   "hora_inicio": 7,
+   "duracion_min": 60,
+   "capacidad": 18,
+   "reservas_activas": 2,
+   "anticipacion_horas": 47.3,
+   "reservas_previas": 15,
+   "inasistencias_previas": 4,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.3311660822481227
+ },
+ {
+  "entrada": {
+   "disciplina": "Zumba",
+   "inicio_sesion": "2026-09-10T13:30:00Z",
+   "dia_semana": 4,
+   "hora_inicio": 8,
+   "duracion_min": 60,
+   "capacidad": 30,
+   "reservas_activas": 8,
+   "anticipacion_horas": 80.8,
+   "reservas_previas": 44,
+   "inasistencias_previas": 2,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.1488763431773372
+ },
+ {
+  "entrada": {
+   "disciplina": "Cross Training",
+   "inicio_sesion": "2026-09-05T15:30:00Z",
+   "dia_semana": 6,
+   "hora_inicio": 10,
+   "duracion_min": 60,
+   "capacidad": 16,
+   "reservas_activas": 8,
+   "anticipacion_horas": 48.5,
+   "reservas_previas": 41,
+   "inasistencias_previas": 5,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.10982057056029025
+ },
+ {
+  "entrada": {
+   "disciplina": "Funcional",
+   "inicio_sesion": "2026-09-28T12:00:00Z",
+   "dia_semana": 1,
+   "hora_inicio": 7,
+   "duracion_min": 60,
+   "capacidad": 18,
+   "reservas_activas": 4,
+   "anticipacion_horas": 46.7,
+   "reservas_previas": 28,
+   "inasistencias_previas": 2,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.20107983273376173
+ },
+ {
+  "entrada": {
+   "disciplina": "Zumba",
+   "inicio_sesion": "2026-08-27T13:30:00Z",
+   "dia_semana": 4,
+   "hora_inicio": 8,
+   "duracion_min": 60,
+   "capacidad": 30,
+   "reservas_activas": 7,
+   "anticipacion_horas": 14.2,
+   "reservas_previas": 53,
+   "inasistencias_previas": 12,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.18412396006185008
+ },
+ {
+  "entrada": {
+   "disciplina": "Zumba",
+   "inicio_sesion": "2026-10-10T14:00:00Z",
+   "dia_semana": 6,
+   "hora_inicio": 9,
+   "duracion_min": 60,
+   "capacidad": 30,
+   "reservas_activas": 13,
+   "anticipacion_horas": 33.3,
+   "reservas_previas": 0,
+   "inasistencias_previas": 0,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.14907247110709557
+ },
+ {
+  "entrada": {
+   "disciplina": "Spinning",
+   "inicio_sesion": "2026-10-23T23:00:00Z",
+   "dia_semana": 5,
+   "hora_inicio": 18,
+   "duracion_min": 50,
+   "capacidad": 25,
+   "reservas_activas": 6,
+   "anticipacion_horas": 21.5,
+   "reservas_previas": 11,
+   "inasistencias_previas": 1,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.1297058220975892
+ },
+ {
+  "entrada": {
+   "disciplina": "Cross Training",
+   "inicio_sesion": "2026-10-17T15:30:00Z",
+   "dia_semana": 6,
+   "hora_inicio": 10,
+   "duracion_min": 60,
+   "capacidad": 16,
+   "reservas_activas": 8,
+   "anticipacion_horas": 18.9,
+   "reservas_previas": 21,
+   "inasistencias_previas": 4,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.10206508852461978
+ },
+ {
+  "entrada": {
+   "disciplina": "HIIT",
+   "inicio_sesion": "2026-09-08T00:30:00Z",
+   "dia_semana": 1,
+   "hora_inicio": 19,
+   "duracion_min": 45,
+   "capacidad": 20,
+   "reservas_activas": 4,
+   "anticipacion_horas": 135.3,
+   "reservas_previas": 10,
+   "inasistencias_previas": 2,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.30705263138735106
+ },
+ {
+  "entrada": {
+   "disciplina": "Cross Training",
+   "inicio_sesion": "2026-09-25T00:00:00Z",
+   "dia_semana": 4,
+   "hora_inicio": 19,
+   "duracion_min": 60,
+   "capacidad": 16,
+   "reservas_activas": 4,
+   "anticipacion_horas": 140.5,
+   "reservas_previas": 14,
+   "inasistencias_previas": 4,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.310358582871033
+ },
+ {
+  "entrada": {
+   "disciplina": "Funcional",
+   "inicio_sesion": "2026-09-14T12:00:00Z",
+   "dia_semana": 1,
+   "hora_inicio": 7,
+   "duracion_min": 60,
+   "capacidad": 18,
+   "reservas_activas": 4,
+   "anticipacion_horas": 59.2,
+   "reservas_previas": 44,
+   "inasistencias_previas": 10,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.3291503274450189
+ },
+ {
+  "entrada": {
+   "disciplina": "Cross Training",
+   "inicio_sesion": "2026-09-19T15:30:00Z",
+   "dia_semana": 6,
+   "hora_inicio": 10,
+   "duracion_min": 60,
+   "capacidad": 16,
+   "reservas_activas": 7,
+   "anticipacion_horas": 43.9,
+   "reservas_previas": 93,
+   "inasistencias_previas": 31,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.2864614122407418
+ },
+ {
+  "entrada": {
+   "disciplina": "HIIT",
+   "inicio_sesion": "2026-10-15T00:30:00Z",
+   "dia_semana": 3,
+   "hora_inicio": 19,
+   "duracion_min": 45,
+   "capacidad": 20,
+   "reservas_activas": 10,
+   "anticipacion_horas": 16.6,
+   "reservas_previas": 20,
+   "inasistencias_previas": 2,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.09399050774542908
+ },
+ {
+  "entrada": {
+   "disciplina": "Cross Training",
+   "inicio_sesion": "2026-10-09T00:00:00Z",
+   "dia_semana": 4,
+   "hora_inicio": 19,
+   "duracion_min": 60,
+   "capacidad": 16,
+   "reservas_activas": 3,
+   "anticipacion_horas": 155.0,
+   "reservas_previas": 1,
+   "inasistencias_previas": 1,
+   "recordatorio_enviado": false
+  },
+  "probabilidad": 0.5377394773493583
+ },
+ {
+  "entrada": {
+   "disciplina": "Spinning",
+   "inicio_sesion": "2026-08-21T23:00:00Z",
+   "dia_semana": 5,
+   "hora_inicio": 18,
+   "duracion_min": 50,
+   "capacidad": 25,
+   "reservas_activas": 7,
+   "anticipacion_horas": 44.8,
+   "reservas_previas": 57,
+   "inasistencias_previas": 12,
+   "recordatorio_enviado": false
+  },
+  "probabilidad": 0.29067484953575196
+ },
+ {
+  "entrada": {
+   "disciplina": "Spinning",
+   "inicio_sesion": "2026-09-07T23:00:00Z",
+   "dia_semana": 1,
+   "hora_inicio": 18,
+   "duracion_min": 50,
+   "capacidad": 25,
+   "reservas_activas": 10,
+   "anticipacion_horas": 50.7,
+   "reservas_previas": 27,
+   "inasistencias_previas": 2,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.13545236312787373
+ },
+ {
+  "entrada": {
+   "disciplina": "Funcional",
+   "inicio_sesion": "2026-08-21T12:00:00Z",
+   "dia_semana": 5,
+   "hora_inicio": 7,
+   "duracion_min": 60,
+   "capacidad": 18,
+   "reservas_activas": 2,
+   "anticipacion_horas": 32.5,
+   "reservas_previas": 58,
+   "inasistencias_previas": 11,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.2883921548056887
+ },
+ {
+  "entrada": {
+   "disciplina": "Spinning",
+   "inicio_sesion": "2026-10-28T23:00:00Z",
+   "dia_semana": 3,
+   "hora_inicio": 18,
+   "duracion_min": 50,
+   "capacidad": 25,
+   "reservas_activas": 11,
+   "anticipacion_horas": 24.1,
+   "reservas_previas": 25,
+   "inasistencias_previas": 2,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.08762278761023733
+ },
+ {
+  "entrada": {
+   "disciplina": "Cross Training",
+   "inicio_sesion": "2026-10-16T00:00:00Z",
+   "dia_semana": 4,
+   "hora_inicio": 19,
+   "duracion_min": 60,
+   "capacidad": 16,
+   "reservas_activas": 6,
+   "anticipacion_horas": 51.6,
+   "reservas_previas": 35,
+   "inasistencias_previas": 2,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.12851008880508202
+ },
+ {
+  "entrada": {
+   "disciplina": "Zumba",
+   "inicio_sesion": "2026-09-01T13:30:00Z",
+   "dia_semana": 2,
+   "hora_inicio": 8,
+   "duracion_min": 60,
+   "capacidad": 30,
+   "reservas_activas": 8,
+   "anticipacion_horas": 84.6,
+   "reservas_previas": 75,
+   "inasistencias_previas": 16,
+   "recordatorio_enviado": false
+  },
+  "probabilidad": 0.33427123517420443
+ },
+ {
+  "entrada": {
+   "disciplina": "HIIT",
+   "inicio_sesion": "2026-10-13T00:30:00Z",
+   "dia_semana": 1,
+   "hora_inicio": 19,
+   "duracion_min": 45,
+   "capacidad": 20,
+   "reservas_activas": 7,
+   "anticipacion_horas": 8.8,
+   "reservas_previas": 55,
+   "inasistencias_previas": 5,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.11976922922125594
+ },
+ {
+  "entrada": {
+   "disciplina": "Zumba",
+   "inicio_sesion": "2026-09-12T14:00:00Z",
+   "dia_semana": 6,
+   "hora_inicio": 9,
+   "duracion_min": 60,
+   "capacidad": 30,
+   "reservas_activas": 6,
+   "anticipacion_horas": 78.6,
+   "reservas_previas": 46,
+   "inasistencias_previas": 2,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.12724967113883856
+ },
+ {
+  "entrada": {
+   "disciplina": "Zumba",
+   "inicio_sesion": "2026-09-19T14:00:00Z",
+   "dia_semana": 6,
+   "hora_inicio": 9,
+   "duracion_min": 60,
+   "capacidad": 30,
+   "reservas_activas": 8,
+   "anticipacion_horas": 41.6,
+   "reservas_previas": 11,
+   "inasistencias_previas": 1,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.1196945736870268
+ },
+ {
+  "entrada": {
+   "disciplina": "HIIT",
+   "inicio_sesion": "2026-10-01T00:30:00Z",
+   "dia_semana": 3,
+   "hora_inicio": 19,
+   "duracion_min": 45,
+   "capacidad": 20,
+   "reservas_activas": 10,
+   "anticipacion_horas": 5.7,
+   "reservas_previas": 84,
+   "inasistencias_previas": 20,
+   "recordatorio_enviado": false
+  },
+  "probabilidad": 0.19138353315204995
+ },
+ {
+  "entrada": {
+   "disciplina": "Zumba",
+   "inicio_sesion": "2026-08-18T13:30:00Z",
+   "dia_semana": 2,
+   "hora_inicio": 8,
+   "duracion_min": 60,
+   "capacidad": 30,
+   "reservas_activas": 6,
+   "anticipacion_horas": 20.2,
+   "reservas_previas": 42,
+   "inasistencias_previas": 2,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.10577762751579771
+ },
+ {
+  "entrada": {
+   "disciplina": "Spinning",
+   "inicio_sesion": "2026-09-16T23:00:00Z",
+   "dia_semana": 3,
+   "hora_inicio": 18,
+   "duracion_min": 50,
+   "capacidad": 25,
+   "reservas_activas": 10,
+   "anticipacion_horas": 82.1,
+   "reservas_previas": 23,
+   "inasistencias_previas": 5,
+   "recordatorio_enviado": false
+  },
+  "probabilidad": 0.2382241952931699
+ },
+ {
+  "entrada": {
+   "disciplina": "Zumba",
+   "inicio_sesion": "2026-08-29T14:00:00Z",
+   "dia_semana": 6,
+   "hora_inicio": 9,
+   "duracion_min": 60,
+   "capacidad": 30,
+   "reservas_activas": 8,
+   "anticipacion_horas": 53.0,
+   "reservas_previas": 18,
+   "inasistencias_previas": 5,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.20404878537328966
+ },
+ {
+  "entrada": {
+   "disciplina": "HIIT",
+   "inicio_sesion": "2026-10-01T00:30:00Z",
+   "dia_semana": 3,
+   "hora_inicio": 19,
+   "duracion_min": 45,
+   "capacidad": 20,
+   "reservas_activas": 10,
+   "anticipacion_horas": 55.7,
+   "reservas_previas": 7,
+   "inasistencias_previas": 1,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.1446402517065569
+ },
+ {
+  "entrada": {
+   "disciplina": "Funcional",
+   "inicio_sesion": "2026-10-28T12:00:00Z",
+   "dia_semana": 3,
+   "hora_inicio": 7,
+   "duracion_min": 60,
+   "capacidad": 18,
+   "reservas_activas": 5,
+   "anticipacion_horas": 44.2,
+   "reservas_previas": 54,
+   "inasistencias_previas": 2,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.13799827434677034
+ },
+ {
+  "entrada": {
+   "disciplina": "Zumba",
+   "inicio_sesion": "2026-10-03T14:00:00Z",
+   "dia_semana": 6,
+   "hora_inicio": 9,
+   "duracion_min": 60,
+   "capacidad": 30,
+   "reservas_activas": 6,
+   "anticipacion_horas": 167.5,
+   "reservas_previas": 1,
+   "inasistencias_previas": 0,
+   "recordatorio_enviado": false
+  },
+  "probabilidad": 0.2466421488838987
+ },
+ {
+  "entrada": {
+   "disciplina": "Spinning",
+   "inicio_sesion": "2026-10-28T23:00:00Z",
+   "dia_semana": 3,
+   "hora_inicio": 18,
+   "duracion_min": 50,
+   "capacidad": 25,
+   "reservas_activas": 11,
+   "anticipacion_horas": 58.0,
+   "reservas_previas": 1,
+   "inasistencias_previas": 1,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.2795074074198492
+ },
+ {
+  "entrada": {
+   "disciplina": "Cross Training",
+   "inicio_sesion": "2026-10-02T00:00:00Z",
+   "dia_semana": 4,
+   "hora_inicio": 19,
+   "duracion_min": 60,
+   "capacidad": 16,
+   "reservas_activas": 5,
+   "anticipacion_horas": 17.9,
+   "reservas_previas": 17,
+   "inasistencias_previas": 1,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.10543742204182768
+ },
+ {
+  "entrada": {
+   "disciplina": "Cross Training",
+   "inicio_sesion": "2026-09-23T00:00:00Z",
+   "dia_semana": 2,
+   "hora_inicio": 19,
+   "duracion_min": 60,
+   "capacidad": 16,
+   "reservas_activas": 3,
+   "anticipacion_horas": 167.5,
+   "reservas_previas": 7,
+   "inasistencias_previas": 4,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.4773735384473157
+ },
+ {
+  "entrada": {
+   "disciplina": "Zumba",
+   "inicio_sesion": "2026-10-22T13:30:00Z",
+   "dia_semana": 4,
+   "hora_inicio": 8,
+   "duracion_min": 60,
+   "capacidad": 30,
+   "reservas_activas": 7,
+   "anticipacion_horas": 131.3,
+   "reservas_previas": 29,
+   "inasistencias_previas": 1,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.1683597575695928
+ },
+ {
+  "entrada": {
+   "disciplina": "Cross Training",
+   "inicio_sesion": "2026-09-02T00:00:00Z",
+   "dia_semana": 2,
+   "hora_inicio": 19,
+   "duracion_min": 60,
+   "capacidad": 16,
+   "reservas_activas": 5,
+   "anticipacion_horas": 5.0,
+   "reservas_previas": 8,
+   "inasistencias_previas": 3,
+   "recordatorio_enviado": false
+  },
+  "probabilidad": 0.2135518588221846
+ },
+ {
+  "entrada": {
+   "disciplina": "Spinning",
+   "inicio_sesion": "2026-08-31T23:00:00Z",
+   "dia_semana": 1,
+   "hora_inicio": 18,
+   "duracion_min": 50,
+   "capacidad": 25,
+   "reservas_activas": 10,
+   "anticipacion_horas": 5.4,
+   "reservas_previas": 54,
+   "inasistencias_previas": 12,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.13944366000201922
+ },
+ {
+  "entrada": {
+   "disciplina": "Funcional",
+   "inicio_sesion": "2026-09-02T12:00:00Z",
+   "dia_semana": 3,
+   "hora_inicio": 7,
+   "duracion_min": 60,
+   "capacidad": 18,
+   "reservas_activas": 4,
+   "anticipacion_horas": 105.8,
+   "reservas_previas": 12,
+   "inasistencias_previas": 0,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.17247356487082718
+ },
+ {
+  "entrada": {
+   "disciplina": "Zumba",
+   "inicio_sesion": "2026-08-20T13:30:00Z",
+   "dia_semana": 4,
+   "hora_inicio": 8,
+   "duracion_min": 60,
+   "capacidad": 30,
+   "reservas_activas": 8,
+   "anticipacion_horas": 81.5,
+   "reservas_previas": 3,
+   "inasistencias_previas": 0,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.16024892079517278
+ },
+ {
+  "entrada": {
+   "disciplina": "Yoga",
+   "inicio_sesion": "2026-09-29T22:30:00Z",
+   "dia_semana": 2,
+   "hora_inicio": 17,
+   "duracion_min": 60,
+   "capacidad": 15,
+   "reservas_activas": 4,
+   "anticipacion_horas": 27.3,
+   "reservas_previas": 97,
+   "inasistencias_previas": 32,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.2480168349284299
+ },
+ {
+  "entrada": {
+   "disciplina": "Cross Training",
+   "inicio_sesion": "2026-09-18T00:00:00Z",
+   "dia_semana": 4,
+   "hora_inicio": 19,
+   "duracion_min": 60,
+   "capacidad": 16,
+   "reservas_activas": 9,
+   "anticipacion_horas": 23.5,
+   "reservas_previas": 36,
+   "inasistencias_previas": 0,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.07335140445143268
+ },
+ {
+  "entrada": {
+   "disciplina": "Spinning",
+   "inicio_sesion": "2026-10-26T23:00:00Z",
+   "dia_semana": 1,
+   "hora_inicio": 18,
+   "duracion_min": 50,
+   "capacidad": 25,
+   "reservas_activas": 8,
+   "anticipacion_horas": 64.1,
+   "reservas_previas": 0,
+   "inasistencias_previas": 0,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.240679213538685
+ },
+ {
+  "entrada": {
+   "disciplina": "Cross Training",
+   "inicio_sesion": "2026-08-19T00:00:00Z",
+   "dia_semana": 2,
+   "hora_inicio": 19,
+   "duracion_min": 60,
+   "capacidad": 16,
+   "reservas_activas": 7,
+   "anticipacion_horas": 24.9,
+   "reservas_previas": 0,
+   "inasistencias_previas": 0,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.16352951247796102
+ },
+ {
+  "entrada": {
+   "disciplina": "Spinning",
+   "inicio_sesion": "2026-10-19T23:00:00Z",
+   "dia_semana": 1,
+   "hora_inicio": 18,
+   "duracion_min": 50,
+   "capacidad": 25,
+   "reservas_activas": 4,
+   "anticipacion_horas": 35.2,
+   "reservas_previas": 6,
+   "inasistencias_previas": 3,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.34340921156073706
+ },
+ {
+  "entrada": {
+   "disciplina": "Spinning",
+   "inicio_sesion": "2026-10-07T23:00:00Z",
+   "dia_semana": 3,
+   "hora_inicio": 18,
+   "duracion_min": 50,
+   "capacidad": 25,
+   "reservas_activas": 7,
+   "anticipacion_horas": 156.8,
+   "reservas_previas": 10,
+   "inasistencias_previas": 0,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.13920351361784436
+ },
+ {
+  "entrada": {
+   "disciplina": "Zumba",
+   "inicio_sesion": "2026-08-18T13:30:00Z",
+   "dia_semana": 2,
+   "hora_inicio": 8,
+   "duracion_min": 60,
+   "capacidad": 30,
+   "reservas_activas": 6,
+   "anticipacion_horas": 32.3,
+   "reservas_previas": 4,
+   "inasistencias_previas": 0,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.12308464034261093
+ },
+ {
+  "entrada": {
+   "disciplina": "Funcional",
+   "inicio_sesion": "2026-09-23T12:00:00Z",
+   "dia_semana": 3,
+   "hora_inicio": 7,
+   "duracion_min": 60,
+   "capacidad": 18,
+   "reservas_activas": 3,
+   "anticipacion_horas": 125.3,
+   "reservas_previas": 24,
+   "inasistencias_previas": 5,
+   "recordatorio_enviado": false
+  },
+  "probabilidad": 0.3775631436049331
+ },
+ {
+  "entrada": {
+   "disciplina": "Cross Training",
+   "inicio_sesion": "2026-09-09T00:00:00Z",
+   "dia_semana": 2,
+   "hora_inicio": 19,
+   "duracion_min": 60,
+   "capacidad": 16,
+   "reservas_activas": 7,
+   "anticipacion_horas": 22.4,
+   "reservas_previas": 27,
+   "inasistencias_previas": 3,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.10968263325518215
+ },
+ {
+  "entrada": {
+   "disciplina": "Spinning",
+   "inicio_sesion": "2026-08-26T23:00:00Z",
+   "dia_semana": 3,
+   "hora_inicio": 18,
+   "duracion_min": 50,
+   "capacidad": 25,
+   "reservas_activas": 8,
+   "anticipacion_horas": 26.4,
+   "reservas_previas": 26,
+   "inasistencias_previas": 6,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.15521382246112356
+ },
+ {
+  "entrada": {
+   "disciplina": "Spinning",
+   "inicio_sesion": "2026-08-28T23:00:00Z",
+   "dia_semana": 5,
+   "hora_inicio": 18,
+   "duracion_min": 50,
+   "capacidad": 25,
+   "reservas_activas": 7,
+   "anticipacion_horas": 18.4,
+   "reservas_previas": 87,
+   "inasistencias_previas": 30,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.32802286484164545
+ },
+ {
+  "entrada": {
+   "disciplina": "Zumba",
+   "inicio_sesion": "2026-10-10T14:00:00Z",
+   "dia_semana": 6,
+   "hora_inicio": 9,
+   "duracion_min": 60,
+   "capacidad": 30,
+   "reservas_activas": 13,
+   "anticipacion_horas": 96.7,
+   "reservas_previas": 26,
+   "inasistencias_previas": 6,
+   "recordatorio_enviado": false
+  },
+  "probabilidad": 0.24493035899050622
+ },
+ {
+  "entrada": {
+   "disciplina": "Zumba",
+   "inicio_sesion": "2026-09-29T13:30:00Z",
+   "dia_semana": 2,
+   "hora_inicio": 8,
+   "duracion_min": 60,
+   "capacidad": 30,
+   "reservas_activas": 5,
+   "anticipacion_horas": 39.6,
+   "reservas_previas": 49,
+   "inasistencias_previas": 7,
+   "recordatorio_enviado": false
+  },
+  "probabilidad": 0.2317455760255376
+ },
+ {
+  "entrada": {
+   "disciplina": "Yoga",
+   "inicio_sesion": "2026-10-29T22:30:00Z",
+   "dia_semana": 4,
+   "hora_inicio": 17,
+   "duracion_min": 60,
+   "capacidad": 15,
+   "reservas_activas": 2,
+   "anticipacion_horas": 47.9,
+   "reservas_previas": 25,
+   "inasistencias_previas": 4,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.14088529410791986
+ },
+ {
+  "entrada": {
+   "disciplina": "HIIT",
+   "inicio_sesion": "2026-08-18T00:30:00Z",
+   "dia_semana": 1,
+   "hora_inicio": 19,
+   "duracion_min": 45,
+   "capacidad": 20,
+   "reservas_activas": 2,
+   "anticipacion_horas": 26.8,
+   "reservas_previas": 74,
+   "inasistencias_previas": 17,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.3028798611509702
+ },
+ {
+  "entrada": {
+   "disciplina": "Funcional",
+   "inicio_sesion": "2026-09-11T12:00:00Z",
+   "dia_semana": 5,
+   "hora_inicio": 7,
+   "duracion_min": 60,
+   "capacidad": 18,
+   "reservas_activas": 2,
+   "anticipacion_horas": 53.3,
+   "reservas_previas": 30,
+   "inasistencias_previas": 4,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.2597353489439469
+ },
+ {
+  "entrada": {
+   "disciplina": "HIIT",
+   "inicio_sesion": "2026-10-15T00:30:00Z",
+   "dia_semana": 3,
+   "hora_inicio": 19,
+   "duracion_min": 45,
+   "capacidad": 20,
+   "reservas_activas": 10,
+   "anticipacion_horas": 19.6,
+   "reservas_previas": 6,
+   "inasistencias_previas": 1,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.11690834421463113
+ },
+ {
+  "entrada": {
+   "disciplina": "Zumba",
+   "inicio_sesion": "2026-09-19T14:00:00Z",
+   "dia_semana": 6,
+   "hora_inicio": 9,
+   "duracion_min": 60,
+   "capacidad": 30,
+   "reservas_activas": 8,
+   "anticipacion_horas": 21.4,
+   "reservas_previas": 31,
+   "inasistencias_previas": 3,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.10134120996757497
+ },
+ {
+  "entrada": {
+   "disciplina": "Zumba",
+   "inicio_sesion": "2026-08-25T13:30:00Z",
+   "dia_semana": 2,
+   "hora_inicio": 8,
+   "duracion_min": 60,
+   "capacidad": 30,
+   "reservas_activas": 11,
+   "anticipacion_horas": 18.3,
+   "reservas_previas": 8,
+   "inasistencias_previas": 0,
+   "recordatorio_enviado": false
+  },
+  "probabilidad": 0.11446333517374763
+ },
+ {
+  "entrada": {
+   "disciplina": "Cross Training",
+   "inicio_sesion": "2026-09-05T15:30:00Z",
+   "dia_semana": 6,
+   "hora_inicio": 10,
+   "duracion_min": 60,
+   "capacidad": 16,
+   "reservas_activas": 8,
+   "anticipacion_horas": 18.2,
+   "reservas_previas": 4,
+   "inasistencias_previas": 1,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.10918944953796482
+ },
+ {
+  "entrada": {
+   "disciplina": "Cross Training",
+   "inicio_sesion": "2026-08-21T00:00:00Z",
+   "dia_semana": 4,
+   "hora_inicio": 19,
+   "duracion_min": 60,
+   "capacidad": 16,
+   "reservas_activas": 2,
+   "anticipacion_horas": 18.6,
+   "reservas_previas": 2,
+   "inasistencias_previas": 1,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.25121142257565615
+ },
+ {
+  "entrada": {
+   "disciplina": "Funcional",
+   "inicio_sesion": "2026-09-18T12:00:00Z",
+   "dia_semana": 5,
+   "hora_inicio": 7,
+   "duracion_min": 60,
+   "capacidad": 18,
+   "reservas_activas": 4,
+   "anticipacion_horas": 47.9,
+   "reservas_previas": 1,
+   "inasistencias_previas": 0,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.22177652070771606
+ },
+ {
+  "entrada": {
+   "disciplina": "Cross Training",
+   "inicio_sesion": "2026-09-12T15:30:00Z",
+   "dia_semana": 6,
+   "hora_inicio": 10,
+   "duracion_min": 60,
+   "capacidad": 16,
+   "reservas_activas": 10,
+   "anticipacion_horas": 15.0,
+   "reservas_previas": 84,
+   "inasistencias_previas": 19,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.12161999078922546
+ },
+ {
+  "entrada": {
+   "disciplina": "Cross Training",
+   "inicio_sesion": "2026-09-12T15:30:00Z",
+   "dia_semana": 6,
+   "hora_inicio": 10,
+   "duracion_min": 60,
+   "capacidad": 16,
+   "reservas_activas": 10,
+   "anticipacion_horas": 58.6,
+   "reservas_previas": 11,
+   "inasistencias_previas": 0,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.07432365488554193
+ },
+ {
+  "entrada": {
+   "disciplina": "Cross Training",
+   "inicio_sesion": "2026-09-25T00:00:00Z",
+   "dia_semana": 4,
+   "hora_inicio": 19,
+   "duracion_min": 60,
+   "capacidad": 16,
+   "reservas_activas": 4,
+   "anticipacion_horas": 73.5,
+   "reservas_previas": 23,
+   "inasistencias_previas": 8,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.3243667864153591
+ },
+ {
+  "entrada": {
+   "disciplina": "HIIT",
+   "inicio_sesion": "2026-09-17T00:30:00Z",
+   "dia_semana": 3,
+   "hora_inicio": 19,
+   "duracion_min": 45,
+   "capacidad": 20,
+   "reservas_activas": 2,
+   "anticipacion_horas": 71.6,
+   "reservas_previas": 56,
+   "inasistencias_previas": 6,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.2009797490876165
+ },
+ {
+  "entrada": {
+   "disciplina": "Spinning",
+   "inicio_sesion": "2026-08-19T23:00:00Z",
+   "dia_semana": 3,
+   "hora_inicio": 18,
+   "duracion_min": 50,
+   "capacidad": 25,
+   "reservas_activas": 7,
+   "anticipacion_horas": 37.5,
+   "reservas_previas": 7,
+   "inasistencias_previas": 1,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.13545069596170167
+ },
+ {
+  "entrada": {
+   "disciplina": "Cross Training",
+   "inicio_sesion": "2026-09-05T15:30:00Z",
+   "dia_semana": 6,
+   "hora_inicio": 10,
+   "duracion_min": 60,
+   "capacidad": 16,
+   "reservas_activas": 8,
+   "anticipacion_horas": 47.3,
+   "reservas_previas": 4,
+   "inasistencias_previas": 0,
+   "recordatorio_enviado": false
+  },
+  "probabilidad": 0.11821927968821677
+ },
+ {
+  "entrada": {
+   "disciplina": "Zumba",
+   "inicio_sesion": "2026-09-15T13:30:00Z",
+   "dia_semana": 2,
+   "hora_inicio": 8,
+   "duracion_min": 60,
+   "capacidad": 30,
+   "reservas_activas": 10,
+   "anticipacion_horas": 42.5,
+   "reservas_previas": 13,
+   "inasistencias_previas": 1,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.12696661891635952
+ },
+ {
+  "entrada": {
+   "disciplina": "HIIT",
+   "inicio_sesion": "2026-09-08T00:30:00Z",
+   "dia_semana": 1,
+   "hora_inicio": 19,
+   "duracion_min": 45,
+   "capacidad": 20,
+   "reservas_activas": 4,
+   "anticipacion_horas": 29.9,
+   "reservas_previas": 80,
+   "inasistencias_previas": 19,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.30208132400520366
+ },
+ {
+  "entrada": {
+   "disciplina": "Spinning",
+   "inicio_sesion": "2026-09-02T23:00:00Z",
+   "dia_semana": 3,
+   "hora_inicio": 18,
+   "duracion_min": 50,
+   "capacidad": 25,
+   "reservas_activas": 6,
+   "anticipacion_horas": 45.5,
+   "reservas_previas": 44,
+   "inasistencias_previas": 2,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.11066829442695865
+ },
+ {
+  "entrada": {
+   "disciplina": "Zumba",
+   "inicio_sesion": "2026-10-13T13:30:00Z",
+   "dia_semana": 2,
+   "hora_inicio": 8,
+   "duracion_min": 60,
+   "capacidad": 30,
+   "reservas_activas": 3,
+   "anticipacion_horas": 167.5,
+   "reservas_previas": 36,
+   "inasistencias_previas": 4,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.2348549179605074
+ },
+ {
+  "entrada": {
+   "disciplina": "Yoga",
+   "inicio_sesion": "2026-09-08T22:30:00Z",
+   "dia_semana": 2,
+   "hora_inicio": 17,
+   "duracion_min": 60,
+   "capacidad": 15,
+   "reservas_activas": 3,
+   "anticipacion_horas": 11.0,
+   "reservas_previas": 13,
+   "inasistencias_previas": 2,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.08766762585302354
+ },
+ {
+  "entrada": {
+   "disciplina": "Spinning",
+   "inicio_sesion": "2026-09-18T23:00:00Z",
+   "dia_semana": 5,
+   "hora_inicio": 18,
+   "duracion_min": 50,
+   "capacidad": 25,
+   "reservas_activas": 10,
+   "anticipacion_horas": 68.6,
+   "reservas_previas": 67,
+   "inasistencias_previas": 12,
+   "recordatorio_enviado": false
+  },
+  "probabilidad": 0.2727191406831464
+ },
+ {
+  "entrada": {
+   "disciplina": "Spinning",
+   "inicio_sesion": "2026-08-28T23:00:00Z",
+   "dia_semana": 5,
+   "hora_inicio": 18,
+   "duracion_min": 50,
+   "capacidad": 25,
+   "reservas_activas": 7,
+   "anticipacion_horas": 57.4,
+   "reservas_previas": 8,
+   "inasistencias_previas": 4,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.3565590218066854
+ },
+ {
+  "entrada": {
+   "disciplina": "Funcional",
+   "inicio_sesion": "2026-10-19T12:00:00Z",
+   "dia_semana": 1,
+   "hora_inicio": 7,
+   "duracion_min": 60,
+   "capacidad": 18,
+   "reservas_activas": 6,
+   "anticipacion_horas": 47.2,
+   "reservas_previas": 5,
+   "inasistencias_previas": 0,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.17249078922597302
+ },
+ {
+  "entrada": {
+   "disciplina": "Spinning",
+   "inicio_sesion": "2026-08-21T23:00:00Z",
+   "dia_semana": 5,
+   "hora_inicio": 18,
+   "duracion_min": 50,
+   "capacidad": 25,
+   "reservas_activas": 7,
+   "anticipacion_horas": 41.0,
+   "reservas_previas": 3,
+   "inasistencias_previas": 0,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.13617364676052585
+ },
+ {
+  "entrada": {
+   "disciplina": "Cross Training",
+   "inicio_sesion": "2026-10-17T15:30:00Z",
+   "dia_semana": 6,
+   "hora_inicio": 10,
+   "duracion_min": 60,
+   "capacidad": 16,
+   "reservas_activas": 8,
+   "anticipacion_horas": 50.4,
+   "reservas_previas": 64,
+   "inasistencias_previas": 19,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.21597369347491344
+ },
+ {
+  "entrada": {
+   "disciplina": "Spinning",
+   "inicio_sesion": "2026-09-21T23:00:00Z",
+   "dia_semana": 1,
+   "hora_inicio": 18,
+   "duracion_min": 50,
+   "capacidad": 25,
+   "reservas_activas": 6,
+   "anticipacion_horas": 25.7,
+   "reservas_previas": 22,
+   "inasistencias_previas": 5,
+   "recordatorio_enviado": false
+  },
+  "probabilidad": 0.256318841144415
+ },
+ {
+  "entrada": {
+   "disciplina": "HIIT",
+   "inicio_sesion": "2026-08-25T00:30:00Z",
+   "dia_semana": 1,
+   "hora_inicio": 19,
+   "duracion_min": 45,
+   "capacidad": 20,
+   "reservas_activas": 7,
+   "anticipacion_horas": 18.3,
+   "reservas_previas": 43,
+   "inasistencias_previas": 8,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.1831573667888015
+ },
+ {
+  "entrada": {
+   "disciplina": "Spinning",
+   "inicio_sesion": "2026-10-07T23:00:00Z",
+   "dia_semana": 3,
+   "hora_inicio": 18,
+   "duracion_min": 50,
+   "capacidad": 25,
+   "reservas_activas": 7,
+   "anticipacion_horas": 77.5,
+   "reservas_previas": 26,
+   "inasistencias_previas": 2,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.13565985710761333
+ },
+ {
+  "entrada": {
+   "disciplina": "Zumba",
+   "inicio_sesion": "2026-09-03T13:30:00Z",
+   "dia_semana": 4,
+   "hora_inicio": 8,
+   "duracion_min": 60,
+   "capacidad": 30,
+   "reservas_activas": 2,
+   "anticipacion_horas": 82.9,
+   "reservas_previas": 9,
+   "inasistencias_previas": 5,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.4692932245108231
+ },
+ {
+  "entrada": {
+   "disciplina": "Spinning",
+   "inicio_sesion": "2026-09-16T23:00:00Z",
+   "dia_semana": 3,
+   "hora_inicio": 18,
+   "duracion_min": 50,
+   "capacidad": 25,
+   "reservas_activas": 10,
+   "anticipacion_horas": 36.1,
+   "reservas_previas": 6,
+   "inasistencias_previas": 1,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.1274642784071284
+ },
+ {
+  "entrada": {
+   "disciplina": "Zumba",
+   "inicio_sesion": "2026-08-22T14:00:00Z",
+   "dia_semana": 6,
+   "hora_inicio": 9,
+   "duracion_min": 60,
+   "capacidad": 30,
+   "reservas_activas": 7,
+   "anticipacion_horas": 124.8,
+   "reservas_previas": 24,
+   "inasistencias_previas": 4,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.1972216771583069
+ },
+ {
+  "entrada": {
+   "disciplina": "Zumba",
+   "inicio_sesion": "2026-09-05T14:00:00Z",
+   "dia_semana": 6,
+   "hora_inicio": 9,
+   "duracion_min": 60,
+   "capacidad": 30,
+   "reservas_activas": 10,
+   "anticipacion_horas": 31.8,
+   "reservas_previas": 51,
+   "inasistencias_previas": 3,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.09419959081530191
+ },
+ {
+  "entrada": {
+   "disciplina": "Cross Training",
+   "inicio_sesion": "2026-10-02T00:00:00Z",
+   "dia_semana": 4,
+   "hora_inicio": 19,
+   "duracion_min": 60,
+   "capacidad": 16,
+   "reservas_activas": 5,
+   "anticipacion_horas": 21.5,
+   "reservas_previas": 8,
+   "inasistencias_previas": 1,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.13312333236164597
+ },
+ {
+  "entrada": {
+   "disciplina": "HIIT",
+   "inicio_sesion": "2026-10-15T00:30:00Z",
+   "dia_semana": 3,
+   "hora_inicio": 19,
+   "duracion_min": 45,
+   "capacidad": 20,
+   "reservas_activas": 10,
+   "anticipacion_horas": 98.2,
+   "reservas_previas": 50,
+   "inasistencias_previas": 3,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.13260260537258894
+ },
+ {
+  "entrada": {
+   "disciplina": "HIIT",
+   "inicio_sesion": "2026-10-27T00:30:00Z",
+   "dia_semana": 1,
+   "hora_inicio": 19,
+   "duracion_min": 45,
+   "capacidad": 20,
+   "reservas_activas": 4,
+   "anticipacion_horas": 37.1,
+   "reservas_previas": 1,
+   "inasistencias_previas": 0,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.1928035039438216
+ },
+ {
+  "entrada": {
+   "disciplina": "HIIT",
+   "inicio_sesion": "2026-09-15T00:30:00Z",
+   "dia_semana": 1,
+   "hora_inicio": 19,
+   "duracion_min": 45,
+   "capacidad": 20,
+   "reservas_activas": 8,
+   "anticipacion_horas": 21.1,
+   "reservas_previas": 17,
+   "inasistencias_previas": 0,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.10442326365604869
+ },
+ {
+  "entrada": {
+   "disciplina": "Zumba",
+   "inicio_sesion": "2026-09-10T13:30:00Z",
+   "dia_semana": 4,
+   "hora_inicio": 8,
+   "duracion_min": 60,
+   "capacidad": 30,
+   "reservas_activas": 8,
+   "anticipacion_horas": 167.5,
+   "reservas_previas": 4,
+   "inasistencias_previas": 2,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.3917826046927212
+ },
+ {
+  "entrada": {
+   "disciplina": "Zumba",
+   "inicio_sesion": "2026-10-29T13:30:00Z",
+   "dia_semana": 4,
+   "hora_inicio": 8,
+   "duracion_min": 60,
+   "capacidad": 30,
+   "reservas_activas": 8,
+   "anticipacion_horas": 22.2,
+   "reservas_previas": 17,
+   "inasistencias_previas": 4,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.17964753111699275
+ },
+ {
+  "entrada": {
+   "disciplina": "Yoga",
+   "inicio_sesion": "2026-10-20T22:30:00Z",
+   "dia_semana": 2,
+   "hora_inicio": 17,
+   "duracion_min": 60,
+   "capacidad": 15,
+   "reservas_activas": 3,
+   "anticipacion_horas": 8.1,
+   "reservas_previas": 91,
+   "inasistencias_previas": 20,
+   "recordatorio_enviado": false
+  },
+  "probabilidad": 0.17097650559603017
+ },
+ {
+  "entrada": {
+   "disciplina": "HIIT",
+   "inicio_sesion": "2026-09-29T00:30:00Z",
+   "dia_semana": 1,
+   "hora_inicio": 19,
+   "duracion_min": 45,
+   "capacidad": 20,
+   "reservas_activas": 6,
+   "anticipacion_horas": 6.7,
+   "reservas_previas": 48,
+   "inasistencias_previas": 7,
+   "recordatorio_enviado": false
+  },
+  "probabilidad": 0.18569680122727764
+ },
+ {
+  "entrada": {
+   "disciplina": "Zumba",
+   "inicio_sesion": "2026-10-15T13:30:00Z",
+   "dia_semana": 4,
+   "hora_inicio": 8,
+   "duracion_min": 60,
+   "capacidad": 30,
+   "reservas_activas": 5,
+   "anticipacion_horas": 91.7,
+   "reservas_previas": 17,
+   "inasistencias_previas": 1,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.176468726062066
+ },
+ {
+  "entrada": {
+   "disciplina": "HIIT",
+   "inicio_sesion": "2026-10-20T00:30:00Z",
+   "dia_semana": 1,
+   "hora_inicio": 19,
+   "duracion_min": 45,
+   "capacidad": 20,
+   "reservas_activas": 3,
+   "anticipacion_horas": 33.4,
+   "reservas_previas": 65,
+   "inasistencias_previas": 19,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.35645236217501447
+ },
+ {
+  "entrada": {
+   "disciplina": "Spinning",
+   "inicio_sesion": "2026-09-28T23:00:00Z",
+   "dia_semana": 1,
+   "hora_inicio": 18,
+   "duracion_min": 50,
+   "capacidad": 25,
+   "reservas_activas": 6,
+   "anticipacion_horas": 54.2,
+   "reservas_previas": 16,
+   "inasistencias_previas": 4,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.2430793715181579
+ },
+ {
+  "entrada": {
+   "disciplina": "Zumba",
+   "inicio_sesion": "2026-10-24T14:00:00Z",
+   "dia_semana": 6,
+   "hora_inicio": 9,
+   "duracion_min": 60,
+   "capacidad": 30,
+   "reservas_activas": 8,
+   "anticipacion_horas": 13.3,
+   "reservas_previas": 15,
+   "inasistencias_previas": 4,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.14036705792458878
+ },
+ {
+  "entrada": {
+   "disciplina": "Cross Training",
+   "inicio_sesion": "2026-10-09T00:00:00Z",
+   "dia_semana": 4,
+   "hora_inicio": 19,
+   "duracion_min": 60,
+   "capacidad": 16,
+   "reservas_activas": 3,
+   "anticipacion_horas": 32.5,
+   "reservas_previas": 17,
+   "inasistencias_previas": 4,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.21342095927905408
+ },
+ {
+  "entrada": {
+   "disciplina": "Zumba",
+   "inicio_sesion": "2026-09-26T14:00:00Z",
+   "dia_semana": 6,
+   "hora_inicio": 9,
+   "duracion_min": 60,
+   "capacidad": 30,
+   "reservas_activas": 5,
+   "anticipacion_horas": 11.6,
+   "reservas_previas": 81,
+   "inasistencias_previas": 19,
+   "recordatorio_enviado": false
+  },
+  "probabilidad": 0.23784844169899744
+ },
+ {
+  "entrada": {
+   "disciplina": "Cross Training",
+   "inicio_sesion": "2026-10-30T00:00:00Z",
+   "dia_semana": 4,
+   "hora_inicio": 19,
+   "duracion_min": 60,
+   "capacidad": 16,
+   "reservas_activas": 4,
+   "anticipacion_horas": 42.4,
+   "reservas_previas": 24,
+   "inasistencias_previas": 2,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.1472157240593089
+ },
+ {
+  "entrada": {
+   "disciplina": "Cross Training",
+   "inicio_sesion": "2026-09-04T00:00:00Z",
+   "dia_semana": 4,
+   "hora_inicio": 19,
+   "duracion_min": 60,
+   "capacidad": 16,
+   "reservas_activas": 8,
+   "anticipacion_horas": 43.5,
+   "reservas_previas": 2,
+   "inasistencias_previas": 0,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.12047780226176188
+ },
+ {
+  "entrada": {
+   "disciplina": "Zumba",
+   "inicio_sesion": "2026-08-18T13:30:00Z",
+   "dia_semana": 2,
+   "hora_inicio": 8,
+   "duracion_min": 60,
+   "capacidad": 30,
+   "reservas_activas": 6,
+   "anticipacion_horas": 85.6,
+   "reservas_previas": 28,
+   "inasistencias_previas": 5,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.2209489807205548
+ },
+ {
+  "entrada": {
+   "disciplina": "HIIT",
+   "inicio_sesion": "2026-08-20T00:30:00Z",
+   "dia_semana": 3,
+   "hora_inicio": 19,
+   "duracion_min": 45,
+   "capacidad": 20,
+   "reservas_activas": 9,
+   "anticipacion_horas": 167.5,
+   "reservas_previas": 32,
+   "inasistencias_previas": 2,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.15934593579627487
+ },
+ {
+  "entrada": {
+   "disciplina": "Funcional",
+   "inicio_sesion": "2026-09-25T12:00:00Z",
+   "dia_semana": 5,
+   "hora_inicio": 7,
+   "duracion_min": 60,
+   "capacidad": 18,
+   "reservas_activas": 2,
+   "anticipacion_horas": 84.5,
+   "reservas_previas": 28,
+   "inasistencias_previas": 1,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.2234738466880455
+ },
+ {
+  "entrada": {
+   "disciplina": "Spinning",
+   "inicio_sesion": "2026-09-02T23:00:00Z",
+   "dia_semana": 3,
+   "hora_inicio": 18,
+   "duracion_min": 50,
+   "capacidad": 25,
+   "reservas_activas": 6,
+   "anticipacion_horas": 24.1,
+   "reservas_previas": 25,
+   "inasistencias_previas": 3,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.11789605929679857
+ },
+ {
+  "entrada": {
+   "disciplina": "Funcional",
+   "inicio_sesion": "2026-10-19T12:00:00Z",
+   "dia_semana": 1,
+   "hora_inicio": 7,
+   "duracion_min": 60,
+   "capacidad": 18,
+   "reservas_activas": 6,
+   "anticipacion_horas": 115.0,
+   "reservas_previas": 2,
+   "inasistencias_previas": 0,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.23636334821435065
+ },
+ {
+  "entrada": {
+   "disciplina": "Cross Training",
+   "inicio_sesion": "2026-09-11T00:00:00Z",
+   "dia_semana": 4,
+   "hora_inicio": 19,
+   "duracion_min": 60,
+   "capacidad": 16,
+   "reservas_activas": 7,
+   "anticipacion_horas": 20.1,
+   "reservas_previas": 29,
+   "inasistencias_previas": 3,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.11002466974651365
+ },
+ {
+  "entrada": {
+   "disciplina": "Spinning",
+   "inicio_sesion": "2026-09-07T23:00:00Z",
+   "dia_semana": 1,
+   "hora_inicio": 18,
+   "duracion_min": 50,
+   "capacidad": 25,
+   "reservas_activas": 10,
+   "anticipacion_horas": 17.6,
+   "reservas_previas": 15,
+   "inasistencias_previas": 1,
+   "recordatorio_enviado": false
+  },
+  "probabilidad": 0.13734622335888788
+ },
+ {
+  "entrada": {
+   "disciplina": "Spinning",
+   "inicio_sesion": "2026-09-11T23:00:00Z",
+   "dia_semana": 5,
+   "hora_inicio": 18,
+   "duracion_min": 50,
+   "capacidad": 25,
+   "reservas_activas": 8,
+   "anticipacion_horas": 23.2,
+   "reservas_previas": 56,
+   "inasistencias_previas": 13,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.20221072490188097
+ },
+ {
+  "entrada": {
+   "disciplina": "Spinning",
+   "inicio_sesion": "2026-10-14T23:00:00Z",
+   "dia_semana": 3,
+   "hora_inicio": 18,
+   "duracion_min": 50,
+   "capacidad": 25,
+   "reservas_activas": 12,
+   "anticipacion_horas": 28.2,
+   "reservas_previas": 19,
+   "inasistencias_previas": 2,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.09495507212867357
+ },
+ {
+  "entrada": {
+   "disciplina": "Cross Training",
+   "inicio_sesion": "2026-09-04T00:00:00Z",
+   "dia_semana": 4,
+   "hora_inicio": 19,
+   "duracion_min": 60,
+   "capacidad": 16,
+   "reservas_activas": 8,
+   "anticipacion_horas": 22.2,
+   "reservas_previas": 9,
+   "inasistencias_previas": 8,
+   "recordatorio_enviado": false
+  },
+  "probabilidad": 0.5748564953782741
+ },
+ {
+  "entrada": {
+   "disciplina": "Cross Training",
+   "inicio_sesion": "2026-10-10T15:30:00Z",
+   "dia_semana": 6,
+   "hora_inicio": 10,
+   "duracion_min": 60,
+   "capacidad": 16,
+   "reservas_activas": 7,
+   "anticipacion_horas": 14.3,
+   "reservas_previas": 0,
+   "inasistencias_previas": 0,
+   "recordatorio_enviado": false
+  },
+  "probabilidad": 0.15753057958398822
+ },
+ {
+  "entrada": {
+   "disciplina": "Spinning",
+   "inicio_sesion": "2026-09-07T23:00:00Z",
+   "dia_semana": 1,
+   "hora_inicio": 18,
+   "duracion_min": 50,
+   "capacidad": 25,
+   "reservas_activas": 10,
+   "anticipacion_horas": 51.7,
+   "reservas_previas": 4,
+   "inasistencias_previas": 0,
+   "recordatorio_enviado": false
+  },
+  "probabilidad": 0.1714496910115413
+ },
+ {
+  "entrada": {
+   "disciplina": "Zumba",
+   "inicio_sesion": "2026-10-01T13:30:00Z",
+   "dia_semana": 4,
+   "hora_inicio": 8,
+   "duracion_min": 60,
+   "capacidad": 30,
+   "reservas_activas": 7,
+   "anticipacion_horas": 32.5,
+   "reservas_previas": 98,
+   "inasistencias_previas": 32,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.3669565377778703
+ },
+ {
+  "entrada": {
+   "disciplina": "Cross Training",
+   "inicio_sesion": "2026-09-09T00:00:00Z",
+   "dia_semana": 2,
+   "hora_inicio": 19,
+   "duracion_min": 60,
+   "capacidad": 16,
+   "reservas_activas": 7,
+   "anticipacion_horas": 30.0,
+   "reservas_previas": 3,
+   "inasistencias_previas": 0,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.10396332881562022
+ },
+ {
+  "entrada": {
+   "disciplina": "Spinning",
+   "inicio_sesion": "2026-10-23T23:00:00Z",
+   "dia_semana": 5,
+   "hora_inicio": 18,
+   "duracion_min": 50,
+   "capacidad": 25,
+   "reservas_activas": 6,
+   "anticipacion_horas": 8.8,
+   "reservas_previas": 23,
+   "inasistencias_previas": 4,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.13601797691811368
+ },
+ {
+  "entrada": {
+   "disciplina": "Cross Training",
+   "inicio_sesion": "2026-10-23T00:00:00Z",
+   "dia_semana": 4,
+   "hora_inicio": 19,
+   "duracion_min": 60,
+   "capacidad": 16,
+   "reservas_activas": 1,
+   "anticipacion_horas": 75.3,
+   "reservas_previas": 3,
+   "inasistencias_previas": 0,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.18963268781643092
+ },
+ {
+  "entrada": {
+   "disciplina": "Spinning",
+   "inicio_sesion": "2026-09-09T23:00:00Z",
+   "dia_semana": 3,
+   "hora_inicio": 18,
+   "duracion_min": 50,
+   "capacidad": 25,
+   "reservas_activas": 10,
+   "anticipacion_horas": 85.1,
+   "reservas_previas": 18,
+   "inasistencias_previas": 1,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.11890009759628901
+ },
+ {
+  "entrada": {
+   "disciplina": "Spinning",
+   "inicio_sesion": "2026-10-23T23:00:00Z",
+   "dia_semana": 5,
+   "hora_inicio": 18,
+   "duracion_min": 50,
+   "capacidad": 25,
+   "reservas_activas": 6,
+   "anticipacion_horas": 50.8,
+   "reservas_previas": 66,
+   "inasistencias_previas": 19,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.3147802560601851
+ },
+ {
+  "entrada": {
+   "disciplina": "HIIT",
+   "inicio_sesion": "2026-09-03T00:30:00Z",
+   "dia_semana": 3,
+   "hora_inicio": 19,
+   "duracion_min": 45,
+   "capacidad": 20,
+   "reservas_activas": 3,
+   "anticipacion_horas": 16.9,
+   "reservas_previas": 8,
+   "inasistencias_previas": 0,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.10457131007286169
+ },
+ {
+  "entrada": {
+   "disciplina": "Spinning",
+   "inicio_sesion": "2026-09-30T23:00:00Z",
+   "dia_semana": 3,
+   "hora_inicio": 18,
+   "duracion_min": 50,
+   "capacidad": 25,
+   "reservas_activas": 11,
+   "anticipacion_horas": 25.1,
+   "reservas_previas": 34,
+   "inasistencias_previas": 4,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.10009426093280614
+ },
+ {
+  "entrada": {
+   "disciplina": "HIIT",
+   "inicio_sesion": "2026-09-15T00:30:00Z",
+   "dia_semana": 1,
+   "hora_inicio": 19,
+   "duracion_min": 45,
+   "capacidad": 20,
+   "reservas_activas": 8,
+   "anticipacion_horas": 12.3,
+   "reservas_previas": 48,
+   "inasistencias_previas": 5,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.12349534797017254
+ },
+ {
+  "entrada": {
+   "disciplina": "Zumba",
+   "inicio_sesion": "2026-09-15T13:30:00Z",
+   "dia_semana": 2,
+   "hora_inicio": 8,
+   "duracion_min": 60,
+   "capacidad": 30,
+   "reservas_activas": 10,
+   "anticipacion_horas": 49.7,
+   "reservas_previas": 0,
+   "inasistencias_previas": 0,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.20551272337080664
+ },
+ {
+  "entrada": {
+   "disciplina": "Funcional",
+   "inicio_sesion": "2026-08-24T12:00:00Z",
+   "dia_semana": 1,
+   "hora_inicio": 7,
+   "duracion_min": 60,
+   "capacidad": 18,
+   "reservas_activas": 7,
+   "anticipacion_horas": 71.7,
+   "reservas_previas": 21,
+   "inasistencias_previas": 1,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.18397233918479616
+ },
+ {
+  "entrada": {
+   "disciplina": "Cross Training",
+   "inicio_sesion": "2026-09-18T00:00:00Z",
+   "dia_semana": 4,
+   "hora_inicio": 19,
+   "duracion_min": 60,
+   "capacidad": 16,
+   "reservas_activas": 9,
+   "anticipacion_horas": 52.5,
+   "reservas_previas": 35,
+   "inasistencias_previas": 9,
+   "recordatorio_enviado": false
+  },
+  "probabilidad": 0.26029190156107285
+ },
+ {
+  "entrada": {
+   "disciplina": "Spinning",
+   "inicio_sesion": "2026-08-21T23:00:00Z",
+   "dia_semana": 5,
+   "hora_inicio": 18,
+   "duracion_min": 50,
+   "capacidad": 25,
+   "reservas_activas": 7,
+   "anticipacion_horas": 18.7,
+   "reservas_previas": 7,
+   "inasistencias_previas": 0,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.10086028650929516
+ },
+ {
+  "entrada": {
+   "disciplina": "Cross Training",
+   "inicio_sesion": "2026-08-26T00:00:00Z",
+   "dia_semana": 2,
+   "hora_inicio": 19,
+   "duracion_min": 60,
+   "capacidad": 16,
+   "reservas_activas": 5,
+   "anticipacion_horas": 167.5,
+   "reservas_previas": 3,
+   "inasistencias_previas": 1,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.28919639109535156
+ },
+ {
+  "entrada": {
+   "disciplina": "Spinning",
+   "inicio_sesion": "2026-08-26T23:00:00Z",
+   "dia_semana": 3,
+   "hora_inicio": 18,
+   "duracion_min": 50,
+   "capacidad": 25,
+   "reservas_activas": 8,
+   "anticipacion_horas": 40.2,
+   "reservas_previas": 7,
+   "inasistencias_previas": 3,
+   "recordatorio_enviado": false
+  },
+  "probabilidad": 0.30358690920481296
+ },
+ {
+  "entrada": {
+   "disciplina": "Spinning",
+   "inicio_sesion": "2026-10-26T23:00:00Z",
+   "dia_semana": 1,
+   "hora_inicio": 18,
+   "duracion_min": 50,
+   "capacidad": 25,
+   "reservas_activas": 8,
+   "anticipacion_horas": 9.3,
+   "reservas_previas": 67,
+   "inasistencias_previas": 19,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.218445272096612
+ },
+ {
+  "entrada": {
+   "disciplina": "Cross Training",
+   "inicio_sesion": "2026-10-07T00:00:00Z",
+   "dia_semana": 2,
+   "hora_inicio": 19,
+   "duracion_min": 60,
+   "capacidad": 16,
+   "reservas_activas": 5,
+   "anticipacion_horas": 25.6,
+   "reservas_previas": 86,
+   "inasistencias_previas": 20,
+   "recordatorio_enviado": false
+  },
+  "probabilidad": 0.28439054715166967
+ },
+ {
+  "entrada": {
+   "disciplina": "Cross Training",
+   "inicio_sesion": "2026-10-10T15:30:00Z",
+   "dia_semana": 6,
+   "hora_inicio": 10,
+   "duracion_min": 60,
+   "capacidad": 16,
+   "reservas_activas": 7,
+   "anticipacion_horas": 13.6,
+   "reservas_previas": 1,
+   "inasistencias_previas": 0,
+   "recordatorio_enviado": false
+  },
+  "probabilidad": 0.10822851540145387
+ },
+ {
+  "entrada": {
+   "disciplina": "Spinning",
+   "inicio_sesion": "2026-09-11T23:00:00Z",
+   "dia_semana": 5,
+   "hora_inicio": 18,
+   "duracion_min": 50,
+   "capacidad": 25,
+   "reservas_activas": 8,
+   "anticipacion_horas": 104.7,
+   "reservas_previas": 5,
+   "inasistencias_previas": 2,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.31421763203645203
+ },
+ {
+  "entrada": {
+   "disciplina": "Funcional",
+   "inicio_sesion": "2026-08-26T12:00:00Z",
+   "dia_semana": 3,
+   "hora_inicio": 7,
+   "duracion_min": 60,
+   "capacidad": 18,
+   "reservas_activas": 5,
+   "anticipacion_horas": 40.2,
+   "reservas_previas": 13,
+   "inasistencias_previas": 4,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.2627419621864978
+ },
+ {
+  "entrada": {
+   "disciplina": "Funcional",
+   "inicio_sesion": "2026-08-24T12:00:00Z",
+   "dia_semana": 1,
+   "hora_inicio": 7,
+   "duracion_min": 60,
+   "capacidad": 18,
+   "reservas_activas": 7,
+   "anticipacion_horas": 25.9,
+   "reservas_previas": 11,
+   "inasistencias_previas": 0,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.13151638271124386
+ },
+ {
+  "entrada": {
+   "disciplina": "HIIT",
+   "inicio_sesion": "2026-09-08T00:30:00Z",
+   "dia_semana": 1,
+   "hora_inicio": 19,
+   "duracion_min": 45,
+   "capacidad": 20,
+   "reservas_activas": 4,
+   "anticipacion_horas": 33.3,
+   "reservas_previas": 25,
+   "inasistencias_previas": 0,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.13633335404191238
+ },
+ {
+  "entrada": {
+   "disciplina": "Cross Training",
+   "inicio_sesion": "2026-10-21T00:00:00Z",
+   "dia_semana": 2,
+   "hora_inicio": 19,
+   "duracion_min": 60,
+   "capacidad": 16,
+   "reservas_activas": 7,
+   "anticipacion_horas": 53.6,
+   "reservas_previas": 4,
+   "inasistencias_previas": 0,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.11665025338769135
+ },
+ {
+  "entrada": {
+   "disciplina": "Zumba",
+   "inicio_sesion": "2026-10-01T13:30:00Z",
+   "dia_semana": 4,
+   "hora_inicio": 8,
+   "duracion_min": 60,
+   "capacidad": 30,
+   "reservas_activas": 7,
+   "anticipacion_horas": 69.1,
+   "reservas_previas": 50,
+   "inasistencias_previas": 7,
+   "recordatorio_enviado": false
+  },
+  "probabilidad": 0.2592398163461209
+ },
+ {
+  "entrada": {
+   "disciplina": "Spinning",
+   "inicio_sesion": "2026-08-24T23:00:00Z",
+   "dia_semana": 1,
+   "hora_inicio": 18,
+   "duracion_min": 50,
+   "capacidad": 25,
+   "reservas_activas": 7,
+   "anticipacion_horas": 11.3,
+   "reservas_previas": 16,
+   "inasistencias_previas": 5,
+   "recordatorio_enviado": false
+  },
+  "probabilidad": 0.25824523235187297
+ },
+ {
+  "entrada": {
+   "disciplina": "Funcional",
+   "inicio_sesion": "2026-10-26T12:00:00Z",
+   "dia_semana": 1,
+   "hora_inicio": 7,
+   "duracion_min": 60,
+   "capacidad": 18,
+   "reservas_activas": 4,
+   "anticipacion_horas": 26.1,
+   "reservas_previas": 3,
+   "inasistencias_previas": 0,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.17358891722319097
+ },
+ {
+  "entrada": {
+   "disciplina": "Zumba",
+   "inicio_sesion": "2026-08-27T13:30:00Z",
+   "dia_semana": 4,
+   "hora_inicio": 8,
+   "duracion_min": 60,
+   "capacidad": 30,
+   "reservas_activas": 7,
+   "anticipacion_horas": 45.6,
+   "reservas_previas": 14,
+   "inasistencias_previas": 1,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.14577581195555542
+ },
+ {
+  "entrada": {
+   "disciplina": "Cross Training",
+   "inicio_sesion": "2026-08-26T00:00:00Z",
+   "dia_semana": 2,
+   "hora_inicio": 19,
+   "duracion_min": 60,
+   "capacidad": 16,
+   "reservas_activas": 5,
+   "anticipacion_horas": 17.4,
+   "reservas_previas": 12,
+   "inasistencias_previas": 4,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.1957976806915562
+ },
+ {
+  "entrada": {
+   "disciplina": "Cross Training",
+   "inicio_sesion": "2026-10-10T15:30:00Z",
+   "dia_semana": 6,
+   "hora_inicio": 10,
+   "duracion_min": 60,
+   "capacidad": 16,
+   "reservas_activas": 7,
+   "anticipacion_horas": 8.3,
+   "reservas_previas": 62,
+   "inasistencias_previas": 13,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.11185379564432714
+ },
+ {
+  "entrada": {
+   "disciplina": "Spinning",
+   "inicio_sesion": "2026-08-24T23:00:00Z",
+   "dia_semana": 1,
+   "hora_inicio": 18,
+   "duracion_min": 50,
+   "capacidad": 25,
+   "reservas_activas": 7,
+   "anticipacion_horas": 31.4,
+   "reservas_previas": 6,
+   "inasistencias_previas": 1,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.16896767224333106
+ },
+ {
+  "entrada": {
+   "disciplina": "Zumba",
+   "inicio_sesion": "2026-08-20T13:30:00Z",
+   "dia_semana": 4,
+   "hora_inicio": 8,
+   "duracion_min": 60,
+   "capacidad": 30,
+   "reservas_activas": 8,
+   "anticipacion_horas": 7.9,
+   "reservas_previas": 68,
+   "inasistencias_previas": 15,
+   "recordatorio_enviado": false
+  },
+  "probabilidad": 0.22136828930895688
+ },
+ {
+  "entrada": {
+   "disciplina": "Cross Training",
+   "inicio_sesion": "2026-09-02T00:00:00Z",
+   "dia_semana": 2,
+   "hora_inicio": 19,
+   "duracion_min": 60,
+   "capacidad": 16,
+   "reservas_activas": 5,
+   "anticipacion_horas": 4.5,
+   "reservas_previas": 15,
+   "inasistencias_previas": 2,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.09183458864991985
+ },
+ {
+  "entrada": {
+   "disciplina": "Cross Training",
+   "inicio_sesion": "2026-10-31T15:30:00Z",
+   "dia_semana": 6,
+   "hora_inicio": 10,
+   "duracion_min": 60,
+   "capacidad": 16,
+   "reservas_activas": 3,
+   "anticipacion_horas": 33.5,
+   "reservas_previas": 39,
+   "inasistencias_previas": 10,
+   "recordatorio_enviado": false
+  },
+  "probabilidad": 0.2561219836515401
+ },
+ {
+  "entrada": {
+   "disciplina": "HIIT",
+   "inicio_sesion": "2026-09-29T00:30:00Z",
+   "dia_semana": 1,
+   "hora_inicio": 19,
+   "duracion_min": 45,
+   "capacidad": 20,
+   "reservas_activas": 6,
+   "anticipacion_horas": 12.3,
+   "reservas_previas": 10,
+   "inasistencias_previas": 5,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.31013947571681016
+ },
+ {
+  "entrada": {
+   "disciplina": "Cross Training",
+   "inicio_sesion": "2026-09-18T00:00:00Z",
+   "dia_semana": 4,
+   "hora_inicio": 19,
+   "duracion_min": 60,
+   "capacidad": 16,
+   "reservas_activas": 9,
+   "anticipacion_horas": 77.8,
+   "reservas_previas": 31,
+   "inasistencias_previas": 4,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.15097460098365736
+ },
+ {
+  "entrada": {
+   "disciplina": "Zumba",
+   "inicio_sesion": "2026-10-24T14:00:00Z",
+   "dia_semana": 6,
+   "hora_inicio": 9,
+   "duracion_min": 60,
+   "capacidad": 30,
+   "reservas_activas": 8,
+   "anticipacion_horas": 32.2,
+   "reservas_previas": 30,
+   "inasistencias_previas": 7,
+   "recordatorio_enviado": true
+  },
+  "probabilidad": 0.16895361652248184
+ }
+]

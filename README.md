@@ -22,6 +22,7 @@ Aplicación web para consultar clases, conocer los cupos disponibles y reservar 
 - Diseño responsive para escritorio, tablet y móvil, con recursos originales de TITAN GYM.
 - Panel administrativo para crear/editar clases, programar sesiones, consultar inscritos y registrar asistencia con historial.
 - Indicador de no-shows y exportación CSV del dataset seudonimizado para el componente de Machine Learning (APF3).
+- Modelo de Machine Learning de no-show (APF3, regresión logística): probabilidad y nivel de riesgo en «Ver inscritos» y comparación con la regla anterior en Indicadores. Notebook, dataset simulado y endpoint en [ml/](ml/README.md).
 - Comprobante con código QR y registro de llegada en recepción escaneando el QR desde el panel.
 - Recordatorio por correo 3 horas antes de cada clase, con opción para desactivarlo en Mi perfil.
 
@@ -167,6 +168,7 @@ La app está publicada en https://titan-gym-tau.vercel.app; Site URL y su redire
 - [Recordatorios por correo](docs/RECORDATORIOS.md)
 - [Lista de espera](docs/LISTA_ESPERA.md)
 - [Riesgo de no-show](docs/RIESGO_NOSHOW.md)
+- [Componente de Machine Learning APF3](ml/README.md)
 - [Cuenta de evaluación y demostración pública APF2](docs/DEMO_VERCEL_APF2.md)
 - [Anexo de prompts de IA y validación](docs/ANEXO_PROMPTS_IA.md)
 - [Configuración de Supabase](docs/SUPABASE.md)

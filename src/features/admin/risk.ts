@@ -93,15 +93,19 @@ export interface RiskBacktestRow {
 }
 
 /**
- * Aplica la regla a las reservas pasadas con asistencia registrada y compara cada nivel con lo
- * que ocurrió. La regla solo usa datos anteriores a cada clase, así que no "ve" el resultado.
+ * Aplica la regla (o el estimador que se indique, p. ej. el modelo de ML) a las reservas pasadas con
+ * asistencia registrada y compara cada nivel con lo que ocurrió. Solo usa datos anteriores a cada
+ * clase, así que no "ve" el resultado.
  */
-export function riskBacktest(rows: DatasetRow[]): RiskBacktestRow[] {
+export function riskBacktest(
+  rows: DatasetRow[],
+  levelOf: (row: DatasetRow) => RiskLevel = (row) => riskFromDatasetRow(row).level,
+): RiskBacktestRow[] {
   const levels: RiskLevel[] = ['bajo', 'medio', 'alto'];
   const acc = new Map(levels.map((l) => [l, { registered: 0, absent: 0 }]));
   for (const row of rows) {
     if (row.asistio === null) continue;
-    const bucket = acc.get(riskFromDatasetRow(row).level)!;
+    const bucket = acc.get(levelOf(row))!;
     bucket.registered++;
     if (row.asistio === false) bucket.absent++;
   }
