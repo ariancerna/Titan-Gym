@@ -22,3 +22,6 @@ __pycache__/
 .ipynb_checkpoints/
 # Export real del panel /admin: puede permitir reidentificar socios (Ley 29733); no se publica.
 ml/data/export_mvp_real.csv
+
+# Entregables académicos con datos de los integrantes: no se publican en GitHub.
+/entregables/
