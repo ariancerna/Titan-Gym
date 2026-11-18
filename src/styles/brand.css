@@ -1363,3 +1363,36 @@
     width: 100%;
   }
 }
+
+/* Casilla con texto (aceptar la política, confirmar asistencia). Dentro de un .field no debe
+   heredar el estilo de los títulos de campo: casilla y texto en la misma línea, texto normal. */
+.field .checkbox-label,
+.checkbox-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font: 400 15px/1.5 var(--font-body);
+  letter-spacing: normal;
+  text-transform: none;
+  color: #cfccd4;
+  cursor: pointer;
+}
+/* Dentro de .field el margen ya lo pone el propio .field. */
+.field .checkbox-label {
+  margin-bottom: 0;
+}
+.field .checkbox-label input,
+.checkbox-label input {
+  width: 20px;
+  height: 20px;
+  min-height: 0;
+  margin: 2px 0 0;
+  padding: 0;
+  flex-shrink: 0;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+.checkbox-label a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
