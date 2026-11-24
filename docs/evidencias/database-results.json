@@ -1,6 +1,6 @@
 {
-  "executedAt": "2026-11-12T18:16:56.739Z",
-  "engine": "PostgreSQL 17.6 on x86_64-windows, compiled by msvc-19.44.35213, 64-bit",
+  "executedAt": "2026-11-24T23:53:43.604Z",
+  "engine": "PostgreSQL 17.6 on x86_64-pc-linux-gnu, compiled by gcc (Ubuntu 7.5.0-3ubuntu1~18.04) 7.5.0, 64-bit",
   "scope": "PostgreSQL real; auth.uid y auth.users mínimos de pruebas. Sin servicio Supabase Auth.",
   "results": [
     {
@@ -157,6 +157,18 @@
     },
     {
       "name": "Panel: instructores, datos de la vista Hoy y correo del responsable en el historial",
+      "passed": true
+    },
+    {
+      "name": "PROY: inferencia en el servidor igual a scikit-learn (200 reservas de paridad)",
+      "passed": true
+    },
+    {
+      "name": "PROY: predicción registrada con entrada, salida, versión y fecha; entrada inválida rechazada",
+      "passed": true
+    },
+    {
+      "name": "PROY: «Ver inscritos» predice en el servidor y el interruptor degrada a la regla",
       "passed": true
     },
     {

@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   getRoster,
+  getRosterRisk,
   getWaitlist,
   setAttendance,
   attendanceLabel,
@@ -14,40 +15,42 @@ import { Button } from '../ui/Button';
 import { errorMessage } from '../../lib/errors';
 import { formatDate, formatSessionWhen, formatTime } from '../../utils/sessions';
 import { limaHour, noShowRisk, type RiskLevel } from '../../features/admin/risk';
-import { limaWeekday, predictNoShow, reminderStatus } from '../../features/admin/noshowModel';
 
 const riskBadge = { bajo: 'available', medio: 'low', alto: 'risk-high' } as const;
 
 interface MemberRisk {
   level: RiskLevel;
-  /** Probabilidad del modelo de ML; null si se usó la regla porque faltan datos. */
+  /** Probabilidad que calcula el servidor; null si se usa la regla de respaldo. */
   probability: number | null;
   reasons: string[];
+  /** servidor = modelo de ML en Supabase · regla = respaldo · cargando = esperando al servidor. */
+  source: 'servidor' | 'regla' | 'cargando';
 }
 
 const riskOrder: Record<RiskLevel, number> = { alto: 0, medio: 1, bajo: 2 };
 
 function RiskCell({ risk }: { risk: MemberRisk | null }) {
   if (!risk) return <span className="admin-roster-muted">—</span>;
+  if (risk.source === 'cargando')
+    return <span className="admin-roster-muted">Calculando en el servidor…</span>;
   return (
     <span className="admin-risk">
       <span className={`badge ${riskBadge[risk.level]}`}>Riesgo {risk.level}</span>
-      {risk.probability !== null && (
+      {risk.probability !== null ? (
         <span className="admin-risk-prob">
           {Math.round(risk.probability * 100)} % de probabilidad de no-show
         </span>
+      ) : (
+        <span className="admin-risk-prob">Regla de respaldo</span>
       )}
     </span>
   );
 }
 export function AttendanceRoster({
   session,
-  discipline,
   onClose,
 }: {
   session: ManagedSession;
-  /** Disciplina de la clase: la necesita el modelo de ML. Sin ella se usa la regla simple. */
-  discipline?: string;
   onClose: () => void;
 }) {
   const { user } = useAuth();
@@ -72,13 +75,24 @@ export function AttendanceRoster({
     queryFn: () => getWaitlist(session.id),
     refetchInterval: 30000,
   });
+  // El riesgo lo calcula el servidor (modelo de ML en Supabase) y queda registrado. Se vuelve a pedir
+  // cuando cambia el número de reservas activas, no en cada refresco de la lista.
+  const activeCount = (query.data ?? []).filter((r) => r.status !== 'cancelled').length;
+  const riskQuery = useQuery({
+    queryKey: ['admin', 'roster-risk', user?.id, session.id, activeCount],
+    queryFn: () => getRosterRisk(session.id),
+    enabled: query.isSuccess && activeCount > 0,
+    retry: false,
+    staleTime: 5 * 60000,
+  });
+  const serverRisk = new Map((riskQuery.data ?? []).map((x) => [x.reservation_id, x]));
   const future = new Date(session.starts_at).getTime() > Date.now();
   const waiting = waitlist.data?.filter((w) => w.status === 'waiting') ?? [];
   // Riesgo solo para reservas activas y cuando la base ya entrega los datos necesarios.
   const startHour = limaHour(session.starts_at);
   const startsAt = new Date(session.starts_at);
-  // El modelo de ML (APF3) da el nivel y la probabilidad; la regla aporta los motivos legibles y es
-  // el respaldo si falta algún dato (por ejemplo, la disciplina).
+  // El servidor da el nivel y la probabilidad; la regla aporta los motivos legibles y es el respaldo
+  // (degradación controlada) si el modelo está desactivado, falla o tarda más de 6 segundos.
   const riskOf = (r: RosterMember): MemberRisk | null => {
     if (r.status === 'cancelled' || typeof r.prior_reservations !== 'number' || !r.booked_at) {
       return null;
@@ -90,28 +104,28 @@ export function AttendanceRoster({
       hoursAhead,
       startHour,
     });
-    if (!discipline) return { level: rule.level, probability: null, reasons: rule.reasons };
-    const reminder = reminderStatus(r, session.starts_at, r.booked_at);
-    const model = predictNoShow({
-      disciplina: discipline,
-      inicio_sesion: session.starts_at,
-      dia_semana: limaWeekday(session.starts_at),
-      hora_inicio: startHour,
-      duracion_min: session.duration_minutes,
-      capacidad: session.capacity,
-      reservas_activas: session.reserved,
-      anticipacion_horas: Math.max(hoursAhead, 0.1),
-      reservas_previas: r.prior_reservations,
-      inasistencias_previas: r.prior_absences ?? 0,
-      recordatorio_enviado: reminder,
-    });
-    const reasons =
-      reminder === false ? [...rule.reasons, 'Sin recordatorio por correo'] : rule.reasons;
-    return { level: model.level, probability: model.probability, reasons };
+    const server = serverRisk.get(r.id);
+    if (server) {
+      const reasons =
+        server.recordatorio_enviado === false
+          ? [...rule.reasons, 'Sin recordatorio por correo']
+          : rule.reasons;
+      return {
+        level: server.riesgo,
+        probability: server.probabilidad_no_show,
+        reasons,
+        source: 'servidor',
+      };
+    }
+    if (riskQuery.isPending && riskQuery.fetchStatus !== 'idle') {
+      return { level: rule.level, probability: null, reasons: rule.reasons, source: 'cargando' };
+    }
+    return { level: rule.level, probability: null, reasons: rule.reasons, source: 'regla' };
   };
   const risks = new Map((query.data ?? []).map((r) => [r.id, riskOf(r)]));
   const highRisk = [...risks.values()].filter((r) => r?.level === 'alto').length;
-  const usesModel = [...risks.values()].some((r) => r && r.probability !== null);
+  const usesModel = [...risks.values()].some((r) => r?.source === 'servidor');
+  const modelVersion = riskQuery.data?.[0]?.modelo_version;
   return (
     <section className="panel admin-roster" aria-label="Inscritos y asistencia">
       <div className="admin-section-heading">
@@ -150,6 +164,20 @@ export function AttendanceRoster({
             {query.data.length} reservas ·{' '}
             {query.data.filter((r) => r.attendance_status === 'present').length} presentes
           </p>
+          {riskQuery.isError && (
+            <p role="alert" className="notice warning admin-risk-fallback">
+              <strong>Servicio de predicción no disponible.</strong> {errorMessage(riskQuery.error)}{' '}
+              Mientras tanto se muestra el riesgo por reglas simples (respaldo) y recepción decide a
+              quién confirmar.{' '}
+              <button
+                type="button"
+                className="link-button"
+                onClick={() => void riskQuery.refetch()}
+              >
+                Reintentar
+              </button>
+            </p>
+          )}
           {[...risks.values()].some(Boolean) && (
             <div className="admin-risk-summary">
               {future && highRisk > 0 ? (
@@ -165,14 +193,15 @@ export function AttendanceRoster({
               {usesModel ? (
                 <details className="admin-risk-help">
                   <summary>
-                    El riesgo lo estima el modelo de Machine Learning del APF3 (regresión
-                    logística). ¿Cómo se usa?
+                    El riesgo lo estima el modelo de Machine Learning (regresión logística, versión{' '}
+                    {modelVersion}) en el servidor. ¿Cómo se usa?
                   </summary>
                   Combina el historial del socio, la anticipación, el horario, la ocupación y el
-                  recordatorio. Por defecto solo se confirma el riesgo alto (como máximo 1 de cada 5
-                  reservas); riesgo medio: recordatorio adicional si recepción tiene tiempo.
-                  Entrenado con datos simulados: se reentrenará con la asistencia real registrada
-                  aquí.
+                  recordatorio. Cada predicción queda registrada con su versión y fecha (Indicadores
+                  → Servicio de predicción). Por defecto solo se confirma el riesgo alto (como
+                  máximo 1 de cada 5 reservas); riesgo medio: recordatorio adicional si recepción
+                  tiene tiempo. Entrenado con datos simulados: se reentrenará con la asistencia real
+                  registrada aquí.
                 </details>
               ) : (
                 <>

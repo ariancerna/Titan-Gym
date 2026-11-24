@@ -67,7 +67,7 @@ El modelo se eligió por PR-AUC en validación cruzada temporal (0.315, frente a
 prueba. Los umbrales se fijan fuera de pliegue exigiendo cada cupo **en todos los pliegues temporales**: contacto ≤ 40 %
 (umbral 0.2224) y riesgo alto ≤ 20 % (umbral 0.2924). Ambos cupos se cumplen en la prueba (33 % y 14 %).
 
-**APF3 entregado → corregido** (`modelo/comparacion_apf3_corregido.csv`): en apf3-1.0 el contacto marcaba 42,1 % (tope de
+**APF3 entregado → corregido** (`modelo/comparacion_apf3_proy.csv`): en apf3-1.0 el contacto marcaba 42,1 % (tope de
 40 % excedido) con recall 0.697; en apf3-1.1 marca 33,3 % con recall 0.614. La meta de recall 0.65 deja de cumplirse: se
 prioriza la capacidad real de recepción y recuperar recall dentro del cupo queda para el ciclo de mejora del PROY.
 Detalle de cada corrección: [docs/CORRECCIONES_APF3.md](../docs/CORRECCIONES_APF3.md).

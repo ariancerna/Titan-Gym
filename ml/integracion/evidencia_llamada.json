@@ -1,5 +1,5 @@
 {
-  "fecha": "2026-11-24T17:55:54-05:00",
+  "fecha": "2026-11-24T18:44:58-05:00",
   "entrada": {
     "disciplina": "Funcional",
     "inicio_sesion": "2026-11-16T12:00:00Z",
@@ -14,12 +14,12 @@
     "recordatorio_enviado": false
   },
   "salida": {
-    "probabilidad_no_show": 0.549,
+    "probabilidad_no_show": 0.5897,
     "riesgo": "alto",
-    "umbral_contacto": 0.2224,
-    "umbral_alto": 0.2924,
+    "umbral_contacto": 0.2177,
+    "umbral_alto": 0.2788,
     "accion_sugerida": "Confirmar asistencia por WhatsApp antes de la clase; si no confirma, liberar el cupo a la lista de espera.",
-    "modelo_version": "apf3-1.1"
+    "modelo_version": "proy-1.0"
   },
   "http_status": 200
 }

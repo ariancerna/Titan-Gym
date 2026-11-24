@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { createHarness } from './harness.mjs';
-import { writeFile, mkdir, access } from 'node:fs/promises';
+import { writeFile, mkdir, access, readFile } from 'node:fs/promises';
 const results=[];
 const harness = await createHarness();
 const { admin, users, connectAs } = harness;
@@ -385,6 +385,51 @@ try {
     assert(!recent.sessions.some(x=>x.id===old),'la sesión de hace 100 días no viaja al panel');
     assert(recent.sessions.some(x=>x.id===past.id));
     await admin.query('delete from public.class_sessions where id=$1',[old]);
+  });
+  await check('PROY: inferencia en el servidor igual a scikit-learn (200 reservas de paridad)',async()=>{
+    const casos=JSON.parse(await readFile('tests/unit/fixtures/noshow-paridad.json','utf8'));
+    const def=(await admin.query('select definicion from private.ml_modelos where activo')).rows[0].definicion;
+    let maxDiff=0;
+    for(const c of casos){
+      const p=(await admin.query('select private.noshow_probabilidad($1::jsonb,$2::jsonb) p',[JSON.stringify(c.entrada),JSON.stringify(def)])).rows[0].p;
+      maxDiff=Math.max(maxDiff,Math.abs(p-c.probabilidad));
+    }
+    assert.equal(casos.length,200);
+    assert(maxDiff<1e-9,`diferencia máxima ${maxDiff}`);
+  });
+  await check('PROY: predicción registrada con entrada, salida, versión y fecha; entrada inválida rechazada',async()=>{
+    const entrada={disciplina:'Funcional',inicio_sesion:'2026-11-16T12:00:00Z',dia_semana:1,hora_inicio:7,duracion_min:60,capacidad:18,reservas_activas:5,anticipacion_horas:96,reservas_previas:6,inasistencias_previas:3,recordatorio_enviado:false};
+    const antes=Number((await admin.query('select count(*) n from private.ml_predicciones')).rows[0].n);
+    const r=(await manager.query('select public.predecir_noshow($1::jsonb) r',[JSON.stringify(entrada)])).rows[0].r;
+    assert.equal(r.riesgo,'alto');assert(r.probabilidad_no_show>0&&r.probabilidad_no_show<1);assert.match(r.modelo_version,/^proy-/);
+    const log=(await admin.query('select * from private.ml_predicciones where id=$1',[r.prediccion_id])).rows[0];
+    assert.equal(log.origen,'prueba');assert.equal(log.version,r.modelo_version);assert.equal(log.entrada.hora_inicio,7);assert(log.creado_en);
+    assert.equal(log.solicitado_por,users[2]);
+    assert(!('member_name' in log.entrada)&&!('member_email' in log.entrada),'la entrada no guarda datos personales');
+    await assert.rejects(manager.query('select public.predecir_noshow($1::jsonb)',[JSON.stringify({...entrada,hora_inicio:27})]),/ENTRADA_INVALIDA: hora_inicio debe estar entre 0 y 23/);
+    await assert.rejects(manager.query('select public.predecir_noshow($1::jsonb)',[JSON.stringify({...entrada,capacidad:null})]),/ENTRADA_INVALIDA: falta el campo capacidad/);
+    await assert.rejects(manager.query('select public.predecir_noshow($1::jsonb)',[JSON.stringify({...entrada,inasistencias_previas:9})]),/ENTRADA_INVALIDA: inasistencias_previas/);
+    assert.equal(Number((await admin.query('select count(*) n from private.ml_predicciones')).rows[0].n),antes+1,'las entradas inválidas no se registran como predicción');
+    await assert.rejects(a.query('select public.predecir_noshow($1::jsonb)',[JSON.stringify(entrada)]),/ADMIN_REQUIRED/);
+    await assert.rejects(anonymous.query('select public.predecir_noshow($1::jsonb)',[JSON.stringify(entrada)]),/permission denied/);
+    await assert.rejects(a.query('select count(*) from private.ml_predicciones'),/permission denied/);
+  });
+  await check('PROY: «Ver inscritos» predice en el servidor y el interruptor degrada a la regla',async()=>{
+    const activa=(await admin.query("select id,session_id from public.reservations where status in ('confirmed','attended') order by created_at limit 1")).rows[0];
+    const activas=Number((await admin.query("select count(*) n from public.reservations where session_id=$1 and status in ('confirmed','attended')",[activa.session_id])).rows[0].n);
+    const riesgo=(await manager.query('select public.admin_roster_riesgo($1) r',[activa.session_id])).rows[0].r;
+    assert.equal(riesgo.length,activas,'una predicción por reserva activa');assert(riesgo.some(x=>x.reservation_id===activa.id));
+    assert(riesgo.every(x=>['bajo','medio','alto'].includes(x.riesgo)&&x.prediccion_id&&/^proy-/.test(x.modelo_version)));
+    const log=(await admin.query("select * from private.ml_predicciones where origen='panel' and reservation_id=$1",[activa.id])).rows;
+    assert(log.length>=1);assert.equal(log[0].session_id,activa.session_id);
+    const off=(await manager.query('select public.admin_set_modelo_activo(false) e')).rows[0].e;
+    assert.equal(off.activo,false);
+    await assert.rejects(manager.query('select public.admin_roster_riesgo($1)',[activa.session_id]),/MODELO_NO_DISPONIBLE/);
+    await assert.rejects(a.query('select public.admin_set_modelo_activo(true)'),/ADMIN_REQUIRED/);
+    const on=(await manager.query('select public.admin_set_modelo_activo(true) e')).rows[0].e;
+    assert.equal(on.activo,true);assert(on.predicciones_registradas>=2);
+    const ultimas=(await manager.query('select public.admin_predicciones(5) r')).rows[0].r;
+    assert(ultimas.length>=2&&ultimas.length<=5);assert(ultimas[0].version&&ultimas[0].creado_en&&ultimas[0].entrada);
   });
   await check('Admin: revocación inmediata sin renovar JWT',async()=>{
     await admin.query('delete from private.administrators where user_id=$1',[users[2]]);

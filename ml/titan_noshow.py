@@ -59,6 +59,11 @@ VARIABLES_NUMERICAS = [
     "capacidad",
 ]
 VARIABLES_CATEGORICAS = ["disciplina", "franja_horaria", "dia_semana", "temporada"]
+# Ciclo de mejora del PROY (Paso 2b): interacción de negocio entre una clase temprana (antes de las
+# 8:00) y una reserva hecha con más de 3 días: entre la reserva y una clase de madrugada hay más
+# tiempo para que cambien los planes. Solo la usa el modelo del PROY (interacciones=True).
+VARIABLES_INTERACCION = ["temprano_x_anticipada"]
+VARIABLES_NUMERICAS_PROY = VARIABLES_NUMERICAS + VARIABLES_INTERACCION
 
 
 def _franja(hora: pd.Series) -> pd.Series:
@@ -76,6 +81,13 @@ def _temporada(mes: pd.Series) -> pd.Series:
 
 class CaracteristicasNoShow(BaseEstimator, TransformerMixin):
     """Convierte los campos del MVP en variables explicativas. No tiene parámetros aprendidos."""
+
+    def __init__(self, interacciones: bool = False):
+        self.interacciones = interacciones
+
+    def _numericas(self):
+        # getattr: los modelos exportados en APF3 se guardaron antes de existir este parámetro.
+        return VARIABLES_NUMERICAS_PROY if getattr(self, "interacciones", False) else VARIABLES_NUMERICAS
 
     def fit(self, X, y=None):
         return self
@@ -111,13 +123,16 @@ class CaracteristicasNoShow(BaseEstimator, TransformerMixin):
         out["franja_horaria"] = _franja(pd.to_numeric(X["hora_inicio"], errors="coerce"))
         out["dia_semana"] = pd.to_numeric(X["dia_semana"], errors="coerce").astype("Int64").astype(str)
         out["temporada"] = _temporada(mes)
-        return out[VARIABLES_NUMERICAS + VARIABLES_CATEGORICAS]
+        out["temprano_x_anticipada"] = (
+            (pd.to_numeric(X["hora_inicio"], errors="coerce") < 8) & (horas > 72)
+        ).astype(float)
+        return out[self._numericas() + VARIABLES_CATEGORICAS]
 
     def get_feature_names_out(self, input_features=None):
-        return np.array(VARIABLES_NUMERICAS + VARIABLES_CATEGORICAS, dtype=object)
+        return np.array(self._numericas() + VARIABLES_CATEGORICAS, dtype=object)
 
 
-def construir_preprocesador() -> ColumnTransformer:
+def construir_preprocesador(numericas_vars=VARIABLES_NUMERICAS) -> ColumnTransformer:
     """Imputación + escalado (numéricas) y one-hot (categóricas). Se ajusta solo con train."""
     numericas = Pipeline(
         [("imputar", SimpleImputer(strategy="median")), ("escalar", StandardScaler())]
@@ -129,16 +144,17 @@ def construir_preprocesador() -> ColumnTransformer:
         ]
     )
     return ColumnTransformer(
-        [("num", numericas, VARIABLES_NUMERICAS), ("cat", categoricas, VARIABLES_CATEGORICAS)],
+        [("num", numericas, list(numericas_vars)), ("cat", categoricas, VARIABLES_CATEGORICAS)],
         verbose_feature_names_out=False,
     )
 
 
-def construir_pipeline(modelo) -> Pipeline:
+def construir_pipeline(modelo, interacciones: bool = False) -> Pipeline:
+    numericas_vars = VARIABLES_NUMERICAS_PROY if interacciones else VARIABLES_NUMERICAS
     return Pipeline(
         [
-            ("caracteristicas", CaracteristicasNoShow()),
-            ("preprocesamiento", construir_preprocesador()),
+            ("caracteristicas", CaracteristicasNoShow(interacciones=interacciones)),
+            ("preprocesamiento", construir_preprocesador(numericas_vars)),
             ("modelo", modelo),
         ]
     )

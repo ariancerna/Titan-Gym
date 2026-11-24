@@ -1,0 +1,5 @@
+línea,C,PR-AUC CV,Δ vs corregido,pliegues que mejoran,¿se acepta?
+APF3 corregido (Regresión logística),0.03,0.31501477530892646,0.0,—,base
+PROY (a): + temprano × anticipada,0.01,0.324270315430456,0.009255540121529515,4/5,sí
+PROY (a): + viernes tarde,0.01,0.31432909313425805,-0.0006856821746684116,3/5,no
+"PROY (e): + temprano × anticipada, clases balanceadas",0.01,0.322902016494217,0.00788724118529055,4/5,sí

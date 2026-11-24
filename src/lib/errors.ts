@@ -25,6 +25,14 @@ export function errorMessage(error: unknown): string {
     return 'La política de privacidad se actualizó. Recarga la página y vuelve a aceptarla.';
   if (raw.includes('ADMIN_REQUIRED'))
     return 'Tu cuenta no tiene permisos de administrador. Solicita acceso al responsable del proyecto.';
+  if (raw.includes('ENTRADA_INVALIDA')) {
+    const detail = message.split('ENTRADA_INVALIDA:')[1]?.trim();
+    return `El servidor rechazó los datos: ${detail || 'hay un dato fuera de rango'}. Corrígelo e inténtalo de nuevo.`;
+  }
+  if (raw.includes('MODELO_NO_DISPONIBLE'))
+    return 'El modelo de predicción está desactivado en el servidor.';
+  if (raw.includes('MODELO_TIEMPO_AGOTADO'))
+    return 'El servicio de predicción tardó más de lo permitido.';
   if (raw.includes('CAPACITY_BELOW_RESERVATIONS'))
     return 'La capacidad no puede ser menor que las reservas activas.';
   if (raw.includes('SESSION_HAS_RESERVATIONS'))

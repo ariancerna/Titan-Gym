@@ -23,6 +23,7 @@ import { ClassEditor, InstructorEditor, SessionEditor } from '../components/admi
 import { SessionRow } from '../components/admin/SessionRow';
 import { AttendanceRoster } from '../components/admin/AttendanceRoster';
 import { AttendanceIndicators } from '../components/admin/AttendanceIndicators';
+import { PredictionService } from '../components/admin/PredictionService';
 import { CheckInPanel } from '../components/admin/CheckInPanel';
 import { PasswordSignInForm } from '../components/reservations/PasswordSignInForm';
 import { EmailRequestForm } from '../components/reservations/EmailRequestForm';
@@ -137,10 +138,6 @@ function AdminDashboard() {
   if (query.isPending) return <LoadingState />;
   if (query.isError) return <ErrorState error={query.error} retry={() => void query.refetch()} />;
   const data = query.data;
-  const rosterSession = data.sessions.find((s) => s.id === rosterId);
-  const rosterDiscipline = data.disciplines.find(
-    (d) => d.id === data.classes.find((c) => c.id === rosterSession?.class_id)?.discipline_id,
-  )?.name;
   const now = Date.now();
   const todayKey = dateKey(new Date());
 
@@ -162,7 +159,6 @@ function AdminDashboard() {
           <AttendanceRoster
             key={`roster-${s.id}`}
             session={s}
-            discipline={rosterDiscipline}
             onClose={() => setRosterId(undefined)}
           />
         </div>
@@ -428,7 +424,12 @@ function AdminDashboard() {
           </section>
         )}
 
-        {view === 'indicadores' && <AttendanceIndicators />}
+        {view === 'indicadores' && (
+          <>
+            <PredictionService />
+            <AttendanceIndicators />
+          </>
+        )}
       </div>
     </>
   );

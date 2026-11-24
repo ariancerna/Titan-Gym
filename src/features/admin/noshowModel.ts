@@ -77,6 +77,9 @@ export function noShowFeatures(x: NoShowInput) {
       x.recordatorio_enviado === null ? Number.NaN : x.recordatorio_enviado ? 1 : 0,
     duracion_min: x.duracion_min,
     capacidad: x.capacidad,
+    // Ciclo de mejora del PROY: clase temprana reservada con más de 3 días. El modelo solo la usa si
+    // figura en noshow-model.json (las versiones de APF3 no la tenían).
+    temprano_x_anticipada: x.hora_inicio < 8 && hours > 72 ? 1 : 0,
   };
   const categorical: Record<string, string> = {
     disciplina: x.disciplina,
