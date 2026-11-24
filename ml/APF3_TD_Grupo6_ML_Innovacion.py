@@ -124,7 +124,7 @@ print(f"Python {platform.python_version()} · scikit-learn {sklearn.__version__}
 # | Tipo de problema | **Clasificación binaria supervisada**: cada reserva termina en *asistió* o *no-show*. El APF1 define el indicador como un porcentaje de inasistencias (evento sí/no), no como un valor continuo. |
 # | Variable objetivo | `no_show = 1` si `asistio = FALSE` (ausente sin cancelar); `0` si `asistio = TRUE`. Es el campo `asistio` del Contrato de Datos de APF2, invertido para que la clase positiva sea el evento que se quiere anticipar. |
 # | Unidad de observación | **Una reserva de una sesión que ya comenzó** (una fila de `admin_dataset()`). Hoy la MiPYME lo mide a mano en cuaderno/WhatsApp; en el MVP lo registra recepción con el QR o la lista de inscritos. |
-# | Decisión que apoya | Antes de cada clase, recepción contacta solo a las reservas en riesgo: **alto** (15 % de mayor riesgo) → confirmación obligatoria por WhatsApp y, si no confirma, el cupo se libera a la lista de espera del MVP; **medio** → recordatorio adicional; **bajo** → sin acción. |
+# | Decisión que apoya | Antes de cada clase, recepción contacta solo a las reservas en riesgo: **alto** (acción por defecto, cupo contractual de hasta el 20 % de las reservas) → confirmación obligatoria por WhatsApp y, si no confirma, el cupo se libera a la lista de espera del MVP; **medio** → recordatorio adicional si sobra capacidad (tope total 40 %); **bajo** → sin acción. |
 # | Dónde se integra | Panel `/admin` → *Ver inscritos* (etiqueta de riesgo junto a cada reserva) e *Indicadores*. |
 # | Costo de los errores | **Falso negativo** (no-show no detectado): cupo perdido y un socio en lista de espera que no entró. **Falso positivo**: un mensaje de confirmación innecesario (≈ 1–2 min de recepción). El FN cuesta más → se prioriza **recall** y se usa **F2** (recall pesa el doble que precisión) para fijar el umbral, con un tope operativo de reservas marcadas. |
 # | Métrica técnica | PR-AUC (average precision) de la clase no-show para elegir modelo; recall, precisión, F1 y F2 al umbral elegido. La exactitud no basta: las clases están desbalanceadas (~17 % no-show). |
@@ -139,6 +139,11 @@ print(f"Python {platform.python_version()} · scikit-learn {sklearn.__version__}
 # Parámetros de negocio usados en la interpretación (SUPUESTOS explícitos, se validan con el administrador).
 META_RECALL = 0.65
 TOPE_MARCADAS = 0.40  # capacidad operativa de recepción: confirmar como máximo 40 % de las reservas
+# Corrección APF3 (H5): cupo contractual de confirmaciones manuales. Por defecto recepción solo confirma el riesgo
+# alto; el riesgo medio recibe un recordatorio adicional si sobra capacidad. Ambos cupos deben cumplirse en CADA
+# pliegue temporal de la validación (peor caso), no solo en promedio.
+CUPO_ALTO = 0.20
+VERSION_MODELO = "apf3-1.1"  # apf3-1.0 = entregado en APF3; 1.1 = corregido según la retroalimentación
 META_TASA_PROY = 0.13
 MINUTOS_POR_CONFIRMACION = 2  # mensaje de WhatsApp + registro
 VALOR_CUPO_SOLES = 10.0  # SUPUESTO: valor referencial de un cupo de clase; validar con TITAN GYM
@@ -348,12 +353,16 @@ limpio["asistio"] = limpio["asistio"].map({True: True, False: False, "True": Tru
 limpio["no_show"] = (~limpio["asistio"].astype(bool)).astype(int)
 limpio["_inicio"] = pd.to_datetime(limpio["inicio_sesion"], utc=True, format="ISO8601")
 limpio = limpio.sort_values(["_inicio", "fecha_reserva"]).reset_index(drop=True)
+# Corrección APF3 (H1) y condición 5 del PROY: los registros reales NO entrenan ni eligen el modelo. Se reservan
+# para comprobar, caso por caso, si el modelo entrenado con datos simulados acierta con socios reales (sección 4.4).
+reales = limpio[limpio["origen"] == "real"].reset_index(drop=True)
+limpio = limpio[limpio["origen"] == "simulado"].reset_index(drop=True)
 
 cobertura = 1 - pendientes.sum() / (~canceladas).sum()
 resumen_limpieza = pd.DataFrame(
     {
-        "paso": ["Filas crudas", "Duplicados eliminados", "Canceladas (excluidas, no son no-show)", "Pendientes de registro (excluidas)", f"Atípicos IQR en anticipación (> {q3 + 1.5 * (q3 - q1):.0f} h, conservados)", "Fuera de la ventana de 7 días (eliminadas)", "Filas para modelar"],
-        "filas": [n0, n0 - len(sin_dup), int(canceladas.sum()), int(pendientes.sum()), int(atipicos.sum()), int(fuera_ventana.sum()), len(limpio)],
+        "paso": ["Filas crudas", "Duplicados eliminados", "Canceladas (excluidas, no son no-show)", "Pendientes de registro (excluidas)", f"Atípicos IQR en anticipación (> {q3 + 1.5 * (q3 - q1):.0f} h, conservados)", "Fuera de la ventana de 7 días (eliminadas)", "Reales reservados para validación (no entrenan)", "Filas para modelar (simuladas)"],
+        "filas": [n0, n0 - len(sin_dup), int(canceladas.sum()), int(pendientes.sum()), int(atipicos.sum()), int(fuera_ventana.sum()), len(reales), len(limpio)],
     }
 )
 mostrar(resumen_limpieza)
@@ -689,7 +698,11 @@ guardar(fig, "fig05_sobreajuste.png")
 # Los umbrales se eligen con predicciones **fuera de pliegue** del entrenamiento (cada pliegue temporal predice reservas que el
 # modelo no vio), nunca con la prueba:
 # * **Umbral de contacto** (riesgo medio o alto): maximiza **F2** con la restricción operativa de marcar como máximo el 40 % de las reservas. Es la decisión binaria que se evalúa.
-# * **Umbral alto**: el percentil 85 de las probabilidades fuera de pliegue (el 15 % de mayor riesgo), para reservar la confirmación obligatoria a los casos más probables.
+# * **Umbral alto**: maximiza F2 marcando como máximo el **20 %** de las reservas (cupo contractual de confirmaciones manuales). Es la acción **por defecto** de recepción.
+#
+# **Corrección APF3 (H5).** En APF3 el tope se exigía sobre el promedio de los pliegues (39,7 %) y en la prueba se excedió
+# (42,1 %). Ahora cada tope se exige **en todos los pliegues temporales** (peor caso): si en algún periodo el umbral marcaría
+# más reservas que el cupo, se descarta. Así el cupo resiste los cambios de tasa entre periodos.
 
 # %%
 mejor_cv = tabla_cv["PR-AUC CV"].max()
@@ -700,18 +713,23 @@ print(f"Mejor PR-AUC CV: {mejor_cv:.3f} · modelos a menos de 0,01: {empatados} 
 
 def predicciones_fuera_de_pliegue(pipeline, X, y):
     proba = pd.Series(np.nan, index=X.index)
-    for tr, va in cv.split(X):
+    pliegue = pd.Series(-1, index=X.index)
+    for k, (tr, va) in enumerate(cv.split(X)):
         m = clone(pipeline).fit(X.iloc[tr], y.iloc[tr])
         proba.iloc[va] = m.predict_proba(X.iloc[va])[:, 1]
+        pliegue.iloc[va] = k
     mascara = proba.notna()
-    return proba[mascara], y[mascara]
+    return proba[mascara], y[mascara], pliegue[mascara]
 
 
-def elegir_umbral(proba, y_real, tope=TOPE_MARCADAS):
-    mejores = (-1, 0.5)
+def elegir_umbral(proba, y_real, pliegue, tope=TOPE_MARCADAS):
+    """Umbral que maximiza F2 con la restricción de marcar como máximo `tope` en CADA pliegue (peor caso)."""
+    proba, y_real, pliegue = np.asarray(proba), np.asarray(y_real), np.asarray(pliegue)
+    mejores = (-1, 1.0)
     for u in np.unique(np.round(proba, 4)):
         pred = proba >= u
-        if pred.mean() > tope:
+        peor = max(pred[pliegue == k].mean() for k in np.unique(pliegue))
+        if peor > tope:
             continue
         f2 = fbeta_score(y_real, pred, beta=2, zero_division=0)
         if f2 > mejores[0]:
@@ -721,17 +739,18 @@ def elegir_umbral(proba, y_real, tope=TOPE_MARCADAS):
 
 umbrales = {}
 for nombre, gs in busquedas.items():
-    p_oof, y_oof = predicciones_fuera_de_pliegue(gs.best_estimator_, X_train, y_train)
-    umbrales[nombre] = elegir_umbral(p_oof.to_numpy(), y_oof.to_numpy())
+    p_oof, y_oof, pl_oof = predicciones_fuera_de_pliegue(gs.best_estimator_, X_train, y_train)
+    umbrales[nombre] = elegir_umbral(p_oof, y_oof, pl_oof, TOPE_MARCADAS)
     if nombre == seleccionado:
-        umbral_alto = float(np.quantile(p_oof, 0.85))
-        alto_oof = p_oof >= umbral_alto
-        print(f"Umbral alto (percentil 85) = {umbral_alto:.3f} → precisión {precision_score(y_oof, alto_oof):.3f}, recall {recall_score(y_oof, alto_oof):.3f}")
-        pred_oof = p_oof >= umbrales[nombre]
-        print(
-            f"{nombre}: umbral de contacto = {umbrales[nombre]:.3f} · en validación fuera de pliegue → recall {recall_score(y_oof, pred_oof):.3f}, "
-            f"precisión {precision_score(y_oof, pred_oof):.3f}, marcadas {pred_oof.mean():.1%}"
-        )
+        umbral_alto = elegir_umbral(p_oof, y_oof, pl_oof, CUPO_ALTO)
+        por_pliegue = pd.DataFrame({"p": p_oof, "pl": pl_oof})
+        for etiqueta, u, tope in (("contacto (medio o alto)", umbrales[nombre], TOPE_MARCADAS), ("alto (acción por defecto)", umbral_alto, CUPO_ALTO)):
+            pred_oof = p_oof >= u
+            marcadas = por_pliegue.assign(m=pred_oof).groupby("pl")["m"].mean()
+            print(
+                f"Umbral {etiqueta} = {u:.4f} · fuera de pliegue: recall {recall_score(y_oof, pred_oof):.3f}, precisión {precision_score(y_oof, pred_oof):.3f}, "
+                f"marcadas {pred_oof.mean():.1%} (peor pliegue {marcadas.max():.1%} ≤ cupo {tope:.0%})"
+            )
 print("Umbrales por modelo:", {k: round(v, 3) for k, v in umbrales.items()})
 modelo_final = busquedas[seleccionado].best_estimator_
 
@@ -790,6 +809,35 @@ for nombre, gs in busquedas.items():
 tabla_test = pd.DataFrame(filas).set_index("modelo")
 tabla_test.to_csv(MODELO / "metricas_prueba.csv")
 mostrar(tabla_test.round(3))
+
+# %% [markdown]
+# ### Comparación APF3 entregado → APF3 corregido (misma partición, mismo modelo, `random_state` fijo)
+# `modelo/metricas_apf3_entregado.csv` guarda las métricas tal como se entregaron en APF3 (versión apf3-1.0). La corrección
+# no cambia el modelo ni sus coeficientes: cambia **cómo se fijan los umbrales** (cupos exigidos en el peor pliegue) y la
+# acción por defecto (solo riesgo alto). La prueba se sigue usando una sola vez, al final.
+
+# %%
+entregado = pd.read_csv(MODELO / "metricas_apf3_entregado.csv").set_index("modelo")
+filas_cmp = {
+    "APF3 entregado · contacto (medio o alto)": entregado.loc["Regresión logística ★ seleccionado"],
+    "APF3 entregado · solo riesgo alto": entregado.loc["Regresión logística: solo riesgo alto"],
+    "APF3 corregido · contacto (medio o alto)": tabla_test.loc[seleccionado + " ★ seleccionado"],
+    "APF3 corregido · solo riesgo alto (por defecto)": tabla_test.loc[seleccionado + ": solo riesgo alto"],
+}
+comparacion = pd.DataFrame(filas_cmp).T[["precision", "recall", "F1", "F2", "PR-AUC", "% marcadas"]]
+comparacion["cupo"] = [TOPE_MARCADAS, None, TOPE_MARCADAS, CUPO_ALTO]
+comparacion["¿cumple el cupo?"] = [
+    "—" if pd.isna(c) else ("sí" if m <= c else "no") for m, c in zip(comparacion["% marcadas"], comparacion["cupo"])
+]
+comparacion.to_csv(MODELO / "comparacion_apf3_corregido.csv")
+mostrar(comparacion.round(3))
+
+# %% [markdown]
+# **Lectura de la corrección (H5).** Con los cupos exigidos en el peor pliegue, el umbral de contacto marca el 33 % de las
+# reservas de prueba (antes 42,1 %) y la acción por defecto, solo riesgo alto, el 14 % (cupo contractual 20 %): **ambos
+# cupos se cumplen**. El costo es explícito: el recall de contacto baja de 0,697 a 0,614 y queda bajo la meta de 0,65.
+# Se prioriza respetar la capacidad real de recepción, como recomendó el docente; recuperar recall dentro del cupo es el
+# objetivo del ciclo de mejora del Proyecto Final (Paso 2b). El PR-AUC no cambia (0,319) porque el modelo es el mismo.
 
 # %%
 fig, ax = plt.subplots(figsize=(7.5, 5.5))
@@ -924,6 +972,28 @@ print(f"Supera a la regla del MVP en PR-AUC y F2: {'SÍ' if supera_regla else 'N
 # entrenarlo con la asistencia real que se registre en el panel.
 
 # %% [markdown]
+# ### 4.4 Validación con registros reales (corrección APF3 · H1)
+# Los registros con `origen = "real"` (exportados desde `/admin` a `data/export_mvp_real.csv`, seudonimizados) **no entrenan
+# ni eligen el modelo**: el modelo ya entrenado los predice y se revisa caso por caso si acierta. Con pocos registros este
+# resultado no es una métrica principal; sirve para saber si los datos simulados se parecen a la realidad.
+
+# %%
+if len(reales):
+    p_reales = modelo_final.predict_proba(reales[tn.CAMPOS_ENTRADA])[:, 1]
+    revision = reales[["inicio_sesion", "disciplina", "hora_inicio", "anticipacion_horas", "reservas_previas", "inasistencias_previas", "recordatorio_enviado", "no_show"]].assign(
+        probabilidad=p_reales.round(3),
+        riesgo=np.where(p_reales >= umbral_alto, "alto", np.where(p_reales >= umbrales[seleccionado], "medio", "bajo")),
+    )
+    revision["acierta (alto = no-show)"] = (revision["riesgo"] == "alto") == revision["no_show"].astype(bool)
+    revision.to_csv(MODELO / "validacion_registros_reales.csv", index=False)
+    mostrar(revision)
+    vn_r, fp_r, fn_r, vp_r = confusion_matrix(revision["no_show"], revision["riesgo"] == "alto", labels=[0, 1]).ravel()
+    print(f"Registros reales: {len(revision)} · no-shows reales: {int(revision['no_show'].sum())} ({revision['no_show'].mean():.1%} vs {y_train.mean():.1%} simulado)")
+    print(f"Riesgo alto frente a lo ocurrido → VP={vp_r} · FP={fp_r} · FN={fn_r} · VN={vn_r}")
+else:
+    print("Aún no hay registros reales (data/export_mvp_real.csv no existe): la validación con datos reales queda pendiente y se declara.")
+
+# %% [markdown]
 # ## 5. Modelo exportado y predicción sobre un registro nuevo
 # El archivo `modelo/modelo_noshow_titan.joblib` contiene **todo el pipeline** (características, imputación, escalado, one-hot y
 # modelo). Recibe los campos tal como los entrega el MVP.
@@ -931,11 +1001,13 @@ print(f"Supera a la regla del MVP en PR-AUC y F2: {'SÍ' if supera_regla else 'N
 # %%
 metadata = {
     "modelo": seleccionado,
-    "version": "apf3-1.0",
+    "version": VERSION_MODELO,
     "fecha_entrenamiento": FECHA_CORTE.date().isoformat(),
     "hiperparametros": {k.replace("modelo__", ""): v for k, v in busquedas[seleccionado].best_params_.items()},
     "umbral_contacto": round(umbrales[seleccionado], 4),  # riesgo medio o alto (F2 con tope de 40 % marcadas)
-    "umbral_alto": round(umbral_alto, 4),  # percentil 85: confirmación obligatoria
+    "umbral_alto": round(umbral_alto, 4),  # F2 con cupo de 20 % en el peor pliegue: acción por defecto
+    "cupo_alto": CUPO_ALTO,
+    "tope_contacto": TOPE_MARCADAS,
     "campos_entrada": tn.CAMPOS_ENTRADA,
     "metricas_prueba": {k: round(float(v), 4) for k, v in sel.items()},
     "tasa_no_show_entrenamiento": round(float(y_train.mean()), 4),

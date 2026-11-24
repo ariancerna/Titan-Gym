@@ -162,8 +162,10 @@ export function AttendanceRoster({
                 <>
                   El riesgo lo estima el modelo de Machine Learning del APF3 (regresión logística)
                   con el historial del socio, la anticipación, el horario, la ocupación y el
-                  recordatorio. Riesgo medio: enviar un recordatorio adicional. Entrenado con datos
-                  simulados: se reentrenará con la asistencia real registrada aquí.
+                  recordatorio. Por defecto solo se confirma el riesgo alto (como máximo 1 de cada 5
+                  reservas); riesgo medio: recordatorio adicional si recepción tiene tiempo.
+                  Entrenado con datos simulados: se reentrenará con la asistencia real registrada
+                  aquí.
                 </>
               ) : (
                 <>

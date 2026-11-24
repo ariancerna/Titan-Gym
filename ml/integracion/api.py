@@ -42,7 +42,7 @@ class Prediccion(BaseModel):
     modelo_version: str
 
 
-app = FastAPI(title="TITAN GYM · Riesgo de no-show", version="apf3-1.0")
+app = FastAPI(title="TITAN GYM · Riesgo de no-show", version="apf3-1.1")
 
 
 @app.get("/salud")
