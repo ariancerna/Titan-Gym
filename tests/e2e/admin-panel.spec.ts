@@ -217,3 +217,59 @@ test('la lista de espera es visible para el administrador en la agenda y en los 
   await expect(waitlist).toContainText('Beto Ruiz');
   await expect(waitlist).toContainText('test2@example.com');
 });
+
+test('servicio de predicción: el servidor predice y registra, rechaza datos inválidos y degrada a la regla', async ({
+  page,
+  request,
+}) => {
+  const sessionId = await createSession(request, 'Sala de predicción', 2, 10);
+  expect(
+    (
+      await request.post(`${api}/rpc/reserve_session`, {
+        headers: auth(1),
+        data: { p_session_id: sessionId, p_member_name: 'Ana López', p_email: 'test1@example.com' },
+      })
+    ).ok(),
+  ).toBe(true);
+  await signIn(page);
+  await page.goto('/admin?vista=indicadores');
+  const service = page.getByRole('region', { name: 'Servicio de predicción' });
+  await expect(service.getByText('Activo', { exact: true })).toBeVisible();
+
+  // (a) Registro nuevo: el servidor calcula el riesgo y explica qué hacer.
+  await service.getByRole('button', { name: 'Calcular riesgo en el servidor' }).click();
+  const result = service.getByRole('status');
+  await expect(result).toContainText(/Riesgo (bajo|medio|alto)/);
+  await expect(result).toContainText('% de probabilidad de no-show');
+  await expect(result).toContainText('Calculado en el servidor con el modelo proy-');
+  await expect(service.getByRole('cell', { name: 'Prueba manual' }).first()).toBeVisible();
+
+  // (b) Dato inválido: el servidor lo rechaza con un mensaje claro y no lo registra.
+  await service.getByLabel('Faltas sin avisar anteriores').fill('99');
+  await service.getByRole('button', { name: 'Calcular riesgo en el servidor' }).click();
+  await expect(service.getByRole('alert')).toContainText(
+    'El servidor rechazó los datos: inasistencias_previas debe estar entre 0 y reservas_previas',
+  );
+
+  // «Ver inscritos» usa el modelo del servidor.
+  await page.goto('/admin?vista=agenda');
+  const row = page.locator('.admin-session').filter({ hasText: 'Sala de predicción' });
+  await row.getByRole('button', { name: 'Ver inscritos' }).click();
+  const member = page.locator('.admin-member').filter({ hasText: 'Ana López' });
+  await expect(member.locator('.admin-risk')).toContainText('% de probabilidad de no-show');
+
+  // (c) Servicio desactivado: el panel lo avisa y muestra la regla de respaldo.
+  await page.goto('/admin?vista=indicadores');
+  await service.getByRole('button', { name: /Desactivar modelo/ }).click();
+  await expect(service.getByText('Desactivado', { exact: true })).toBeVisible();
+  await page.goto('/admin?vista=agenda');
+  await page
+    .locator('.admin-session')
+    .filter({ hasText: 'Sala de predicción' })
+    .getByRole('button', { name: 'Ver inscritos' })
+    .click();
+  await expect(
+    page.getByRole('alert').filter({ hasText: 'Servicio de predicción no disponible' }),
+  ).toContainText('El modelo de predicción está desactivado en el servidor.');
+  await expect(member.locator('.admin-risk')).toContainText('Regla de respaldo');
+});

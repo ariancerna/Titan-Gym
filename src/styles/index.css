@@ -1262,6 +1262,53 @@
 .admin-session .admin-actions {
   flex-shrink: 0;
 }
+.prediction-service {
+  margin-bottom: 28px;
+}
+.prediction-status {
+  display: grid;
+  gap: 8px;
+  justify-items: start;
+  margin-bottom: 20px;
+}
+.prediction-status p {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0;
+}
+.prediction-form h3,
+.prediction-log h3 {
+  margin: 12px 0 4px;
+}
+.prediction-form .admin-form-grid {
+  margin: 12px 0 16px;
+}
+.prediction-result {
+  margin-top: 16px;
+  padding: 14px 16px;
+  border: 1px solid #ffffff1a;
+  border-radius: var(--radius);
+  background: var(--ink-2);
+}
+.prediction-result p {
+  margin: 4px 0;
+}
+.prediction-error {
+  margin-top: 12px;
+}
+.prediction-log {
+  margin-top: 24px;
+}
+.admin-risk-fallback {
+  border-color: #f59e0b66;
+  background: #f59e0b14;
+  color: #fcd34d;
+}
+.admin-risk-fallback strong {
+  color: #fde68a;
+}
 .panel.admin-roster {
   padding: 24px 28px;
 }

@@ -1,12 +1,12 @@
 {
-  "modelo": "Regresión logística",
-  "version": "apf3-1.1",
+  "modelo": "Regresión logística + interacción temprano × anticipada",
+  "version": "proy-1.0",
   "fecha_entrenamiento": "2026-11-01",
   "hiperparametros": {
-    "C": 0.03
+    "C": 0.01
   },
-  "umbral_contacto": 0.2224,
-  "umbral_alto": 0.2924,
+  "umbral_contacto": 0.2177,
+  "umbral_alto": 0.2788,
   "cupo_alto": 0.2,
   "tope_contacto": 0.4,
   "campos_entrada": [
@@ -24,13 +24,13 @@
   ],
   "metricas_prueba": {
     "accuracy": 0.7001,
-    "precision": 0.2709,
-    "recall": 0.6136,
-    "F1": 0.3759,
-    "F2": 0.4897,
-    "PR-AUC": 0.3191,
-    "ROC-AUC": 0.7213,
-    "% marcadas": 0.3333
+    "precision": 0.2724,
+    "recall": 0.6212,
+    "F1": 0.3788,
+    "F2": 0.4946,
+    "PR-AUC": 0.3133,
+    "ROC-AUC": 0.7235,
+    "% marcadas": 0.3356
   },
   "tasa_no_show_entrenamiento": 0.187,
   "datos": "100 % simulados (origen = simulado); reentrenar con datos reales del MVP",

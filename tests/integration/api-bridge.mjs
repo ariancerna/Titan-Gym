@@ -38,6 +38,8 @@ const server = createServer(async(req,res)=>{
     await harness.admin.query('update public.class_sessions s set capacity=v.capacity from unnest($1::uuid[],$2::int[]) v(id,capacity) where s.id=v.id and s.capacity<>v.capacity',[initialCapacity.map(r=>r.id),initialCapacity.map(r=>r.capacity)]);
     await harness.admin.query('delete from public.instructors where not(id=any($1::uuid[]))',[initialInstructors]);
     await harness.admin.query('delete from public.member_preferences');
+    await harness.admin.query('delete from private.ml_predicciones');
+    await harness.admin.query("update private.ml_modelos set activo=true where version=(select version from private.ml_modelos order by creado_en desc limit 1)");
     await harness.admin.query('delete from public.classes where not(id=any($1::uuid[]))',[initialClasses]);
     res.end('{"ok":true}');return;
   }
@@ -58,6 +60,11 @@ const server = createServer(async(req,res)=>{
       else if(url.pathname.endsWith('/admin_set_attendance')){await client.query('select public.admin_set_attendance($1,$2)',[args.p_reservation_id,args.p_status]);data=null;}
       else if(url.pathname.endsWith('/cancel_reservation')){await client.query('select public.cancel_reservation($1)',[args.p_reservation_id]);data=null;}
       else if(url.pathname.endsWith('/admin_dataset'))data=(await client.query('select * from public.admin_dataset()')).rows;
+      else if(url.pathname.endsWith('/admin_roster_riesgo'))data=(await client.query('select public.admin_roster_riesgo($1) value',[args.p_session_id])).rows[0].value;
+      else if(url.pathname.endsWith('/predecir_noshow'))data=(await client.query('select public.predecir_noshow($1::jsonb) value',[JSON.stringify(args.p_entrada)])).rows[0].value;
+      else if(url.pathname.endsWith('/admin_modelo_estado'))data=(await client.query('select public.admin_modelo_estado() value')).rows[0].value;
+      else if(url.pathname.endsWith('/admin_set_modelo_activo'))data=(await client.query('select public.admin_set_modelo_activo($1) value',[args.p_activo])).rows[0].value;
+      else if(url.pathname.endsWith('/admin_predicciones'))data=(await client.query('select public.admin_predicciones($1) value',[args.p_limite])).rows[0].value;
       else if(url.pathname.endsWith('/accept_privacy_policy')){await client.query('select public.accept_privacy_policy($1)',[args.p_version]);data=null;}
       else if(url.pathname.endsWith('/admin_check_in'))data=(await client.query('select public.admin_check_in($1) value',[args.p_code])).rows[0].value;
       else if(url.pathname.endsWith('/set_email_reminders')){await client.query('select public.set_email_reminders($1)',[args.p_enabled]);data=null;}

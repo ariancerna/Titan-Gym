@@ -143,7 +143,9 @@ TOPE_MARCADAS = 0.40  # capacidad operativa de recepción: confirmar como máxim
 # alto; el riesgo medio recibe un recordatorio adicional si sobra capacidad. Ambos cupos deben cumplirse en CADA
 # pliegue temporal de la validación (peor caso), no solo en promedio.
 CUPO_ALTO = 0.20
-VERSION_MODELO = "apf3-1.1"  # apf3-1.0 = entregado en APF3; 1.1 = corregido según la retroalimentación
+VERSION_APF3_CORREGIDO = "apf3-1.1"  # apf3-1.0 = entregado en APF3; 1.1 = corregido según la retroalimentación
+VERSION_PROY = "proy-1.0"  # modelo mejorado en el Proyecto Final (ciclo de mejora, sección 3.5)
+VERSION_MODELO = VERSION_APF3_CORREGIDO  # pasa a proy-1.0 si la mejora se acepta
 META_TASA_PROY = 0.13
 MINUTOS_POR_CONFIRMACION = 2  # mensaje de WhatsApp + registro
 VALOR_CUPO_SOLES = 10.0  # SUPUESTO: valor referencial de un cupo de clase; validar con TITAN GYM
@@ -755,7 +757,77 @@ print("Umbrales por modelo:", {k: round(v, 3) for k, v in umbrales.items()})
 modelo_final = busquedas[seleccionado].best_estimator_
 
 # %% [markdown]
-# ### 3.5 Viabilidad de despliegue
+# ### 3.5 Ciclo de mejora del Proyecto Final (Paso 2b)
+# Sobre el modelo **APF3 corregido** (regresión logística, umbrales con cupo en el peor pliegue) se prueban líneas de mejora con
+# **la misma partición, el mismo preprocesamiento, la misma validación cruzada temporal y `random_state` fijo**. La prueba no
+# interviene: se usa una sola vez, en la sección 4, para la tabla comparativa.
+#
+# | Línea (tipo de la consigna) | Hipótesis de negocio |
+# |---|---|
+# | (a) Variable derivada `temprano_x_anticipada` | Una clase antes de las 8:00 reservada con más de 3 días deja más tiempo para que cambien los planes. |
+# | (a) Variable derivada `viernes_tarde` | El viernes desde las 17:00 compite con planes de fin de semana. |
+# | (e) Tratamiento del desbalance: `class_weight="balanced"` | Dar más peso a la clase minoritaria podría mejorar el orden de riesgo. |
+#
+# **Criterio de aceptación (fijado antes de ver resultados):** una línea se acepta si sube el PR-AUC medio de la validación
+# cruzada **y** mejora en al menos 4 de los 5 pliegues temporales (comparación pareada con el modelo corregido). Entre líneas
+# aceptadas se prefiere la de mayor PR-AUC; ante empate (< 0,001), la más simple.
+
+# %%
+class CaracteristicasViernes(tn.CaracteristicasNoShow):
+    """Solo para evaluar la línea «viernes_tarde» (no se exporta si no se acepta)."""
+
+    def transform(self, X):
+        out = super().transform(X)
+        X = pd.DataFrame(X)
+        out["viernes_tarde"] = ((pd.to_numeric(X["dia_semana"]) == 5) & (pd.to_numeric(X["hora_inicio"]) >= 17)).astype(float)
+        return out
+
+
+def pipeline_viernes():
+    p = tn.construir_pipeline(LogisticRegression(max_iter=5000, random_state=SEED))
+    p.steps[0] = ("caracteristicas", CaracteristicasViernes())
+    p.steps[1] = ("preprocesamiento", tn.construir_preprocesador(tn.VARIABLES_NUMERICAS + ["viernes_tarde"]))
+    return p
+
+
+base_nombre = seleccionado
+umbral_contacto_base, umbral_alto_base = umbrales[base_nombre], umbral_alto
+r_base = busquedas[base_nombre].cv_results_
+pliegues_base = np.array([r_base[f"split{k}_test_pr_auc"][busquedas[base_nombre].best_index_] for k in range(cv.n_splits)])
+lineas = {
+    "PROY (a): + temprano × anticipada": tn.construir_pipeline(LogisticRegression(max_iter=5000, random_state=SEED), interacciones=True),
+    "PROY (a): + viernes tarde": pipeline_viernes(),
+    "PROY (e): + temprano × anticipada, clases balanceadas": tn.construir_pipeline(LogisticRegression(max_iter=5000, random_state=SEED, class_weight="balanced"), interacciones=True),
+}
+filas_mejora, busquedas_mejora = [{"línea": f"APF3 corregido ({base_nombre})", "C": busquedas[base_nombre].best_params_["modelo__C"], "PR-AUC CV": pliegues_base.mean(), "Δ vs corregido": 0.0, "pliegues que mejoran": "—", "¿se acepta?": "base"}], {}
+for nombre, pipe in lineas.items():
+    gs = GridSearchCV(pipe, {"modelo__C": [0.003, 0.01, 0.03, 0.1, 0.3, 1]}, scoring="average_precision", cv=cv, n_jobs=1).fit(X_train, y_train)
+    pliegues = np.array([gs.cv_results_[f"split{k}_test_score"][gs.best_index_] for k in range(cv.n_splits)])
+    mejoran = int((pliegues > pliegues_base).sum())
+    acepta = pliegues.mean() > pliegues_base.mean() and mejoran >= 4
+    busquedas_mejora[nombre] = (gs, acepta, pliegues.mean())
+    filas_mejora.append({"línea": nombre, "C": gs.best_params_["modelo__C"], "PR-AUC CV": pliegues.mean(), "Δ vs corregido": pliegues.mean() - pliegues_base.mean(), "pliegues que mejoran": f"{mejoran}/5", "¿se acepta?": "sí" if acepta else "no"})
+tabla_mejora = pd.DataFrame(filas_mejora)
+mostrar(tabla_mejora.round(4))
+tabla_mejora.to_csv(MODELO / "ciclo_mejora_cv.csv", index=False)
+
+aceptadas = sorted([(pr, n) for n, (gs, ok, pr) in busquedas_mejora.items() if ok], reverse=True)
+if aceptadas:
+    mejor_pr = aceptadas[0][0]
+    # Ante un empate práctico gana la más simple: la línea sin balanceo de clases (orden de `lineas`).
+    nombre_proy = next(n for n in lineas if busquedas_mejora[n][1] and busquedas_mejora[n][2] >= mejor_pr - 0.001)
+    gs_proy = busquedas_mejora[nombre_proy][0]
+    busquedas[nombre_proy] = gs_proy
+    p_oof, y_oof, pl_oof = predicciones_fuera_de_pliegue(gs_proy.best_estimator_, X_train, y_train)
+    umbrales[nombre_proy] = elegir_umbral(p_oof, y_oof, pl_oof, TOPE_MARCADAS)
+    umbral_alto = elegir_umbral(p_oof, y_oof, pl_oof, CUPO_ALTO)
+    seleccionado, modelo_final, VERSION_MODELO = nombre_proy, gs_proy.best_estimator_, VERSION_PROY
+    print(f"Mejora aceptada: {nombre_proy} → versión {VERSION_MODELO} · umbral contacto {umbrales[nombre_proy]:.4f} · umbral alto {umbral_alto:.4f}")
+else:
+    print(f"Ninguna línea cumple el criterio: se conserva el modelo corregido ({VERSION_MODELO}).")
+
+# %% [markdown]
+# ### 3.6 Viabilidad de despliegue
 # Se mide el tamaño del modelo exportado y el tiempo de predicción por reserva. El servicio donde se integra es el MVP:
 # frontend en **Vercel (plan gratuito)** y base de datos en **Supabase (plan gratuito)**. Ver la sección 6.
 
@@ -806,31 +878,54 @@ for nombre, gs in busquedas.items():
     filas.append(metricas(nombre + (" ★ seleccionado" if nombre == seleccionado else ""), y_test, probas_test[nombre] >= umbrales[nombre], probas_test[nombre]))
     if nombre == seleccionado:
         filas.append(metricas(nombre + ": solo riesgo alto", y_test, probas_test[nombre] >= umbral_alto, probas_test[nombre]))
+if seleccionado != base_nombre:  # el APF3 corregido sigue en la tabla con su acción por defecto
+    filas.append(metricas(base_nombre + ": solo riesgo alto", y_test, probas_test[base_nombre] >= umbral_alto_base, probas_test[base_nombre]))
 tabla_test = pd.DataFrame(filas).set_index("modelo")
 tabla_test.to_csv(MODELO / "metricas_prueba.csv")
 mostrar(tabla_test.round(3))
 
 # %% [markdown]
-# ### Comparación APF3 entregado → APF3 corregido (misma partición, mismo modelo, `random_state` fijo)
-# `modelo/metricas_apf3_entregado.csv` guarda las métricas tal como se entregaron en APF3 (versión apf3-1.0). La corrección
-# no cambia el modelo ni sus coeficientes: cambia **cómo se fijan los umbrales** (cupos exigidos en el peor pliegue) y la
-# acción por defecto (solo riesgo alto). La prueba se sigue usando una sola vez, al final.
+# ### Comparación APF3 entregado → APF3 corregido → PROY (misma partición, mismo preprocesamiento, `random_state` fijo)
+# `modelo/metricas_apf3_entregado.csv` guarda las métricas tal como se entregaron en APF3 (versión apf3-1.0). El APF3 corregido
+# (apf3-1.1) es el mismo modelo con los umbrales de cupo en el peor pliegue; el PROY (proy-1.0) suma la mejora aceptada en la
+# sección 3.5. La prueba se usa una sola vez, aquí y en la tabla anterior.
 
 # %%
 entregado = pd.read_csv(MODELO / "metricas_apf3_entregado.csv").set_index("modelo")
+etiqueta_base = base_nombre + (" ★ seleccionado" if seleccionado == base_nombre else "")
 filas_cmp = {
-    "APF3 entregado · contacto (medio o alto)": entregado.loc["Regresión logística ★ seleccionado"],
-    "APF3 entregado · solo riesgo alto": entregado.loc["Regresión logística: solo riesgo alto"],
-    "APF3 corregido · contacto (medio o alto)": tabla_test.loc[seleccionado + " ★ seleccionado"],
-    "APF3 corregido · solo riesgo alto (por defecto)": tabla_test.loc[seleccionado + ": solo riesgo alto"],
+    "Línea base · regla del MVP (riesgo alto)": (tabla_test.loc["Regla del MVP: riesgo alto"], None),
+    "APF3 entregado · contacto (medio o alto)": (entregado.loc["Regresión logística ★ seleccionado"], TOPE_MARCADAS),
+    "APF3 entregado · solo riesgo alto": (entregado.loc["Regresión logística: solo riesgo alto"], None),
+    "APF3 corregido · contacto (medio o alto)": (tabla_test.loc[etiqueta_base], TOPE_MARCADAS),
+    "APF3 corregido · solo riesgo alto": (tabla_test.loc[base_nombre + ": solo riesgo alto"], CUPO_ALTO),
 }
-comparacion = pd.DataFrame(filas_cmp).T[["precision", "recall", "F1", "F2", "PR-AUC", "% marcadas"]]
-comparacion["cupo"] = [TOPE_MARCADAS, None, TOPE_MARCADAS, CUPO_ALTO]
+if seleccionado != base_nombre:
+    filas_cmp["PROY · contacto (medio o alto)"] = (tabla_test.loc[seleccionado + " ★ seleccionado"], TOPE_MARCADAS)
+    filas_cmp["PROY · solo riesgo alto (por defecto)"] = (tabla_test.loc[seleccionado + ": solo riesgo alto"], CUPO_ALTO)
+comparacion = pd.DataFrame({k: v[0] for k, v in filas_cmp.items()}).T[["precision", "recall", "F1", "F2", "PR-AUC", "% marcadas"]]
+comparacion["cupo"] = [v[1] for v in filas_cmp.values()]
 comparacion["¿cumple el cupo?"] = [
     "—" if pd.isna(c) else ("sí" if m <= c else "no") for m, c in zip(comparacion["% marcadas"], comparacion["cupo"])
 ]
-comparacion.to_csv(MODELO / "comparacion_apf3_corregido.csv")
+comparacion.to_csv(MODELO / "comparacion_apf3_proy.csv")
 mostrar(comparacion.round(3))
+if seleccionado != base_nombre:
+    num_cols = ["precision", "recall", "F2", "PR-AUC", "% marcadas"]
+    d = comparacion.loc["PROY · contacto (medio o alto)", num_cols].astype(float) - comparacion.loc["APF3 corregido · contacto (medio o alto)", num_cols].astype(float)
+    print(f"Δ PROY − APF3 corregido (contacto): PR-AUC {d['PR-AUC']:+.3f} · recall {d['recall']:+.3f} · precisión {d['precision']:+.3f} · marcadas {d['% marcadas']:+.1%}")
+
+# %% [markdown]
+# **Resultado y decisión del ciclo de mejora (Paso 2b).** La línea `temprano_x_anticipada` cumplió el criterio fijado de
+# antemano (PR-AUC de validación 0,315 → 0,324, mejor en 4 de 5 pliegues) y es el modelo servido (`proy-1.0`). En la prueba, con
+# ambos cupos respetados, el recall de contacto sube de 0,614 a 0,621, el F2 de 0,490 a 0,495 y la acción por defecto (riesgo
+# alto) detecta más no-shows (recall 0,341 → 0,364) marcando 15,6 % de las reservas; el ROC-AUC sube levemente (0,721 → 0,723),
+# pero el PR-AUC baja 0,006 (0,319 → 0,313). **Lectura honesta:** la ganancia es pequeña y está dentro de la variación entre
+# pliegues (desviación ≈ 0,05): la variable aporta en las clases tempranas reservadas con días de anticipación, que son pocas en la
+# prueba (agosto–octubre). Se conserva porque fue elegida con la regla previa —no se vuelve a elegir mirando la prueba—, mejora la
+# acción que usa recepción y no empeora la calibración. La mejora de fondo vendrá de **datos reales** (H1): se repetirá esta misma
+# tabla con la asistencia registrada en el MVP. `viernes_tarde` no mejora y el balanceo de clases no suma frente a la línea
+# simple y descalibra la probabilidad que ve recepción: ambas se descartan.
 
 # %% [markdown]
 # **Lectura de la corrección (H5).** Con los cupos exigidos en el peor pliegue, el umbral de contacto marca el 33 % de las
@@ -913,7 +1008,7 @@ ax.set_title(f"Figura 8. Importancia por permutación (prueba) — {seleccionado
 guardar(fig, "fig08_importancia.png")
 mostrar(tabla_imp.round(4))
 
-if seleccionado == "Regresión logística":
+if isinstance(modelo_final.named_steps["modelo"], LogisticRegression):
     nombres = modelo_final.named_steps["preprocesamiento"].get_feature_names_out()
     coef = modelo_final.named_steps["modelo"].coef_[0]
     tabla_coef = pd.DataFrame({"variable": nombres, "coeficiente": coef, "odds_ratio": np.exp(coef)}).sort_values("coeficiente", key=abs, ascending=False)
@@ -1000,7 +1095,7 @@ else:
 
 # %%
 metadata = {
-    "modelo": seleccionado,
+    "modelo": "Regresión logística" + (" + interacción temprano × anticipada" if VERSION_MODELO == VERSION_PROY else ""),
     "version": VERSION_MODELO,
     "fecha_entrenamiento": FECHA_CORTE.date().isoformat(),
     "hiperparametros": {k.replace("modelo__", ""): v for k, v in busquedas[seleccionado].best_params_.items()},
@@ -1074,12 +1169,12 @@ evidencia = {"fecha": pd.Timestamp.now(tz="America/Lima").isoformat(timespec="se
 # automática `tests/unit/noshow-model.test.ts` del MVP verifica que TypeScript da el mismo resultado (diferencia < 1e-9).
 
 # %%
-if seleccionado == "Regresión logística":
+if isinstance(modelo_final.named_steps["modelo"], LogisticRegression):
     pre = modelo_final.named_steps["preprocesamiento"]
     num, cat = pre.named_transformers_["num"], pre.named_transformers_["cat"]
     modelo_web = {
         "version": metadata["version"],
-        "modelo": seleccionado,
+        "modelo": metadata["modelo"],
         "datos": metadata["datos"],
         "umbral_contacto": metadata["umbral_contacto"],
         "umbral_alto": metadata["umbral_alto"],
@@ -1087,7 +1182,7 @@ if seleccionado == "Regresión logística":
         "k_suavizado": tn.K_SUAVIZADO,
         "numericas": [
             {"nombre": n, "imputacion": float(num.named_steps["imputar"].statistics_[i]), "media": float(num.named_steps["escalar"].mean_[i]), "escala": float(num.named_steps["escalar"].scale_[i])}
-            for i, n in enumerate(tn.VARIABLES_NUMERICAS)
+            for i, n in enumerate(pre.transformers_[0][2])
         ],
         "categoricas": [
             {"nombre": n, "imputacion": str(cat.named_steps["imputar"].statistics_[i]), "categorias": [str(c) for c in cat.named_steps["onehot"].categories_[i]]}

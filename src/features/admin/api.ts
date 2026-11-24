@@ -129,6 +129,85 @@ export const createRecurringSessions = (data: Record<string, unknown>, until: st
   });
 export const saveInstructor = (data: { name: string; bio: string }, id?: string) =>
   rpc<string>('admin_save_instructor', { p_data: data, p_id: id ?? null });
+// ---------------------------------------------------------------------------------------------
+// Modelo de no-show servido por el backend (migración 20261125000000_inferencia_servidor.sql).
+// ---------------------------------------------------------------------------------------------
+export type ServerRiskLevel = 'bajo' | 'medio' | 'alto';
+export interface ServerPrediction {
+  prediccion_id: number;
+  probabilidad_no_show: number;
+  riesgo: ServerRiskLevel;
+  umbral_contacto: number;
+  umbral_alto: number;
+  accion_sugerida: string;
+  modelo_version: string;
+  modelo: string;
+  fecha: string;
+}
+export interface RosterRisk extends ServerPrediction {
+  reservation_id: string;
+  recordatorio_enviado: boolean | null;
+}
+export interface PredictionInput {
+  disciplina: string;
+  inicio_sesion: string;
+  dia_semana: number;
+  hora_inicio: number;
+  duracion_min: number;
+  capacidad: number;
+  reservas_activas: number;
+  anticipacion_horas: number;
+  reservas_previas: number;
+  inasistencias_previas: number;
+  recordatorio_enviado: boolean | null;
+}
+export interface ModelStatus {
+  version: string | null;
+  modelo: string | null;
+  activo: boolean;
+  actualizado_en: string | null;
+  umbral_contacto: number | null;
+  umbral_alto: number | null;
+  predicciones_registradas: number;
+  ultima_prediccion: string | null;
+}
+export interface PredictionLogEntry {
+  id: number;
+  creado_en: string;
+  version: string;
+  origen: 'panel' | 'prueba';
+  reservation_id: string | null;
+  session_id: string | null;
+  entrada: PredictionInput;
+  probabilidad: number;
+  riesgo: ServerRiskLevel;
+}
+/** Si el servicio de predicción tarda más que esto, el panel usa la regla de respaldo. */
+export const PREDICTION_TIMEOUT_MS = 6000;
+async function rpcWithTimeout<T>(name: string, args: Record<string, unknown>): Promise<T> {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), PREDICTION_TIMEOUT_MS);
+  try {
+    const { data, error } = await requireSupabase().rpc(name, args).abortSignal(controller.signal);
+    if (error) throw controller.signal.aborted ? new Error('MODELO_TIEMPO_AGOTADO') : error;
+    return data as T;
+  } catch (e) {
+    if (controller.signal.aborted) throw new Error('MODELO_TIEMPO_AGOTADO');
+    throw e;
+  } finally {
+    clearTimeout(timer);
+  }
+}
+export const getRosterRisk = (sessionId: string) =>
+  rpcWithTimeout<RosterRisk[]>('admin_roster_riesgo', { p_session_id: sessionId });
+export const predictOnServer = (input: PredictionInput) =>
+  rpcWithTimeout<ServerPrediction>('predecir_noshow', { p_entrada: input });
+export const getModelStatus = () => rpc<ModelStatus>('admin_modelo_estado');
+export const setModelActive = (active: boolean) =>
+  rpc<ModelStatus>('admin_set_modelo_activo', { p_activo: active });
+export const getPredictionLog = (limit = 10) =>
+  rpc<PredictionLogEntry[]>('admin_predicciones', { p_limite: limit });
+
 export const attendanceLabel: Record<AttendanceStatus, string> = {
   pending: 'Pendiente',
   present: 'Presente',
