@@ -25,15 +25,19 @@ interface MemberRisk {
   reasons: string[];
 }
 
-function RiskNote({ risk }: { risk: MemberRisk }) {
+const riskOrder: Record<RiskLevel, number> = { alto: 0, medio: 1, bajo: 2 };
+
+function RiskCell({ risk }: { risk: MemberRisk | null }) {
+  if (!risk) return <span className="admin-roster-muted">—</span>;
   return (
-    <p className="admin-risk">
+    <span className="admin-risk">
       <span className={`badge ${riskBadge[risk.level]}`}>Riesgo {risk.level}</span>
       {risk.probability !== null && (
-        <strong>{Math.round(risk.probability * 100)} % de probabilidad de no-show · </strong>
+        <span className="admin-risk-prob">
+          {Math.round(risk.probability * 100)} % de probabilidad de no-show
+        </span>
       )}
-      {risk.reasons.length ? risk.reasons.join(' · ') : 'Sin factores de riesgo'}
-    </p>
+    </span>
   );
 }
 export function AttendanceRoster({
@@ -147,7 +151,7 @@ export function AttendanceRoster({
             {query.data.filter((r) => r.attendance_status === 'present').length} presentes
           </p>
           {[...risks.values()].some(Boolean) && (
-            <p className="admin-risk-summary">
+            <div className="admin-risk-summary">
               {future && highRisk > 0 ? (
                 <>
                   <strong>
@@ -159,70 +163,114 @@ export function AttendanceRoster({
                 </>
               ) : null}
               {usesModel ? (
-                <>
-                  El riesgo lo estima el modelo de Machine Learning del APF3 (regresión logística)
-                  con el historial del socio, la anticipación, el horario, la ocupación y el
+                <details className="admin-risk-help">
+                  <summary>
+                    El riesgo lo estima el modelo de Machine Learning del APF3 (regresión
+                    logística). ¿Cómo se usa?
+                  </summary>
+                  Combina el historial del socio, la anticipación, el horario, la ocupación y el
                   recordatorio. Por defecto solo se confirma el riesgo alto (como máximo 1 de cada 5
                   reservas); riesgo medio: recordatorio adicional si recepción tiene tiempo.
                   Entrenado con datos simulados: se reentrenará con la asistencia real registrada
                   aquí.
-                </>
+                </details>
               ) : (
                 <>
                   El riesgo se estima con reglas simples: faltas anteriores sin avisar, primera
                   reserva, anticipación y horario de la clase.
                 </>
               )}
-            </p>
+            </div>
           )}
-          <div className="admin-roster-grid">
-            {query.data.map((r) => (
-              <article className="admin-member" key={r.id}>
-                <h3>{r.member_name}</h3>
-                <p>{r.member_email}</p>
-                <p className="reservation-code">{r.code}</p>
-                {risks.get(r.id) && <RiskNote risk={risks.get(r.id)!} />}
-                <p>
-                  Reserva: {r.status === 'cancelled' ? 'Cancelada' : 'Confirmada'} · Asistencia:{' '}
-                  <strong>{attendanceLabel[r.attendance_status]}</strong>
-                </p>
-                <label className="admin-select">
-                  Asistencia de {r.member_name}
-                  <select
-                    value={r.attendance_status}
-                    disabled={future || r.status === 'cancelled' || mutation.isPending}
-                    onChange={(e) =>
-                      mutation.mutate({ id: r.id, status: e.target.value as AttendanceStatus })
-                    }
-                  >
-                    {Object.entries(attendanceLabel).map(([value, label]) => (
-                      <option key={value} value={value}>
-                        {label}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-                {r.history.length > 0 && (
-                  <details>
-                    <summary>Historial de asistencia ({r.history.length})</summary>
-                    <ol>
-                      {r.history.map((h, i) => (
-                        <li key={`${h.created_at}-${i}`}>
-                          {attendanceLabel[h.status]} · {formatDate(h.created_at)},{' '}
-                          {formatTime(h.created_at)}
-                          <br />
-                          <small>
-                            {h.recorded_by === user?.id
-                              ? 'Registrado por ti'
-                              : `Registrado por ${h.recorded_by_email ?? 'otro administrador'}`}
-                          </small>
-                        </li>
-                      ))}
-                    </ol>
-                  </details>
-                )}
-              </article>
-            ))}
+          <div className="admin-roster-table-wrap">
+            <table className="admin-roster-table">
+              <caption className="sr-only">
+                Inscritos de la sesión, ordenados de mayor a menor riesgo de no-show
+              </caption>
+              <thead>
+                <tr>
+                  <th scope="col">Socio</th>
+                  <th scope="col">Riesgo</th>
+                  <th scope="col">Motivos</th>
+                  <th scope="col">Asistencia</th>
+                </tr>
+              </thead>
+              <tbody>
+                {[...query.data]
+                  // Primero quien más conviene confirmar; las canceladas al final.
+                  .sort((a, b) => {
+                    const ra = risks.get(a.id);
+                    const rb = risks.get(b.id);
+                    if (!ra || !rb) return ra ? -1 : rb ? 1 : 0;
+                    return (
+                      riskOrder[ra.level] - riskOrder[rb.level] ||
+                      (rb.probability ?? 0) - (ra.probability ?? 0)
+                    );
+                  })
+                  .map((r) => {
+                    const risk = risks.get(r.id) ?? null;
+                    const cancelled = r.status === 'cancelled';
+                    return (
+                      <tr className={`admin-member${cancelled ? ' is-cancelled' : ''}`} key={r.id}>
+                        <th scope="row" data-label="Socio">
+                          <strong className="admin-member-name">{r.member_name}</strong>
+                          <span className="admin-roster-muted">{r.member_email}</span>
+                          <span className="admin-roster-muted">
+                            {r.code}
+                            {cancelled && ' · Reserva cancelada'}
+                          </span>
+                        </th>
+                        <td data-label="Riesgo">
+                          <RiskCell risk={risk} />
+                        </td>
+                        <td data-label="Motivos" className="admin-roster-reasons">
+                          {risk
+                            ? risk.reasons.length
+                              ? risk.reasons.join(' · ')
+                              : 'Sin factores de riesgo'
+                            : '—'}
+                        </td>
+                        <td data-label="Asistencia">
+                          <select
+                            className="admin-roster-select"
+                            aria-label={`Asistencia de ${r.member_name}`}
+                            value={r.attendance_status}
+                            disabled={future || cancelled || mutation.isPending}
+                            onChange={(e) =>
+                              mutation.mutate({
+                                id: r.id,
+                                status: e.target.value as AttendanceStatus,
+                              })
+                            }
+                          >
+                            {Object.entries(attendanceLabel).map(([value, label]) => (
+                              <option key={value} value={value}>
+                                {label}
+                              </option>
+                            ))}
+                          </select>
+                          {r.history.length > 0 && (
+                            <details className="admin-roster-history">
+                              <summary>Historial de asistencia ({r.history.length})</summary>
+                              <ol>
+                                {r.history.map((h, i) => (
+                                  <li key={`${h.created_at}-${i}`}>
+                                    {attendanceLabel[h.status]} · {formatDate(h.created_at)},{' '}
+                                    {formatTime(h.created_at)} ·{' '}
+                                    {h.recorded_by === user?.id
+                                      ? 'registrado por ti'
+                                      : `registrado por ${h.recorded_by_email ?? 'otro administrador'}`}
+                                  </li>
+                                ))}
+                              </ol>
+                            </details>
+                          )}
+                        </td>
+                      </tr>
+                    );
+                  })}
+              </tbody>
+            </table>
           </div>
         </>
       )}

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type KeyboardEvent } from 'react';
+import { Fragment, useEffect, useRef, useState, type KeyboardEvent } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Link, useSearchParams } from 'react-router-dom';
 import { Plus, Pencil } from 'lucide-react';
@@ -103,7 +103,8 @@ function AdminDashboard() {
   const roster = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (rosterId) roster.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    // Los inscritos se abren justo debajo de la sesión elegida; solo se desplaza si no se ven.
+    if (rosterId) roster.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }, [rosterId]);
 
   function show(next: View) {
@@ -144,18 +145,29 @@ function AdminDashboard() {
   const todayKey = dateKey(new Date());
 
   const row = (s: ManagedSession) => (
-    <SessionRow
-      key={s.id}
-      session={s}
-      onRoster={() => {
-        setEditor(null);
-        setRosterId(s.id);
-      }}
-      onEdit={() => {
-        setCurrentSession(s);
-        openEditor('session');
-      }}
-    />
+    <Fragment key={s.id}>
+      <SessionRow
+        session={s}
+        onRoster={() => {
+          setEditor(null);
+          setRosterId(s.id);
+        }}
+        onEdit={() => {
+          setCurrentSession(s);
+          openEditor('session');
+        }}
+      />
+      {s.id === rosterId && (
+        <div ref={roster}>
+          <AttendanceRoster
+            key={`roster-${s.id}`}
+            session={s}
+            discipline={rosterDiscipline}
+            onClose={() => setRosterId(undefined)}
+          />
+        </div>
+      )}
+    </Fragment>
   );
 
   const agenda = data.sessions
@@ -239,16 +251,6 @@ function AdminDashboard() {
             onCancel={() => setEditor(null)}
           />
         )}
-        <div ref={roster}>
-          {rosterSession && (
-            <AttendanceRoster
-              key={`roster-${rosterSession.id}`}
-              session={rosterSession}
-              discipline={rosterDiscipline}
-              onClose={() => setRosterId(undefined)}
-            />
-          )}
-        </div>
 
         {view === 'hoy' && (
           <>

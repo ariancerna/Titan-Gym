@@ -2,6 +2,14 @@
 
 Cambios del MVP y del modelo de Machine Learning desde la entrega del APF2. Fechas en hora de Lima.
 
+## [proy-dev] · 2026-11-25 · Ajustes de usabilidad del panel
+
+### MVP
+- «Ver inscritos» pasa de tarjetas grandes a una tabla compacta (Socio, Riesgo, Motivos, Asistencia), ordenada de mayor a menor riesgo para que recepción vea primero a quién confirmar. En el celular cada inscrito se apila en un bloque con etiquetas. Recomendación del docente.
+- Los inscritos se abren justo debajo de la sesión elegida, no arriba de la lista.
+- La explicación del modelo queda plegada en una línea («¿Cómo se usa?») y el encabezado es más compacto.
+- Los motivos siempre indican el total de reservas («Faltó sin avisar a 14 de sus 120 reservas anteriores»): un conteo sin contexto parecía contradecir un riesgo bajo.
+
 ## [apf3-1.1] · 2026-11-24 · Corrección del APF3 según la retroalimentación docente
 
 Detalle y evidencia de cada corrección: [docs/CORRECCIONES_APF3.md](docs/CORRECCIONES_APF3.md).
