@@ -19,7 +19,10 @@ describe('riesgo de no-show', () => {
     expect(noShowRisk({ ...base, priorReservations: 10, priorAbsences: 2 }).level).toBe('bajo');
     const risk = noShowRisk({ ...base, priorAbsences: 1, startHour: 7 });
     expect(risk.level).toBe('medio');
-    expect(risk.reasons).toEqual(['Faltó sin avisar una vez', 'Clase antes de las 8:00']);
+    expect(risk.reasons).toEqual([
+      'Faltó sin avisar a 1 de sus 6 reservas anteriores',
+      'Clase antes de las 8:00',
+    ]);
   });
 
   it('primera reserva, mucha anticipación y clase temprana suman riesgo alto', () => {

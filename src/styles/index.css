@@ -1262,40 +1262,109 @@
 .admin-session .admin-actions {
   flex-shrink: 0;
 }
-.admin-roster-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 20px;
+.panel.admin-roster {
+  padding: 24px 28px;
 }
-.admin-member {
-  background: var(--ink-2);
-  border: 1px solid #ffffff1a;
-  border-radius: var(--radius);
-  padding: 20px;
-  min-width: 0;
+@media (max-width: 639px) {
+  .panel.admin-roster {
+    padding: 18px 14px;
+  }
 }
-.admin-member p,
-.admin-member small {
-  overflow-wrap: anywhere;
+.admin-roster .admin-section-heading h2 {
+  font-size: 28px;
 }
-.admin-member h3 {
-  font-size: 24px;
+.admin-roster .admin-section-heading {
+  margin: 0 0 12px;
 }
-.admin-member p {
-  font-size: 13px;
-}
-.admin-member details {
-  margin-top: 20px;
-}
-.admin-member summary {
+.admin-risk-help summary {
   cursor: pointer;
 }
-.admin-member ol {
-  padding-left: 20px;
+.admin-risk-help[open] summary {
+  margin-bottom: 4px;
+}
+.admin-roster-table-wrap {
+  border: 1px solid #ffffff1a;
+  border-radius: var(--radius);
+  overflow-x: auto;
+}
+.admin-roster-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+.admin-roster-table thead th {
+  text-align: left;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-weight: 600;
+  padding: 10px 14px;
+  background: var(--ink-2);
+  border-bottom: 1px solid #ffffff1a;
+  white-space: nowrap;
+}
+.admin-roster-table td,
+.admin-roster-table tbody th {
+  text-align: left;
+  font-weight: inherit;
+  padding: 10px 14px;
+  border-bottom: 1px solid #ffffff12;
+  vertical-align: top;
+}
+.admin-roster-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+.admin-roster-table tbody tr:hover {
+  background: #ffffff08;
+}
+.admin-member.is-cancelled {
+  opacity: 0.55;
+}
+.admin-member-name {
+  display: block;
+  font-weight: 600;
+  font-size: 14px;
+}
+.admin-roster-muted {
+  display: block;
+  color: var(--muted);
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+.admin-roster-table .admin-risk {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  white-space: nowrap;
+}
+.admin-risk-prob {
+  font-size: 12px;
+  color: var(--muted);
+}
+.admin-roster-reasons {
+  color: var(--muted);
+  font-size: 12px;
+  min-width: 220px;
+}
+.admin-roster-select {
+  min-width: 130px;
+  padding: 6px 8px;
+  font-size: 13px;
+}
+.admin-roster-history {
+  margin-top: 6px;
   font-size: 12px;
 }
-.admin-member li {
-  margin-top: 12px;
+.admin-roster-history summary {
+  cursor: pointer;
+  color: var(--muted);
+}
+.admin-roster-history ol {
+  margin: 6px 0 0;
+  padding-left: 18px;
 }
 @media (max-width: 1023px) {
   .admin-session {
@@ -1311,9 +1380,40 @@
 }
 @media (max-width: 639px) {
   .admin-metrics,
-  .admin-form-grid,
-  .admin-roster-grid {
+  .admin-form-grid {
     grid-template-columns: 1fr;
+  }
+  /* En el celular cada inscrito se apila en un bloque compacto con la etiqueta de cada dato. */
+  .admin-roster-table thead {
+    display: none;
+  }
+  .admin-roster-table,
+  .admin-roster-table tbody,
+  .admin-roster-table tr,
+  .admin-roster-table td,
+  .admin-roster-table tbody th {
+    display: block;
+  }
+  .admin-roster-table tr {
+    padding: 10px 0;
+    border-bottom: 1px solid #ffffff1a;
+  }
+  .admin-roster-table td,
+  .admin-roster-table tbody th {
+    border: 0;
+    padding: 4px 14px;
+  }
+  .admin-roster-table td[data-label='Motivos']::before,
+  .admin-roster-table td[data-label='Asistencia']::before {
+    content: attr(data-label);
+    display: block;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .admin-roster-reasons {
+    min-width: 0;
   }
   .admin-actions {
     width: 100%;

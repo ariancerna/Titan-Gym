@@ -127,10 +127,10 @@ test('inscritos y asistencia se guardan con historial en tres tamaños', async (
   const past = page.locator('.admin-session').filter({ hasText: 'Sala asistencia de pruebas' });
   await past.getByRole('button', { name: 'Ver inscritos' }).click();
   const roster = page.getByRole('region', { name: 'Inscritos y asistencia' });
-  await expect(roster.getByRole('heading', { name: 'Alumno de asistencia' })).toBeVisible();
+  await expect(roster.getByRole('rowheader', { name: /Alumno de asistencia/ })).toBeVisible();
   await roster.getByLabel('Asistencia de Alumno de asistencia').selectOption('present');
   await expect(roster.getByRole('status')).toContainText('Asistencia guardada');
-  await expect(roster.getByText('Presente', { exact: true }).first()).toBeVisible();
+  await expect(roster.getByLabel('Asistencia de Alumno de asistencia')).toHaveValue('present');
   await expect(roster.getByText('Historial de asistencia (1)', { exact: true })).toBeVisible();
   await expect
     .poll(() => page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth))

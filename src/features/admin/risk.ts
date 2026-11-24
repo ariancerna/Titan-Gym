@@ -48,9 +48,8 @@ export function noShowRisk(f: RiskFactors): Risk {
     reasons.push(`Faltó sin avisar a ${absences} de sus ${total} reservas anteriores`);
   } else if (absences >= 1) {
     points += 1;
-    reasons.push(
-      absences === 1 ? 'Faltó sin avisar una vez' : `Faltó sin avisar ${absences} veces`,
-    );
+    // Siempre con el total: «14 veces» sin contexto parece alto aunque sean 14 de 120 reservas.
+    reasons.push(`Faltó sin avisar a ${absences} de sus ${total} reservas anteriores`);
   }
   if (total === 0) {
     points += 1;
