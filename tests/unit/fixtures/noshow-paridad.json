@@ -13,7 +13,7 @@
    "inasistencias_previas": 12,
    "recordatorio_enviado": null
   },
-  "probabilidad": 0.14714424466206644
+  "probabilidad": 0.14714424466206633
  },
  {
   "entrada": {
@@ -29,7 +29,7 @@
    "inasistencias_previas": 4,
    "recordatorio_enviado": null
   },
-  "probabilidad": 0.14956223870208563
+  "probabilidad": 0.14956223870208565
  },
  {
   "entrada": {
@@ -45,7 +45,7 @@
    "inasistencias_previas": 6,
    "recordatorio_enviado": null
   },
-  "probabilidad": 0.25149839956577696
+  "probabilidad": 0.2514983995657769
  },
  {
   "entrada": {
@@ -77,7 +77,7 @@
    "inasistencias_previas": 6,
    "recordatorio_enviado": null
   },
-  "probabilidad": 0.17058913649370014
+  "probabilidad": 0.1705891364937001
  },
  {
   "entrada": {
@@ -93,7 +93,7 @@
    "inasistencias_previas": 8,
    "recordatorio_enviado": null
   },
-  "probabilidad": 0.1599413447045253
+  "probabilidad": 0.15994134470452537
  },
  {
   "entrada": {
@@ -109,7 +109,7 @@
    "inasistencias_previas": 25,
    "recordatorio_enviado": null
   },
-  "probabilidad": 0.3478588651428723
+  "probabilidad": 0.3478588651428722
  },
  {
   "entrada": {
@@ -141,7 +141,7 @@
    "inasistencias_previas": 1,
    "recordatorio_enviado": null
   },
-  "probabilidad": 0.28028567651249187
+  "probabilidad": 0.2802856765124919
  },
  {
   "entrada": {
@@ -157,7 +157,7 @@
    "inasistencias_previas": 0,
    "recordatorio_enviado": null
   },
-  "probabilidad": 0.15095555260151122
+  "probabilidad": 0.15095555260151125
  },
  {
   "entrada": {
@@ -173,7 +173,7 @@
    "inasistencias_previas": 12,
    "recordatorio_enviado": null
   },
-  "probabilidad": 0.17828200568406577
+  "probabilidad": 0.17828200568406574
  },
  {
   "entrada": {
@@ -189,7 +189,7 @@
    "inasistencias_previas": 20,
    "recordatorio_enviado": null
   },
-  "probabilidad": 0.18342938059731315
+  "probabilidad": 0.18342938059731312
  },
  {
   "entrada": {
@@ -205,7 +205,7 @@
    "inasistencias_previas": 0,
    "recordatorio_enviado": null
   },
-  "probabilidad": 0.15283622774385686
+  "probabilidad": 0.15283622774385683
  },
  {
   "entrada": {
@@ -221,7 +221,7 @@
    "inasistencias_previas": 35,
    "recordatorio_enviado": null
   },
-  "probabilidad": 0.38623193160266
+  "probabilidad": 0.38623193160265984
  },
  {
   "entrada": {
@@ -237,7 +237,7 @@
    "inasistencias_previas": 5,
    "recordatorio_enviado": null
   },
-  "probabilidad": 0.15509417446376944
+  "probabilidad": 0.15509417446376947
  },
  {
   "entrada": {
@@ -285,7 +285,7 @@
    "inasistencias_previas": 0,
    "recordatorio_enviado": null
   },
-  "probabilidad": 0.09101065999995846
+  "probabilidad": 0.09101065999995848
  },
  {
   "entrada": {
@@ -301,7 +301,7 @@
    "inasistencias_previas": 0,
    "recordatorio_enviado": null
   },
-  "probabilidad": 0.1218463528045492
+  "probabilidad": 0.12184635280454922
  },
  {
   "entrada": {
@@ -317,7 +317,7 @@
    "inasistencias_previas": 1,
    "recordatorio_enviado": null
   },
-  "probabilidad": 0.17283588777555983
+  "probabilidad": 0.1728358877755598
  },
  {
   "entrada": {
@@ -333,7 +333,7 @@
    "inasistencias_previas": 21,
    "recordatorio_enviado": true
   },
-  "probabilidad": 0.3860381170484265
+  "probabilidad": 0.3860381170484264
  },
  {
   "entrada": {
@@ -349,7 +349,7 @@
    "inasistencias_previas": 10,
    "recordatorio_enviado": true
   },
-  "probabilidad": 0.44771763706074186
+  "probabilidad": 0.4477176370607418
  },
  {
   "entrada": {
@@ -365,7 +365,7 @@
    "inasistencias_previas": 20,
    "recordatorio_enviado": true
   },
-  "probabilidad": 0.2188978914527398
+  "probabilidad": 0.21889789145273972
  },
  {
   "entrada": {
@@ -381,7 +381,7 @@
    "inasistencias_previas": 0,
    "recordatorio_enviado": true
   },
-  "probabilidad": 0.11195603755175156
+  "probabilidad": 0.11195603755175151
  },
  {
   "entrada": {
@@ -397,7 +397,7 @@
    "inasistencias_previas": 2,
    "recordatorio_enviado": true
   },
-  "probabilidad": 0.18790614216750892
+  "probabilidad": 0.1879061421675089
  },
  {
   "entrada": {
@@ -445,7 +445,7 @@
    "inasistencias_previas": 3,
    "recordatorio_enviado": true
   },
-  "probabilidad": 0.1411673120250895
+  "probabilidad": 0.14116731202508953
  },
  {
   "entrada": {
@@ -477,7 +477,7 @@
    "inasistencias_previas": 3,
    "recordatorio_enviado": true
   },
-  "probabilidad": 0.2667220399270021
+  "probabilidad": 0.26672203992700205
  },
  {
   "entrada": {
@@ -493,7 +493,7 @@
    "inasistencias_previas": 4,
    "recordatorio_enviado": true
   },
-  "probabilidad": 0.12598598803638372
+  "probabilidad": 0.1259859880363837
  },
  {
   "entrada": {
@@ -509,7 +509,7 @@
    "inasistencias_previas": 0,
    "recordatorio_enviado": true
   },
-  "probabilidad": 0.13768137657832738
+  "probabilidad": 0.1376813765783274
  },
  {
   "entrada": {
@@ -525,7 +525,7 @@
    "inasistencias_previas": 3,
    "recordatorio_enviado": true
   },
-  "probabilidad": 0.28937937016549403
+  "probabilidad": 0.2893793701654941
  },
  {
   "entrada": {
@@ -573,7 +573,7 @@
    "inasistencias_previas": 0,
    "recordatorio_enviado": true
   },
-  "probabilidad": 0.1766058107161628
+  "probabilidad": 0.17660581071616274
  },
  {
   "entrada": {
@@ -589,7 +589,7 @@
    "inasistencias_previas": 0,
    "recordatorio_enviado": true
   },
-  "probabilidad": 0.20441159629284592
+  "probabilidad": 0.20441159629284586
  },
  {
   "entrada": {
@@ -605,7 +605,7 @@
    "inasistencias_previas": 8,
    "recordatorio_enviado": false
   },
-  "probabilidad": 0.2365966951002804
+  "probabilidad": 0.23659669510028034
  },
  {
   "entrada": {
@@ -637,7 +637,7 @@
    "inasistencias_previas": 1,
    "recordatorio_enviado": true
   },
-  "probabilidad": 0.08044132109121088
+  "probabilidad": 0.08044132109121092
  },
  {
   "entrada": {
@@ -653,7 +653,7 @@
    "inasistencias_previas": 4,
    "recordatorio_enviado": true
   },
-  "probabilidad": 0.20638456608349426
+  "probabilidad": 0.20638456608349431
  },
  {
   "entrada": {
@@ -669,7 +669,7 @@
    "inasistencias_previas": 1,
    "recordatorio_enviado": false
   },
-  "probabilidad": 0.13867760077492225
+  "probabilidad": 0.13867760077492228
  },
  {
   "entrada": {
@@ -685,7 +685,7 @@
    "inasistencias_previas": 4,
    "recordatorio_enviado": true
   },
-  "probabilidad": 0.20238624520075713
+  "probabilidad": 0.2023862452007572
  },
  {
   "entrada": {
@@ -717,7 +717,7 @@
    "inasistencias_previas": 3,
    "recordatorio_enviado": true
   },
-  "probabilidad": 0.1850414868523533
+  "probabilidad": 0.18504148685235333
  },
  {
   "entrada": {
@@ -733,7 +733,7 @@
    "inasistencias_previas": 11,
    "recordatorio_enviado": true
   },
-  "probabilidad": 0.5462574947663578
+  "probabilidad": 0.5462574947663579
  },
  {
   "entrada": {
@@ -781,7 +781,7 @@
    "inasistencias_previas": 0,
    "recordatorio_enviado": true
   },
-  "probabilidad": 0.09919388813648851
+  "probabilidad": 0.09919388813648854
  },
  {
   "entrada": {
@@ -813,7 +813,7 @@
    "inasistencias_previas": 7,
    "recordatorio_enviado": true
   },
-  "probabilidad": 0.15735284511070946
+  "probabilidad": 0.1573528451107095
  },
  {
   "entrada": {
@@ -845,7 +845,7 @@
    "inasistencias_previas": 7,
    "recordatorio_enviado": false
   },
-  "probabilidad": 0.25437292150167395
+  "probabilidad": 0.2543729215016739
  },
  {
   "entrada": {
@@ -877,7 +877,7 @@
    "inasistencias_previas": 2,
    "recordatorio_enviado": true
   },
-  "probabilidad": 0.1488763431773372
+  "probabilidad": 0.14887634317733717
  },
  {
   "entrada": {
@@ -909,7 +909,7 @@
    "inasistencias_previas": 2,
    "recordatorio_enviado": true
   },
-  "probabilidad": 0.20107983273376173
+  "probabilidad": 0.20107983273376168
  },
  {
   "entrada": {
@@ -925,7 +925,7 @@
    "inasistencias_previas": 12,
    "recordatorio_enviado": true
   },
-  "probabilidad": 0.18412396006185008
+  "probabilidad": 0.18412396006185
  },
  {
   "entrada": {
@@ -941,7 +941,7 @@
    "inasistencias_previas": 0,
    "recordatorio_enviado": true
   },
-  "probabilidad": 0.14907247110709557
+  "probabilidad": 0.1490724711070954
  },
  {
   "entrada": {
@@ -957,7 +957,7 @@
    "inasistencias_previas": 1,
    "recordatorio_enviado": true
   },
-  "probabilidad": 0.1297058220975892
+  "probabilidad": 0.12970582209758919
  },
  {
   "entrada": {
@@ -973,7 +973,7 @@
    "inasistencias_previas": 4,
    "recordatorio_enviado": true
   },
-  "probabilidad": 0.10206508852461978
+  "probabilidad": 0.10206508852461973
  },
  {
   "entrada": {
@@ -1037,7 +1037,7 @@
    "inasistencias_previas": 31,
    "recordatorio_enviado": true
   },
-  "probabilidad": 0.2864614122407418
+  "probabilidad": 0.2864614122407417
  },
  {
   "entrada": {
@@ -1085,7 +1085,7 @@
    "inasistencias_previas": 12,
    "recordatorio_enviado": false
   },
-  "probabilidad": 0.29067484953575196
+  "probabilidad": 0.29067484953575184
  },
  {
   "entrada": {
@@ -1117,7 +1117,7 @@
    "inasistencias_previas": 11,
    "recordatorio_enviado": true
   },
-  "probabilidad": 0.2883921548056887
+  "probabilidad": 0.28839215480568864
  },
  {
   "entrada": {
@@ -1165,7 +1165,7 @@
    "inasistencias_previas": 16,
    "recordatorio_enviado": false
   },
-  "probabilidad": 0.33427123517420443
+  "probabilidad": 0.3342712351742043
  },
  {
   "entrada": {
@@ -1293,7 +1293,7 @@
    "inasistencias_previas": 1,
    "recordatorio_enviado": true
   },
-  "probabilidad": 0.1446402517065569
+  "probabilidad": 0.14464025170655692
  },
  {
   "entrada": {
@@ -1309,7 +1309,7 @@
    "inasistencias_previas": 2,
    "recordatorio_enviado": true
   },
-  "probabilidad": 0.13799827434677034
+  "probabilidad": 0.13799827434677037
  },
  {
   "entrada": {
@@ -1357,7 +1357,7 @@
    "inasistencias_previas": 1,
    "recordatorio_enviado": true
   },
-  "probabilidad": 0.10543742204182768
+  "probabilidad": 0.10543742204182772
  },
  {
   "entrada": {
@@ -1421,7 +1421,7 @@
    "inasistencias_previas": 12,
    "recordatorio_enviado": true
   },
-  "probabilidad": 0.13944366000201922
+  "probabilidad": 0.13944366000201916
  },
  {
   "entrada": {
@@ -1437,7 +1437,7 @@
    "inasistencias_previas": 0,
    "recordatorio_enviado": true
   },
-  "probabilidad": 0.17247356487082718
+  "probabilidad": 0.1724735648708272
  },
  {
   "entrada": {
@@ -1453,7 +1453,7 @@
    "inasistencias_previas": 0,
    "recordatorio_enviado": true
   },
-  "probabilidad": 0.16024892079517278
+  "probabilidad": 0.16024892079517272
  },
  {
   "entrada": {
@@ -1469,7 +1469,7 @@
    "inasistencias_previas": 32,
    "recordatorio_enviado": true
   },
-  "probabilidad": 0.2480168349284299
+  "probabilidad": 0.24801683492842985
  },
  {
   "entrada": {
@@ -1485,7 +1485,7 @@
    "inasistencias_previas": 0,
    "recordatorio_enviado": true
   },
-  "probabilidad": 0.07335140445143268
+  "probabilidad": 0.07335140445143264
  },
  {
   "entrada": {
@@ -1501,7 +1501,7 @@
    "inasistencias_previas": 0,
    "recordatorio_enviado": true
   },
-  "probabilidad": 0.240679213538685
+  "probabilidad": 0.24067921353868477
  },
  {
   "entrada": {
@@ -1517,7 +1517,7 @@
    "inasistencias_previas": 0,
    "recordatorio_enviado": true
   },
-  "probabilidad": 0.16352951247796102
+  "probabilidad": 0.1635295124779609
  },
  {
   "entrada": {
@@ -1533,7 +1533,7 @@
    "inasistencias_previas": 3,
    "recordatorio_enviado": true
   },
-  "probabilidad": 0.34340921156073706
+  "probabilidad": 0.34340921156073695
  },
  {
   "entrada": {
@@ -1549,7 +1549,7 @@
    "inasistencias_previas": 0,
    "recordatorio_enviado": true
   },
-  "probabilidad": 0.13920351361784436
+  "probabilidad": 0.1392035136178444
  },
  {
   "entrada": {
@@ -1613,7 +1613,7 @@
    "inasistencias_previas": 6,
    "recordatorio_enviado": true
   },
-  "probabilidad": 0.15521382246112356
+  "probabilidad": 0.15521382246112359
  },
  {
   "entrada": {
@@ -1629,7 +1629,7 @@
    "inasistencias_previas": 30,
    "recordatorio_enviado": true
   },
-  "probabilidad": 0.32802286484164545
+  "probabilidad": 0.3280228648416452
  },
  {
   "entrada": {
@@ -1645,7 +1645,7 @@
    "inasistencias_previas": 6,
    "recordatorio_enviado": false
   },
-  "probabilidad": 0.24493035899050622
+  "probabilidad": 0.24493035899050616
  },
  {
   "entrada": {
@@ -1693,7 +1693,7 @@
    "inasistencias_previas": 17,
    "recordatorio_enviado": true
   },
-  "probabilidad": 0.3028798611509702
+  "probabilidad": 0.3028798611509701
  },
  {
   "entrada": {
@@ -1709,7 +1709,7 @@
    "inasistencias_previas": 4,
    "recordatorio_enviado": true
   },
-  "probabilidad": 0.2597353489439469
+  "probabilidad": 0.25973534894394684
  },
  {
   "entrada": {
@@ -1789,7 +1789,7 @@
    "inasistencias_previas": 1,
    "recordatorio_enviado": true
   },
-  "probabilidad": 0.25121142257565615
+  "probabilidad": 0.2512114225756562
  },
  {
   "entrada": {
@@ -1821,7 +1821,7 @@
    "inasistencias_previas": 19,
    "recordatorio_enviado": true
   },
-  "probabilidad": 0.12161999078922546
+  "probabilidad": 0.12161999078922539
  },
  {
   "entrada": {
@@ -1837,7 +1837,7 @@
    "inasistencias_previas": 0,
    "recordatorio_enviado": true
   },
-  "probabilidad": 0.07432365488554193
+  "probabilidad": 0.0743236548855419
  },
  {
   "entrada": {
@@ -1869,7 +1869,7 @@
    "inasistencias_previas": 6,
    "recordatorio_enviado": true
   },
-  "probabilidad": 0.2009797490876165
+  "probabilidad": 0.2009797490876166
  },
  {
   "entrada": {
@@ -1885,7 +1885,7 @@
    "inasistencias_previas": 1,
    "recordatorio_enviado": true
   },
-  "probabilidad": 0.13545069596170167
+  "probabilidad": 0.1354506959617017
  },
  {
   "entrada": {
@@ -1901,7 +1901,7 @@
    "inasistencias_previas": 0,
    "recordatorio_enviado": false
   },
-  "probabilidad": 0.11821927968821677
+  "probabilidad": 0.11821927968821672
  },
  {
   "entrada": {
@@ -1917,7 +1917,7 @@
    "inasistencias_previas": 1,
    "recordatorio_enviado": true
   },
-  "probabilidad": 0.12696661891635952
+  "probabilidad": 0.12696661891635946
  },
  {
   "entrada": {
@@ -1933,7 +1933,7 @@
    "inasistencias_previas": 19,
    "recordatorio_enviado": true
   },
-  "probabilidad": 0.30208132400520366
+  "probabilidad": 0.30208132400520354
  },
  {
   "entrada": {
@@ -1997,7 +1997,7 @@
    "inasistencias_previas": 12,
    "recordatorio_enviado": false
   },
-  "probabilidad": 0.2727191406831464
+  "probabilidad": 0.2727191406831463
  },
  {
   "entrada": {
@@ -2013,7 +2013,7 @@
    "inasistencias_previas": 4,
    "recordatorio_enviado": true
   },
-  "probabilidad": 0.3565590218066854
+  "probabilidad": 0.35655902180668536
  },
  {
   "entrada": {
@@ -2029,7 +2029,7 @@
    "inasistencias_previas": 0,
    "recordatorio_enviado": true
   },
-  "probabilidad": 0.17249078922597302
+  "probabilidad": 0.172490789225973
  },
  {
   "entrada": {
@@ -2045,7 +2045,7 @@
    "inasistencias_previas": 0,
    "recordatorio_enviado": true
   },
-  "probabilidad": 0.13617364676052585
+  "probabilidad": 0.13617364676052582
  },
  {
   "entrada": {
@@ -2061,7 +2061,7 @@
    "inasistencias_previas": 19,
    "recordatorio_enviado": true
   },
-  "probabilidad": 0.21597369347491344
+  "probabilidad": 0.21597369347491335
  },
  {
   "entrada": {
@@ -2093,7 +2093,7 @@
    "inasistencias_previas": 8,
    "recordatorio_enviado": true
   },
-  "probabilidad": 0.1831573667888015
+  "probabilidad": 0.18315736678880143
  },
  {
   "entrada": {
@@ -2109,7 +2109,7 @@
    "inasistencias_previas": 2,
    "recordatorio_enviado": true
   },
-  "probabilidad": 0.13565985710761333
+  "probabilidad": 0.13565985710761336
  },
  {
   "entrada": {
@@ -2141,7 +2141,7 @@
    "inasistencias_previas": 1,
    "recordatorio_enviado": true
   },
-  "probabilidad": 0.1274642784071284
+  "probabilidad": 0.12746427840712843
  },
  {
   "entrada": {
@@ -2157,7 +2157,7 @@
    "inasistencias_previas": 4,
    "recordatorio_enviado": true
   },
-  "probabilidad": 0.1972216771583069
+  "probabilidad": 0.19722167715830694
  },
  {
   "entrada": {
@@ -2173,7 +2173,7 @@
    "inasistencias_previas": 3,
    "recordatorio_enviado": true
   },
-  "probabilidad": 0.09419959081530191
+  "probabilidad": 0.09419959081530195
  },
  {
   "entrada": {
@@ -2221,7 +2221,7 @@
    "inasistencias_previas": 0,
    "recordatorio_enviado": true
   },
-  "probabilidad": 0.1928035039438216
+  "probabilidad": 0.19280350394382154
  },
  {
   "entrada": {
@@ -2237,7 +2237,7 @@
    "inasistencias_previas": 0,
    "recordatorio_enviado": true
   },
-  "probabilidad": 0.10442326365604869
+  "probabilidad": 0.10442326365604866
  },
  {
   "entrada": {
@@ -2253,7 +2253,7 @@
    "inasistencias_previas": 2,
    "recordatorio_enviado": true
   },
-  "probabilidad": 0.3917826046927212
+  "probabilidad": 0.39178260469272114
  },
  {
   "entrada": {
@@ -2269,7 +2269,7 @@
    "inasistencias_previas": 4,
    "recordatorio_enviado": true
   },
-  "probabilidad": 0.17964753111699275
+  "probabilidad": 0.17964753111699272
  },
  {
   "entrada": {
@@ -2301,7 +2301,7 @@
    "inasistencias_previas": 7,
    "recordatorio_enviado": false
   },
-  "probabilidad": 0.18569680122727764
+  "probabilidad": 0.1856968012272776
  },
  {
   "entrada": {
@@ -2317,7 +2317,7 @@
    "inasistencias_previas": 1,
    "recordatorio_enviado": true
   },
-  "probabilidad": 0.176468726062066
+  "probabilidad": 0.17646872606206604
  },
  {
   "entrada": {
@@ -2333,7 +2333,7 @@
    "inasistencias_previas": 19,
    "recordatorio_enviado": true
   },
-  "probabilidad": 0.35645236217501447
+  "probabilidad": 0.35645236217501436
  },
  {
   "entrada": {
@@ -2349,7 +2349,7 @@
    "inasistencias_previas": 4,
    "recordatorio_enviado": true
   },
-  "probabilidad": 0.2430793715181579
+  "probabilidad": 0.24307937151815784
  },
  {
   "entrada": {
@@ -2413,7 +2413,7 @@
    "inasistencias_previas": 2,
    "recordatorio_enviado": true
   },
-  "probabilidad": 0.1472157240593089
+  "probabilidad": 0.14721572405930897
  },
  {
   "entrada": {
@@ -2445,7 +2445,7 @@
    "inasistencias_previas": 5,
    "recordatorio_enviado": true
   },
-  "probabilidad": 0.2209489807205548
+  "probabilidad": 0.22094898072055474
  },
  {
   "entrada": {
@@ -2509,7 +2509,7 @@
    "inasistencias_previas": 0,
    "recordatorio_enviado": true
   },
-  "probabilidad": 0.23636334821435065
+  "probabilidad": 0.2363633482143506
  },
  {
   "entrada": {
@@ -2541,7 +2541,7 @@
    "inasistencias_previas": 1,
    "recordatorio_enviado": false
   },
-  "probabilidad": 0.13734622335888788
+  "probabilidad": 0.13734622335888783
  },
  {
   "entrada": {
@@ -2557,7 +2557,7 @@
    "inasistencias_previas": 13,
    "recordatorio_enviado": true
   },
-  "probabilidad": 0.20221072490188097
+  "probabilidad": 0.20221072490188088
  },
  {
   "entrada": {
@@ -2605,7 +2605,7 @@
    "inasistencias_previas": 0,
    "recordatorio_enviado": false
   },
-  "probabilidad": 0.15753057958398822
+  "probabilidad": 0.15753057958398806
  },
  {
   "entrada": {
@@ -2621,7 +2621,7 @@
    "inasistencias_previas": 0,
    "recordatorio_enviado": false
   },
-  "probabilidad": 0.1714496910115413
+  "probabilidad": 0.17144969101154128
  },
  {
   "entrada": {
@@ -2637,7 +2637,7 @@
    "inasistencias_previas": 32,
    "recordatorio_enviado": true
   },
-  "probabilidad": 0.3669565377778703
+  "probabilidad": 0.36695653777787013
  },
  {
   "entrada": {
@@ -2653,7 +2653,7 @@
    "inasistencias_previas": 0,
    "recordatorio_enviado": true
   },
-  "probabilidad": 0.10396332881562022
+  "probabilidad": 0.10396332881562019
  },
  {
   "entrada": {
@@ -2685,7 +2685,7 @@
    "inasistencias_previas": 0,
    "recordatorio_enviado": true
   },
-  "probabilidad": 0.18963268781643092
+  "probabilidad": 0.18963268781643097
  },
  {
   "entrada": {
@@ -2701,7 +2701,7 @@
    "inasistencias_previas": 1,
    "recordatorio_enviado": true
   },
-  "probabilidad": 0.11890009759628901
+  "probabilidad": 0.11890009759628907
  },
  {
   "entrada": {
@@ -2765,7 +2765,7 @@
    "inasistencias_previas": 5,
    "recordatorio_enviado": true
   },
-  "probabilidad": 0.12349534797017254
+  "probabilidad": 0.12349534797017249
  },
  {
   "entrada": {
@@ -2781,7 +2781,7 @@
    "inasistencias_previas": 0,
    "recordatorio_enviado": true
   },
-  "probabilidad": 0.20551272337080664
+  "probabilidad": 0.20551272337080642
  },
  {
   "entrada": {
@@ -2797,7 +2797,7 @@
    "inasistencias_previas": 1,
    "recordatorio_enviado": true
   },
-  "probabilidad": 0.18397233918479616
+  "probabilidad": 0.1839723391847961
  },
  {
   "entrada": {
@@ -2813,7 +2813,7 @@
    "inasistencias_previas": 9,
    "recordatorio_enviado": false
   },
-  "probabilidad": 0.26029190156107285
+  "probabilidad": 0.26029190156107274
  },
  {
   "entrada": {
@@ -2845,7 +2845,7 @@
    "inasistencias_previas": 1,
    "recordatorio_enviado": true
   },
-  "probabilidad": 0.28919639109535156
+  "probabilidad": 0.2891963910953516
  },
  {
   "entrada": {
@@ -2877,7 +2877,7 @@
    "inasistencias_previas": 19,
    "recordatorio_enviado": true
   },
-  "probabilidad": 0.218445272096612
+  "probabilidad": 0.2184452720966119
  },
  {
   "entrada": {
@@ -2909,7 +2909,7 @@
    "inasistencias_previas": 0,
    "recordatorio_enviado": false
   },
-  "probabilidad": 0.10822851540145387
+  "probabilidad": 0.10822851540145378
  },
  {
   "entrada": {
@@ -2941,7 +2941,7 @@
    "inasistencias_previas": 4,
    "recordatorio_enviado": true
   },
-  "probabilidad": 0.2627419621864978
+  "probabilidad": 0.2627419621864979
  },
  {
   "entrada": {
@@ -2973,7 +2973,7 @@
    "inasistencias_previas": 0,
    "recordatorio_enviado": true
   },
-  "probabilidad": 0.13633335404191238
+  "probabilidad": 0.13633335404191235
  },
  {
   "entrada": {
@@ -3005,7 +3005,7 @@
    "inasistencias_previas": 7,
    "recordatorio_enviado": false
   },
-  "probabilidad": 0.2592398163461209
+  "probabilidad": 0.25923981634612087
  },
  {
   "entrada": {
@@ -3021,7 +3021,7 @@
    "inasistencias_previas": 5,
    "recordatorio_enviado": false
   },
-  "probabilidad": 0.25824523235187297
+  "probabilidad": 0.2582452323518729
  },
  {
   "entrada": {
@@ -3037,7 +3037,7 @@
    "inasistencias_previas": 0,
    "recordatorio_enviado": true
   },
-  "probabilidad": 0.17358891722319097
+  "probabilidad": 0.17358891722319095
  },
  {
   "entrada": {
@@ -3053,7 +3053,7 @@
    "inasistencias_previas": 1,
    "recordatorio_enviado": true
   },
-  "probabilidad": 0.14577581195555542
+  "probabilidad": 0.1457758119555554
  },
  {
   "entrada": {
@@ -3101,7 +3101,7 @@
    "inasistencias_previas": 1,
    "recordatorio_enviado": true
   },
-  "probabilidad": 0.16896767224333106
+  "probabilidad": 0.168967672243331
  },
  {
   "entrada": {
@@ -3117,7 +3117,7 @@
    "inasistencias_previas": 15,
    "recordatorio_enviado": false
   },
-  "probabilidad": 0.22136828930895688
+  "probabilidad": 0.22136828930895686
  },
  {
   "entrada": {
@@ -3133,7 +3133,7 @@
    "inasistencias_previas": 2,
    "recordatorio_enviado": true
   },
-  "probabilidad": 0.09183458864991985
+  "probabilidad": 0.09183458864991988
  },
  {
   "entrada": {
@@ -3149,7 +3149,7 @@
    "inasistencias_previas": 10,
    "recordatorio_enviado": false
   },
-  "probabilidad": 0.2561219836515401
+  "probabilidad": 0.25612198365154004
  },
  {
   "entrada": {
@@ -3165,7 +3165,7 @@
    "inasistencias_previas": 5,
    "recordatorio_enviado": true
   },
-  "probabilidad": 0.31013947571681016
+  "probabilidad": 0.31013947571681005
  },
  {
   "entrada": {
@@ -3181,7 +3181,7 @@
    "inasistencias_previas": 4,
    "recordatorio_enviado": true
   },
-  "probabilidad": 0.15097460098365736
+  "probabilidad": 0.15097460098365734
  },
  {
   "entrada": {
