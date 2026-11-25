@@ -2,6 +2,20 @@
 
 Cambios del MVP y del modelo de Machine Learning desde la entrega del APF2. Fechas en hora de Lima.
 
+## [proy-1.0] · 2026-11-25 · Proyecto Final: modelo servido por el backend y ciclo de mejora
+
+Detalle de la versión integrada, estado real y guion de la demo: [docs/PROYECTO_FINAL.md](docs/PROYECTO_FINAL.md).
+
+### Modelo
+- Ciclo de mejora (Paso 2b): se probaron tres líneas con la misma partición, preprocesamiento y semilla. Se acepta la variable `temprano_x_anticipada` (clase antes de las 8:00 reservada con más de 3 días): PR-AUC de validación 0,315 → 0,324, mejor en 4 de 5 pliegues. Se descartan `viernes_tarde` (no mejora) y el balanceo de clases (no suma y descalibra la probabilidad).
+- En la prueba, con ambos cupos respetados: recall de contacto 0,614 → 0,621, F2 0,490 → 0,495; la acción por defecto (riesgo alto) pasa de recall 0,341 a 0,364 marcando 15,6 % de las reservas. El PR-AUC baja 0,006 (0,319 → 0,313): ganancia pequeña y dentro de la variación entre pliegues, declarada así en el notebook.
+- Tabla comparativa línea base → APF3 entregado → APF3 corregido → PROY: `ml/modelo/comparacion_apf3_proy.csv`.
+
+### MVP
+- **Inferencia en el servidor** (migración `20261125000000_inferencia_servidor.sql`): Supabase valida la entrada, calcula la probabilidad con el pipeline exportado y registra cada predicción con entrada, resultado, versión y fecha. La paridad con scikit-learn se prueba en 200 reservas (diferencia < 1e-9).
+- «Ver inscritos» pide el riesgo al servidor. Si el modelo está desactivado, falla o tarda más de 6 segundos, el panel lo avisa y muestra la regla de respaldo (degradación controlada).
+- Indicadores → **Servicio de predicción**: estado del modelo, prueba de una predicción (caso válido y dato inválido rechazado por el servidor), interruptor para desactivar o reactivar el modelo y registro de las últimas predicciones.
+
 ## [proy-dev] · 2026-11-25 · Ajustes de usabilidad del panel
 
 ### MVP
@@ -18,7 +32,7 @@ Detalle y evidencia de cada corrección: [docs/CORRECCIONES_APF3.md](docs/CORREC
 - Los umbrales se fijan exigiendo cada cupo en todos los pliegues temporales de la validación (peor caso). En la prueba, el contacto marca 33,3 % de las reservas (antes 42,1 %, tope 40 %) y el riesgo alto, 14,2 % (cupo 20 %). Recall de contacto 0,614 (antes 0,697); el modelo y su PR-AUC (0,319) no cambian.
 - El riesgo alto pasa a ser la acción por defecto de recepción, con cupo contractual del 20 %.
 - Los registros con `origen = real` se reservan solo para validar el modelo caso por caso; ya no se mezclan con el entrenamiento.
-- Se guardan las métricas de la versión entregada (`ml/modelo/metricas_apf3_entregado.csv`) y la comparación con la corregida (`ml/modelo/comparacion_apf3_corregido.csv`).
+- Se guardan las métricas de la versión entregada (`ml/modelo/metricas_apf3_entregado.csv`) y la comparación con la corregida (`ml/modelo/comparacion_apf3_proy.csv`).
 
 ### MVP
 - «Ver inscritos» indica que por defecto solo se confirma el riesgo alto y usa los umbrales nuevos.

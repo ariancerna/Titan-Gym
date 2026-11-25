@@ -1,0 +1,133 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="860" viewBox="0 0 1400 860" font-family="Arial, Helvetica, sans-serif">
+  <defs>
+    <marker id="f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#333"/></marker>
+    <style>
+      .box{fill:#fff;stroke:#222;stroke-width:1.6}
+      .zone{fill:#f4f4f4;stroke:#999;stroke-width:1.2;stroke-dasharray:6 4}
+      .ml{fill:#fff;stroke:#222;stroke-width:2.6}
+      .t{font-size:17px;font-weight:bold;fill:#111}
+      .s{font-size:13px;fill:#333}
+      .z{font-size:14px;font-weight:bold;fill:#555;letter-spacing:1px}
+      .a{stroke:#333;stroke-width:1.6;fill:none;marker-end:url(#f)}
+      .d{stroke:#333;stroke-width:1.4;fill:none;stroke-dasharray:5 4;marker-end:url(#f)}
+      .l{font-size:12px;fill:#222}
+    </style>
+  </defs>
+  <rect width="1400" height="860" fill="#fff"/>
+  <text x="30" y="40" font-size="24" font-weight="bold" fill="#111">FitSmart Agenda · TITAN GYM — Arquitectura final desplegada (PROY)</text>
+  <text x="30" y="64" class="s">Línea continua: flujo en producción · línea discontinua: entrenamiento y despliegue del modelo (fuera de línea)</text>
+
+  <!-- Usuarios -->
+  <rect x="30" y="110" width="220" height="80" rx="8" class="box"/>
+  <text x="140" y="143" text-anchor="middle" class="t">Socio</text>
+  <text x="140" y="165" text-anchor="middle" class="s">navegador / app instalable</text>
+  <rect x="30" y="250" width="220" height="80" rx="8" class="box"/>
+  <text x="140" y="283" text-anchor="middle" class="t">Recepción / administrador</text>
+  <text x="140" y="305" text-anchor="middle" class="s">panel /admin</text>
+
+  <!-- Vercel -->
+  <rect x="320" y="90" width="300" height="270" rx="10" class="zone"/>
+  <text x="335" y="114" class="z">VERCEL (PLAN GRATUITO)</text>
+  <rect x="345" y="130" width="250" height="210" rx="8" class="box"/>
+  <text x="470" y="160" text-anchor="middle" class="t">Frontend React + TypeScript</text>
+  <text x="470" y="184" text-anchor="middle" class="s">Catálogo, reserva, Mis reservas, perfil</text>
+  <text x="470" y="204" text-anchor="middle" class="s">Panel: agenda, «Ver inscritos»,</text>
+  <text x="470" y="224" text-anchor="middle" class="s">check-in QR, Indicadores,</text>
+  <text x="470" y="244" text-anchor="middle" class="s">Servicio de predicción</text>
+  <text x="470" y="270" text-anchor="middle" class="s">Regla de respaldo si el modelo</text>
+  <text x="470" y="290" text-anchor="middle" class="s">falla o tarda &gt; 6 s</text>
+  <text x="470" y="318" text-anchor="middle" class="s">CSP · HTTPS</text>
+
+  <!-- Supabase -->
+  <rect x="690" y="90" width="680" height="470" rx="10" class="zone"/>
+  <text x="705" y="114" class="z">SUPABASE (PLAN GRATUITO, SÃO PAULO)</text>
+  <rect x="715" y="130" width="200" height="80" rx="8" class="box"/>
+  <text x="815" y="157" text-anchor="middle" class="t">Supabase Auth</text>
+  <text x="815" y="178" text-anchor="middle" class="s">correo y contraseña,</text>
+  <text x="815" y="196" text-anchor="middle" class="s">Google, enlace por correo</text>
+  <rect x="935" y="130" width="410" height="150" rx="8" class="box"/>
+  <text x="1140" y="160" text-anchor="middle" class="t">PostgreSQL + RLS + funciones (RPC)</text>
+  <text x="1140" y="184" text-anchor="middle" class="s">reservas con aforo atómico · lista de espera</text>
+  <text x="1140" y="204" text-anchor="middle" class="s">asistencia auditada · consentimiento (Ley 29733)</text>
+  <text x="1140" y="224" text-anchor="middle" class="s">roles en esquema privado (is_admin)</text>
+  <text x="1140" y="244" text-anchor="middle" class="s">admin_dataset(): dataset seudonimizado (CSV)</text>
+  <text x="1140" y="264" text-anchor="middle" class="s">claim_reminders(): recordatorios pendientes</text>
+  <rect x="715" y="310" width="630" height="225" rx="8" class="ml"/>
+  <text x="1030" y="340" text-anchor="middle" class="t">Punto de inferencia del modelo ML (en el servidor)</text>
+  <rect x="735" y="358" width="180" height="150" rx="6" class="box"/>
+  <text x="825" y="384" text-anchor="middle" class="t" font-size="15">ml_modelos</text>
+  <text x="825" y="406" text-anchor="middle" class="s">versiones (proy-1.0)</text>
+  <text x="825" y="426" text-anchor="middle" class="s">coeficientes, escalas,</text>
+  <text x="825" y="446" text-anchor="middle" class="s">umbrales · 1 activa</text>
+  <text x="825" y="470" text-anchor="middle" class="s">interruptor activar /</text>
+  <text x="825" y="490" text-anchor="middle" class="s">desactivar</text>
+  <rect x="935" y="358" width="200" height="150" rx="6" class="box"/>
+  <text x="1035" y="384" text-anchor="middle" class="t" font-size="15">predecir_noshow()</text>
+  <text x="1035" y="406" text-anchor="middle" class="s">admin_roster_riesgo()</text>
+  <text x="1035" y="430" text-anchor="middle" class="s">valida la entrada</text>
+  <text x="1035" y="450" text-anchor="middle" class="s">variables → escalado →</text>
+  <text x="1035" y="470" text-anchor="middle" class="s">one-hot → sigmoide</text>
+  <text x="1035" y="490" text-anchor="middle" class="s">riesgo + acción</text>
+  <rect x="1155" y="358" width="170" height="150" rx="6" class="box"/>
+  <text x="1240" y="384" text-anchor="middle" class="t" font-size="15">ml_predicciones</text>
+  <text x="1240" y="406" text-anchor="middle" class="s">registro de auditoría:</text>
+  <text x="1240" y="426" text-anchor="middle" class="s">entrada, probabilidad,</text>
+  <text x="1240" y="446" text-anchor="middle" class="s">riesgo, versión, fecha</text>
+  <text x="1240" y="470" text-anchor="middle" class="s">sin nombres ni</text>
+  <text x="1240" y="490" text-anchor="middle" class="s">correos</text>
+  <path d="M915 433 L933 433" class="a"/><path d="M1135 433 L1153 433" class="a"/>
+
+  <!-- GitHub Actions + SMTP -->
+  <rect x="320" y="420" width="300" height="110" rx="10" class="zone"/>
+  <text x="335" y="444" class="z">GITHUB ACTIONS (CADA 15 MIN)</text>
+  <rect x="345" y="455" width="250" height="60" rx="8" class="box"/>
+  <text x="470" y="481" text-anchor="middle" class="t" font-size="15">send-reminders.mjs</text>
+  <text x="470" y="501" text-anchor="middle" class="s">claim_reminders() → correo 3 h antes</text>
+  <rect x="30" y="455" width="220" height="60" rx="8" class="box"/>
+  <text x="140" y="481" text-anchor="middle" class="t" font-size="15">Correo (SMTP Gmail)</text>
+  <text x="140" y="501" text-anchor="middle" class="s">QR y enlace para cancelar</text>
+
+  <!-- Entrenamiento fuera de línea -->
+  <rect x="30" y="610" width="1340" height="220" rx="10" class="zone"/>
+  <text x="45" y="634" class="z">ENTRENAMIENTO Y DESPLIEGUE DEL MODELO (FUERA DE LÍNEA, REPOSITORIO GITHUB)</text>
+  <rect x="55" y="650" width="250" height="160" rx="8" class="box"/>
+  <text x="180" y="680" text-anchor="middle" class="t">Export CSV del panel</text>
+  <text x="180" y="704" text-anchor="middle" class="s">admin_dataset() seudonimizado</text>
+  <text x="180" y="724" text-anchor="middle" class="s">+ columna origen</text>
+  <text x="180" y="744" text-anchor="middle" class="s">(real | simulado)</text>
+  <text x="180" y="774" text-anchor="middle" class="s">reales: solo validación</text>
+  <rect x="355" y="650" width="330" height="160" rx="8" class="box"/>
+  <text x="520" y="680" text-anchor="middle" class="t">Notebook Python (scikit-learn)</text>
+  <text x="520" y="704" text-anchor="middle" class="s">coherencia (25 reglas) · partición temporal</text>
+  <text x="520" y="724" text-anchor="middle" class="s">4 modelos U3 vs 3 líneas base</text>
+  <text x="520" y="744" text-anchor="middle" class="s">corrección APF3 + ciclo de mejora</text>
+  <text x="520" y="764" text-anchor="middle" class="s">random_state = 2026 · requirements.txt</text>
+  <text x="520" y="788" text-anchor="middle" class="s">modelo .joblib + noshow-model.json</text>
+  <rect x="735" y="650" width="290" height="160" rx="8" class="box"/>
+  <text x="880" y="680" text-anchor="middle" class="t">Migración SQL versionada</text>
+  <text x="880" y="704" text-anchor="middle" class="s">inserta la versión en ml_modelos</text>
+  <text x="880" y="724" text-anchor="middle" class="s">pruebas: paridad SQL = scikit-learn</text>
+  <text x="880" y="744" text-anchor="middle" class="s">(200 reservas, &lt; 1e-9)</text>
+  <text x="880" y="774" text-anchor="middle" class="s">reversión: activar versión previa</text>
+  <rect x="1075" y="650" width="270" height="160" rx="8" class="box"/>
+  <text x="1210" y="680" text-anchor="middle" class="t">Alternativas probadas</text>
+  <text x="1210" y="704" text-anchor="middle" class="s">FastAPI POST /predict (local)</text>
+  <text x="1210" y="724" text-anchor="middle" class="s">predict.py con el .joblib</text>
+  <text x="1210" y="748" text-anchor="middle" class="s">No se despliega: duplicaría</text>
+  <text x="1210" y="768" text-anchor="middle" class="s">servidor y costo; queda para</text>
+  <text x="1210" y="788" text-anchor="middle" class="s">modelos no lineales</text>
+
+  <!-- Flechas producción -->
+  <path d="M250 150 L343 170" class="a"/><text x="262" y="146" class="l">HTTPS</text>
+  <path d="M250 290 L343 270" class="a"/>
+  <path d="M595 175 L713 175" class="a"/><text x="610" y="167" class="l">sesión / JWT</text>
+  <path d="M595 255 L933 255" class="a"/><text x="640" y="248" class="l">RPC (supabase-js)</text>
+  <path d="M595 300 L715 420" class="a"/><text x="608" y="335" class="l">riesgo de inscritos</text>
+    <path d="M345 485 L252 485" class="a"/>
+  <path d="M140 455 L140 332" class="d"/><text x="148" y="400" class="l">correo al socio</text>
+  <!-- Flechas fuera de línea -->
+  <path d="M1345 250 L1388 250 L1388 590 L180 590 L180 648" class="d"/><text x="300" y="582" class="l">exportar dataset (CSV seudonimizado desde el panel)</text>
+  <path d="M305 730 L353 730" class="d"/>
+  <path d="M685 730 L733 730" class="d"/>
+  <path d="M880 650 L830 512" class="d"/><text x="862" y="590" class="l">publica versión</text>
+</svg>
