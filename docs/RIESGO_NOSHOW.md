@@ -47,10 +47,11 @@ semana, ocupación, disciplina, temporada y recordatorio). La regla sigue aporta
 si falta algún dato. En la prueba cronológica del notebook (datos simulados) el modelo supera a la regla: PR-AUC 0.319
 frente a 0.230 y recall 0.61 frente a 0.56 marcando menos reservas (33 % frente a 36 %).
 
-Niveles del modelo (versión apf3-1.1): **alto** = probabilidad ≥ 0.2924, acción **por defecto** (confirmar por WhatsApp y,
-si no confirma, liberar el cupo), con un cupo de hasta el 20 % de las reservas; **medio** = probabilidad ≥ 0.2224
-(recordatorio adicional si recepción tiene tiempo; tope total de contactos 40 %); **bajo** = sin acción. Ambos cupos se
-exigen en todos los pliegues temporales de la validación. La tabla de Indicadores compara modelo y regla con las clases ya
-dictadas de la base real.
+Desde el Proyecto Final (versión **proy-1.0**) el riesgo de «Ver inscritos» lo calcula **el servidor** (Supabase,
+`admin_roster_riesgo()`), y cada predicción queda registrada con su versión y fecha. Niveles: **alto** = probabilidad ≥ 0.2788,
+acción **por defecto** (confirmar por WhatsApp y, si no confirma, liberar el cupo), con un cupo de hasta el 20 % de las
+reservas; **medio** = probabilidad ≥ 0.2177 (recordatorio adicional si recepción tiene tiempo; tope total de contactos 40 %);
+**bajo** = sin acción. Si el servicio de predicción está desactivado, falla o tarda más de 6 segundos, el panel lo avisa y usa
+esta regla como **respaldo**. La tabla de Indicadores compara modelo y regla con las clases ya dictadas.
 
 La regla sigue siendo la **línea base**: el modelo debe superarla también con asistencia real para justificar su complejidad.

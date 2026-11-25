@@ -6,6 +6,8 @@ Aplicación web para consultar clases, conocer los cupos disponibles y reservar 
 
 > Estado: publicado en https://titan-gym-tau.vercel.app (HTTP 200 comprobado el 11/10/2026, ver [Demostración](docs/DEMO_VERCEL_APF2.md)). Reservas, cancelación, lista de espera, recordatorios, perfil y panel de administración conectados a Supabase. La migración de la lista de espera fue aplicada en Supabase por el titular el 19/10 ([detalle](docs/LISTA_ESPERA.md)); la de la política de privacidad 2026-10-19 debe aplicarse justo después de desplegar ([Privacidad](docs/PRIVACIDAD.md#versiones)). La primera cuenta administradora debe ser autorizada explícitamente; no se asignan roles automáticamente.
 
+> **Proyecto Final (proy-1.0):** el riesgo de no-show lo calcula el servidor (Supabase) con el modelo de Machine Learning y cada predicción queda registrada. Arquitectura final, estado real, despliegue y guion de la demo: [docs/PROYECTO_FINAL.md](docs/PROYECTO_FINAL.md). Cambios desde APF2: [CHANGELOG.md](CHANGELOG.md). Manual para el personal del gimnasio: [docs/MANUAL_USUARIO.md](docs/MANUAL_USUARIO.md).
+
 ## Funcionalidades
 
 - Inicio con clases destacadas obtenidas del catálogo real.
@@ -22,6 +24,7 @@ Aplicación web para consultar clases, conocer los cupos disponibles y reservar 
 - Diseño responsive para escritorio, tablet y móvil, con recursos originales de TITAN GYM.
 - Panel administrativo para crear/editar clases, programar sesiones, consultar inscritos y registrar asistencia con historial.
 - Indicador de no-shows y exportación CSV del dataset seudonimizado para el componente de Machine Learning (APF3).
+- Riesgo de no-show calculado en el servidor con el modelo de Machine Learning, con registro de cada predicción, prueba manual y regla de respaldo si el servicio no responde.
 - Modelo de Machine Learning de no-show (APF3, regresión logística): probabilidad y nivel de riesgo en «Ver inscritos» y comparación con la regla anterior en Indicadores. Notebook, dataset simulado y endpoint en [ml/](ml/README.md).
 - Comprobante con código QR y registro de llegada en recepción escaneando el QR desde el panel.
 - Recordatorio por correo 3 horas antes de cada clase, con opción para desactivarlo en Mi perfil.

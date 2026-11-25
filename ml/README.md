@@ -51,37 +51,40 @@ siguiente descarga `simulacion.py`, `titan_noshow.py` e `integracion/` del repos
 .venv\Scripts\uvicorn integracion.api:app --port 8000      # luego POST http://127.0.0.1:8000/predict
 ```
 
-## Resultados (prueba cronológica: 18/08–31/10/2026, 897 reservas) · versión apf3-1.1 (APF3 corregido)
+## Resultados (prueba cronológica: 18/08–31/10/2026, 897 reservas)
 
-| Modelo | PR-AUC | ROC-AUC | Recall | Precisión | F2 | % marcadas |
-| --- | --- | --- | --- | --- | --- | --- |
-| Dummy "todos asisten" (situación actual) | 0.147 | 0.500 | 0.000 | 0.000 | 0.000 | 0 % |
-| Regla del MVP (medio o alto) | 0.230 | 0.647 | 0.561 | 0.228 | 0.434 | 36 % |
-| **Regresión logística · contacto (medio o alto)** | **0.319** | **0.721** | **0.614** | **0.271** | **0.490** | 33 % |
-| **Regresión logística · solo riesgo alto (acción por defecto)** | 0.319 | 0.721 | 0.341 | 0.354 | 0.344 | 14 % |
-| KNN (k = 201) | 0.295 | 0.720 | 0.652 | 0.249 | 0.492 | 39 % |
-| Gradient Boosting | 0.310 | 0.710 | 0.515 | 0.297 | 0.449 | 26 % |
-| Árbol de decisión | 0.238 | 0.669 | 0.439 | 0.251 | 0.382 | 26 % |
+Comparación con la misma partición, el mismo preprocesamiento y `random_state = 2026`
+(`modelo/comparacion_apf3_proy.csv`):
 
-El modelo se eligió por PR-AUC en validación cruzada temporal (0.315, frente a ≤ 0.275 de los demás), **no** por la
-prueba. Los umbrales se fijan fuera de pliegue exigiendo cada cupo **en todos los pliegues temporales**: contacto ≤ 40 %
-(umbral 0.2224) y riesgo alto ≤ 20 % (umbral 0.2924). Ambos cupos se cumplen en la prueba (33 % y 14 %).
+| Versión | Acción | Precisión | Recall | F2 | PR-AUC | % marcadas | Cupo |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| Línea base: regla del MVP | Riesgo alto | 0.318 | 0.311 | 0.312 | 0.230 | 14 % | — |
+| apf3-1.0 (APF3 entregado) | Contacto (medio o alto) | 0.243 | 0.697 | 0.508 | 0.319 | 42 % | 40 %: **no cumple** |
+| apf3-1.1 (APF3 corregido) | Contacto | 0.271 | 0.614 | 0.490 | 0.319 | 33 % | 40 %: cumple |
+| apf3-1.1 (APF3 corregido) | Solo riesgo alto | 0.354 | 0.341 | 0.344 | 0.319 | 14 % | 20 %: cumple |
+| **proy-1.0 (PROY, servido)** | Contacto | 0.272 | **0.621** | **0.495** | 0.313 | 34 % | 40 %: cumple |
+| **proy-1.0 (PROY, servido)** | **Solo riesgo alto (por defecto)** | 0.343 | **0.364** | **0.359** | 0.313 | 16 % | 20 %: cumple |
 
-**APF3 entregado → corregido** (`modelo/comparacion_apf3_proy.csv`): en apf3-1.0 el contacto marcaba 42,1 % (tope de
-40 % excedido) con recall 0.697; en apf3-1.1 marca 33,3 % con recall 0.614. La meta de recall 0.65 deja de cumplirse: se
-prioriza la capacidad real de recepción y recuperar recall dentro del cupo queda para el ciclo de mejora del PROY.
-Detalle de cada corrección: [docs/CORRECCIONES_APF3.md](../docs/CORRECCIONES_APF3.md).
+- **Corrección APF3 (apf3-1.1):** cada cupo se exige en todos los pliegues temporales; el riesgo alto pasa a ser la acción por
+  defecto. Detalle: [docs/CORRECCIONES_APF3.md](../docs/CORRECCIONES_APF3.md).
+- **Ciclo de mejora (proy-1.0):** se acepta la variable `temprano_x_anticipada` por la regla fijada de antemano (PR-AUC de
+  validación 0.315 → 0.324, mejor en 4 de 5 pliegues; `modelo/ciclo_mejora_cv.csv`). En la prueba mejora recall y F2 dentro
+  del cupo, pero el PR-AUC baja 0.006: la ganancia es pequeña y está dentro de la variación entre pliegues. `viernes_tarde` y
+  el balanceo de clases se descartan.
 
 ## Integración con el MVP
 
-1. **En el panel publicado (implementado y desplegado en Vercel; el docente lo verificó en el bundle de producción):** el notebook exporta la regresión logística a
-   `src/features/admin/noshow-model.json`; `src/features/admin/noshowModel.ts` la evalúa en *Ver inscritos* (nivel +
-   probabilidad) y en *Indicadores → ¿Acierta el riesgo de no-show?* (modelo contra regla en clases ya dictadas).
-   `tests/unit/noshow-model.test.ts` verifica que TypeScript reproduce scikit-learn en 200 reservas (diferencia < 1e-9).
-2. **Endpoint HTTP (implementado y probado en local):** `integracion/api.py` responde con el mismo contrato para un
-   backend futuro o para modelos no lineales.
-3. **Validación con datos reales:** los registros exportados a `data/export_mvp_real.csv` (con `origen = real`) no
-   entrenan el modelo: la sección 4.4 del notebook los predice y los revisa caso por caso.
-4. **Pendiente para PROY:** confirmar en Supabase la migración `20261113000000_modelo_noshow_roster.sql` (estado del
-   recordatorio en *Ver inscritos*; sin ella el modelo imputa ese dato), servir el modelo desde el backend con registro de
-   cada predicción, registrar asistencia real y reentrenar.
+1. **Servido por el backend (en producción):** la migración `supabase/migrations/20261125000000_inferencia_servidor.sql`
+   guarda la versión exportada en `private.ml_modelos` y expone `predecir_noshow()` y `admin_roster_riesgo()`. Supabase valida
+   la entrada, calcula la probabilidad con el mismo pipeline y registra cada predicción en `private.ml_predicciones` (entrada,
+   probabilidad, riesgo, versión y fecha). `tests/integration/database.mjs` comprueba la paridad con scikit-learn en 200
+   reservas (diferencia < 1e-9).
+2. **En el panel:** «Ver inscritos» pide el riesgo al servidor; si el modelo está desactivado, falla o tarda más de 6 s,
+   muestra la regla de respaldo con un aviso. Indicadores → *Servicio de predicción* permite probar una predicción, ver el
+   registro y desactivar el modelo para comprobar la degradación.
+3. **Endpoint HTTP (probado en local):** `integracion/api.py` responde con el mismo contrato; queda para modelos no lineales
+   que no puedan evaluarse en SQL.
+4. **Validación con datos reales:** los registros exportados a `data/export_mvp_real.csv` (con `origen = real`) no entrenan
+   el modelo: la sección 4.4 del notebook los predice y los revisa caso por caso.
+5. **Publicar una versión nueva:** ejecutar el notebook, insertar la nueva fila en `private.ml_modelos` mediante una
+   migración (activándola) y mantener la prueba de paridad. Guía completa: [docs/PROYECTO_FINAL.md](../docs/PROYECTO_FINAL.md).
