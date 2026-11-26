@@ -1301,6 +1301,33 @@
 .prediction-log {
   margin-top: 24px;
 }
+.pending-attendance {
+  border-color: #f59e0b66;
+  background: #f59e0b14;
+  margin: 0 0 20px;
+}
+.pending-attendance p {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin: 0 0 8px;
+}
+.pending-attendance ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 6px;
+}
+.pending-attendance li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 13px;
+}
 .admin-risk-fallback {
   border-color: #f59e0b66;
   background: #f59e0b14;

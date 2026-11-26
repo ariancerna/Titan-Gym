@@ -1255,7 +1255,94 @@ mostrar(controles)
 assert controles["cumple"].all()
 
 # %% [markdown]
-# ## 8. Conclusiones del notebook
+# ## 8. Extensión (sesión 16): segmentación de socios con clustering
+# Complemento del modelo supervisado, **no** su reemplazo. El problema de APF1 es el cupo perdido por socios que no avisan;
+# además de predecir cada reserva, conviene conocer **grupos de socios** con hábitos parecidos para definir políticas por grupo.
+# Unidad de análisis: un socio con al menos 5 reservas con resultado. Variables por socio (todas observables en el MVP):
+# frecuencia semanal, tasa de no-show suavizada, anticipación media, proporción de clases antes de las 8:00 y proporción de
+# reservas con recordatorio. Se estandarizan y se comparan K-Means (k = 2…6), mezcla gaussiana (GMM) y clustering jerárquico
+# aglomerativo. **Métrica:** silueta (mayor es mejor), con Davies-Bouldin como control (menor es mejor). Datos simulados: los
+# segmentos describen el generador y se recalcularán con asistencia real.
+
+# %%
+from sklearn.cluster import AgglomerativeClustering, KMeans
+from sklearn.metrics import davies_bouldin_score, silhouette_score
+from sklearn.mixture import GaussianMixture
+from sklearn.preprocessing import StandardScaler
+
+por_socio = limpio.groupby("socio_ref")
+perfil_socios = pd.DataFrame(
+    {
+        "reservas": por_socio.size(),
+        "semanas_activo": por_socio["_inicio"].agg(lambda x: max((x.max() - x.min()).days / 7, 1)),
+        "tasa_no_show": (por_socio["no_show"].sum() + tn.PRIOR_NO_SHOW * tn.K_SUAVIZADO) / (por_socio.size() + tn.K_SUAVIZADO),
+        "anticipacion_media_h": por_socio["anticipacion_horas"].mean(),
+        "pct_temprano": por_socio["hora_inicio"].agg(lambda h: (h < 8).mean()),
+        "pct_recordatorio": por_socio["recordatorio_enviado"].agg(lambda r: r.astype(bool).mean()),
+    }
+)
+perfil_socios["frecuencia_semanal"] = perfil_socios["reservas"] / perfil_socios["semanas_activo"]
+perfil_socios = perfil_socios[perfil_socios["reservas"] >= 5]
+VARS_SEGMENTO = ["frecuencia_semanal", "tasa_no_show", "anticipacion_media_h", "pct_temprano", "pct_recordatorio"]
+Z = StandardScaler().fit_transform(perfil_socios[VARS_SEGMENTO])
+filas_k = []
+for k in range(2, 7):
+    etiquetas_k = KMeans(n_clusters=k, n_init=20, random_state=SEED).fit_predict(Z)
+    filas_k.append({"k": k, "silueta": silhouette_score(Z, etiquetas_k), "davies_bouldin": davies_bouldin_score(Z, etiquetas_k)})
+tabla_k = pd.DataFrame(filas_k)
+k_elegido = int(tabla_k.loc[tabla_k["silueta"].idxmax(), "k"])
+algoritmos = {
+    "K-Means": KMeans(n_clusters=k_elegido, n_init=20, random_state=SEED).fit_predict(Z),
+    "GMM": GaussianMixture(n_components=k_elegido, n_init=5, random_state=SEED).fit(Z).predict(Z),
+    "Jerárquico aglomerativo (Ward)": AgglomerativeClustering(n_clusters=k_elegido).fit_predict(Z),
+}
+tabla_alg = pd.DataFrame(
+    [{"algoritmo": a, "silueta": silhouette_score(Z, e), "davies_bouldin": davies_bouldin_score(Z, e)} for a, e in algoritmos.items()]
+)
+alg_elegido = tabla_alg.loc[tabla_alg["silueta"].idxmax(), "algoritmo"]
+print(f"Socios segmentados: {len(perfil_socios)} · k elegido por silueta: {k_elegido} · algoritmo: {alg_elegido}")
+mostrar(tabla_k.round(3))
+mostrar(tabla_alg.round(3))
+
+perfil_socios["segmento"] = algoritmos[alg_elegido]
+resumen_seg = perfil_socios.groupby("segmento")[VARS_SEGMENTO].mean().assign(socios=perfil_socios.groupby("segmento").size())
+# Nombre de negocio: el segmento con mayor tasa de no-show es el de «reincidentes».
+orden = resumen_seg["tasa_no_show"].sort_values(ascending=False).index
+nombres_seg = {orden[0]: "Reincidentes"} | {s: ("Cumplidos" if i == len(orden) - 1 else f"Intermedio {i}") for i, s in enumerate(orden) if i > 0}
+resumen_seg.index = [nombres_seg[s] for s in resumen_seg.index]
+perfil_socios["segmento_nombre"] = perfil_socios["segmento"].map(nombres_seg)
+mostrar(resumen_seg.round(3))
+perfil_socios[["segmento_nombre"] + VARS_SEGMENTO].round(4).to_csv(MODELO / "segmentos_socios.csv")
+
+fig, ax = plt.subplots(1, 2, figsize=(11, 4.2))
+ax[0].plot(tabla_k["k"], tabla_k["silueta"], marker="o", label="Silueta")
+ax[0].plot(tabla_k["k"], tabla_k["davies_bouldin"], marker="s", label="Davies-Bouldin")
+ax[0].axvline(k_elegido, color="gray", ls=":")
+ax[0].set_xlabel("Número de segmentos (k)")
+ax[0].set_title("Elección de k (K-Means)")
+ax[0].legend()
+for nombre, grupo in perfil_socios.groupby("segmento_nombre"):
+    ax[1].scatter(grupo["frecuencia_semanal"], grupo["tasa_no_show"], s=22, alpha=0.75, label=f"{nombre} ({len(grupo)})")
+ax[1].set_xlabel("Reservas por semana")
+ax[1].set_ylabel("Tasa de no-show suavizada")
+ax[1].set_title("Segmentos de socios")
+ax[1].legend()
+fig.suptitle("Figura 9. Segmentación de socios (extensión de clustering)")
+guardar(fig, "fig09_segmentos.png")
+
+# %% [markdown]
+# **Lectura y acción de negocio.** La silueta máxima se obtiene con 2 segmentos (0,32; K-Means y el jerárquico coinciden,
+# GMM rinde peor). Los **reincidentes** (32 socios) faltan 23,9 % de las veces frente a 15,9 % de los **cumplidos** (148), y
+# lo que más los separa es que **tienen desactivado el recordatorio por correo** (0 % de sus reservas con recordatorio frente a
+# 99 %); además reservan algo antes y van un poco más a clases tempranas. Acciones derivadas, trazables al problema de APF1:
+# (1) invitar a los reincidentes a reactivar el recordatorio en Mi perfil y confirmar siempre sus reservas por WhatsApp;
+# (2) a los cumplidos, prioridad en la lista de espera o beneficios de fidelización, porque liberan cupos útiles; (3) seguir
+# mes a mes el tamaño del segmento de reincidentes como señal de que las acciones funcionan. La segmentación **no reemplaza**
+# al modelo supervisado: el modelo decide reserva por reserva y los segmentos orientan políticas por grupo. La silueta es
+# moderada (los grupos se solapan) y los datos son simulados: se recalculará con la asistencia real.
+
+# %% [markdown]
+# ## 9. Conclusiones del notebook
 # * Se construyó un dataset simulado, rotulado y trazable al Contrato de Datos de APF2, que pasa todas las reglas de
 #   coherencia tras una limpieza con criterios explícitos.
 # * Se compararon 4 modelos de la Unidad 3 contra 3 líneas base con la misma partición cronológica y el mismo pipeline; el
@@ -1264,6 +1351,8 @@ assert controles["cumple"].all()
 #   la variable `temprano_x_anticipada` con un criterio fijado de antemano; la ganancia es pequeña y se reporta con sus matices.
 # * El modelo exportado (proy-1.0) lo sirve el backend del MVP con registro de cada predicción; también responde con el mismo
 #   contrato mediante `predict.py` y un endpoint HTTP.
+# * Extensión: la segmentación de socios (sección 8) separa reincidentes de cumplidos para políticas por grupo; no
+#   reemplaza al modelo supervisado.
 # * **Límite:** los resultados son indicativos porque los datos son simulados. Siguiente paso: registrar asistencia real en
 #   `/admin`, exportarla a `data/export_mvp_real.csv`, volver a ejecutar este notebook y comparar real vs. simulado.
 

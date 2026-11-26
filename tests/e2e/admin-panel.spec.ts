@@ -273,3 +273,17 @@ test('servicio de predicción: el servidor predice y registra, rechaza datos inv
   ).toContainText('El modelo de predicción está desactivado en el servidor.');
   await expect(member.locator('.admin-risk')).toContainText('Regla de respaldo');
 });
+
+test('Hoy avisa de la asistencia pendiente y abre los inscritos de esa clase', async ({ page }) => {
+  await signIn(page);
+  await page.goto('/admin');
+  const alert = page.getByRole('region', { name: 'Asistencia pendiente' });
+  await expect(alert).toContainText('asistencia sin registrar');
+  await alert.getByRole('button', { name: 'Registrar asistencia' }).first().click();
+  await expect(page).toHaveURL(/vista=agenda/);
+  const roster = page.getByRole('region', { name: 'Inscritos y asistencia' });
+  await roster.getByLabel('Asistencia de Alumno de asistencia').selectOption('present');
+  await expect(roster.getByRole('status')).toContainText('Asistencia guardada');
+  await page.getByRole('tab', { name: 'Hoy' }).click();
+  await expect(page.getByRole('region', { name: 'Asistencia pendiente' })).toHaveCount(0);
+});

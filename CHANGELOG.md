@@ -2,6 +2,18 @@
 
 Cambios del MVP y del modelo de Machine Learning desde la entrega del APF2. Fechas en hora de Lima.
 
+## [proy-1.1] · 2026-11-26 · Extensión de clustering, alerta de asistencia y carga de datos reales
+
+- **Extensión de clustering (sesión 16):** sección 8 del notebook. K-Means con k = 2 elegido por silueta (0,32; GMM 0,19)
+  separa 32 socios **reincidentes** (23,9 % de no-show, recordatorio desactivado) de 148 **cumplidos** (15,9 %). Acción:
+  invitar a los reincidentes a reactivar el recordatorio y confirmar siempre sus reservas. No reemplaza al modelo supervisado.
+- **Alerta de asistencia pendiente** en la pestaña Hoy: clases de los últimos 14 días ya dictadas con asistencia sin
+  registrar y botón «Registrar asistencia» que abre sus inscritos. Responde a la observación del APF2 y asegura el dato real
+  que necesita el modelo.
+- **`ml/preparar_export_real.py`:** limpia la exportación del panel (quita sesiones simuladas y socios de demostración,
+  anonimiza instructores, rotula `origen = real`) para validar el modelo con registros reales sin entrenar con ellos.
+- El notebook se presenta como entregable del Proyecto Final, con la tabla de corrección del APF3 y el CHANGELOG al inicio.
+
 ## [proy-1.0] · 2026-11-25 · Proyecto Final: modelo servido por el backend y ciclo de mejora
 
 Detalle de la versión integrada, estado real y guion de la demo: [docs/PROYECTO_FINAL.md](docs/PROYECTO_FINAL.md).

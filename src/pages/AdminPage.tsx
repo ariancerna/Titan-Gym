@@ -24,6 +24,7 @@ import { SessionRow } from '../components/admin/SessionRow';
 import { AttendanceRoster } from '../components/admin/AttendanceRoster';
 import { AttendanceIndicators } from '../components/admin/AttendanceIndicators';
 import { PredictionService } from '../components/admin/PredictionService';
+import { PendingAttendance, PENDING_WINDOW_DAYS } from '../components/admin/PendingAttendance';
 import { CheckInPanel } from '../components/admin/CheckInPanel';
 import { PasswordSignInForm } from '../components/reservations/PasswordSignInForm';
 import { EmailRequestForm } from '../components/reservations/EmailRequestForm';
@@ -113,6 +114,15 @@ function AdminDashboard() {
     setRosterId(undefined);
     setSaved('');
     setParams(next === 'hoy' ? {} : { vista: next }, { replace: true });
+  }
+  // Desde el aviso de asistencia pendiente: abre la clase pasada en la Agenda con sus inscritos.
+  function openPastRoster(sessionId: string) {
+    setEditor(null);
+    setSaved('');
+    setPeriod('past');
+    setDays(PENDING_WINDOW_DAYS + 1); // la clase está dentro de la ventana del aviso
+    setParams({ vista: 'agenda' }, { replace: true });
+    setRosterId(sessionId);
   }
   // Pestañas accesibles: las flechas cambian de pestaña.
   function onTabKey(event: KeyboardEvent<HTMLDivElement>) {
@@ -251,6 +261,7 @@ function AdminDashboard() {
         {view === 'hoy' && (
           <>
             <TodayMetrics sessions={data.sessions} />
+            <PendingAttendance onOpen={openPastRoster} />
             <CheckInPanel />
             <section className="admin-day" aria-labelledby="today-title">
               <h2 id="today-title">Clases de hoy</h2>

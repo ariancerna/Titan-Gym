@@ -12,7 +12,7 @@ FitSmart Agenda reemplaza el cuaderno y los mensajes de WhatsApp para las clases
 
 | Momento | Dónde | Qué hacer |
 | --- | --- | --- |
-| Al abrir | Panel → **Hoy** | Ver las clases del día, sus inscritos y los cupos libres. |
+| Al abrir | Panel → **Hoy** | Ver las clases del día, sus inscritos y los cupos libres. Si aparece el aviso amarillo **«asistencia sin registrar»**, pulsar **Registrar asistencia** en cada clase indicada. |
 | Antes de cada clase | Panel → **Agenda** → la clase → **Ver inscritos** | Revisar la tabla de riesgo (sección 3). Confirmar por WhatsApp a los socios en **riesgo alto**. |
 | Cuando llega un socio | Panel → **Hoy** → **Registrar llegada** | Escanear el QR de su comprobante (o escribir el código TG-…). |
 | Después de la clase | **Ver inscritos** | Marcar **Presente** o **Ausente** a quien falte por registrar. Registrar la asistencia de todas las clases es lo que permite medir el indicador y reentrenar el modelo. |
