@@ -1,6 +1,10 @@
 # %% [markdown]
-# # APF3 · Solución de Machine Learning para TITAN GYM
-# **Curso:** Innovación y Transformación Digital (UTP, 2026-2) · **Grupo 6**
+# # Proyecto Final · Solución de Machine Learning integrada para TITAN GYM
+# **Curso:** Innovación y Transformación Digital (UTP, 2026-2) · **Grupo 6** · versión del modelo servida: **proy-1.0**
+#
+# Notebook del componente de Machine Learning: nació en el APF3 y en el Proyecto Final suma la corrección del modelo base
+# (Paso 2a, sección 3.4), el ciclo de mejora (Paso 2b, sección 3.5), la comparación APF3 entregado → corregido → PROY
+# (sección 4) y la exportación del modelo que sirve el backend del MVP (sección 6).
 #
 # **Integrantes:** Campos Ortiz, Yorman Alexander · Cerna Martinez, Arian · Rojas Reyes, Fabrizio Marcelo · Arbi Pando, Manuel Sebastian
 #
@@ -16,6 +20,23 @@
 #   los módulos `simulacion.py`, `titan_noshow.py` e `integracion/` del repositorio público si no están presentes.
 #
 # Todo el notebook usa `random_state = 2026` y corre de principio a fin sin intervención.
+#
+# ### Proyecto Final: tabla de corrección del APF3 y CHANGELOG
+# | Observación del docente (revisión APF3) | Corrección aplicada | Evidencia en este notebook |
+# |---|---|---|
+# | **H5** · el umbral marcó 42,1 % de las reservas (tope 40 %) | Cada cupo se exige en todos los pliegues temporales; riesgo alto como acción por defecto (cupo 20 %) | Sección 3.4 y tabla comparativa de la sección 4 |
+# | **H1** · datos 100 % sintéticos | Los registros reales (`origen = real`) solo validan el modelo, caso por caso | Secciones 2.3 y 4.4 |
+# | **H3** · despliegue declarado como pendiente | El modelo se sirve desde Supabase con registro de cada predicción | Sección 6.1 |
+# | **H4** · anexo de IA inconsistente | Registro único de prompts | `docs/ANEXO_PROMPTS_IA.md` |
+# | **H2** · un solo autor en el repositorio | Trabajo visible por integrante | Historial del repositorio |
+#
+# | Versión | Cambios |
+# |---|---|
+# | apf3-1.0 | Modelo entregado en APF3 (regresión logística, C = 0,03). |
+# | apf3-1.1 | Corrección: umbrales con cupo en el peor pliegue; reales solo para validación. |
+# | proy-1.0 | Ciclo de mejora: variable `temprano_x_anticipada` aceptada (PR-AUC CV 0,315 → 0,324, 4/5 pliegues); modelo servido por Supabase. |
+#
+# Detalle completo: `docs/CORRECCIONES_APF3.md` y `CHANGELOG.md` del repositorio.
 #
 # > **Aviso de datos:** el dataset de este notebook es **100 % simulado** (columna `origen = "simulado"`), porque el MVP
 # > todavía no registra asistencia real suficiente. Los resultados son **indicativos y no generalizables** hasta
@@ -1161,12 +1182,15 @@ evidencia = {"fecha": pd.Timestamp.now(tz="America/Lima").isoformat(timespec="se
 (BASE / "integracion" / "evidencia_llamada.json").write_text(json.dumps(evidencia, indent=2, ensure_ascii=False), encoding="utf-8")
 
 # %% [markdown]
-# ### 6.1 El modelo dentro del MVP (panel `/admin`)
+# ### 6.1 El modelo dentro del MVP: servido por el backend (Supabase)
 # El modelo seleccionado es una regresión logística: su predicción es `sigmoide(intercepto + Σ coeficiente × variable)`.
-# Por eso se exporta a un JSON (medias y escalas, categorías, coeficientes, imputación y umbrales) que el MVP evalúa en
-# TypeScript dentro del navegador del administrador: **sin servidor adicional, sin costo en Vercel y sin enviar datos de
-# socios a terceros**. Se exportan también 200 reservas de prueba con la probabilidad que calcula scikit-learn; la prueba
-# automática `tests/unit/noshow-model.test.ts` del MVP verifica que TypeScript da el mismo resultado (diferencia < 1e-9).
+# Por eso se exporta a un JSON (medias y escalas, categorías, coeficientes, imputación y umbrales) que se publica en la base
+# de datos del MVP (`private.ml_modelos`, migración `supabase/migrations/20261125000000_inferencia_servidor.sql`). La función
+# `predecir_noshow()` valida la entrada, calcula la probabilidad **en el servidor** y registra cada predicción en
+# `private.ml_predicciones` (entrada, probabilidad, riesgo, versión y fecha); «Ver inscritos» la usa para cada reserva y, si
+# el servicio falla o tarda más de 6 s, muestra la regla de respaldo. Se exportan también 200 reservas con la probabilidad
+# que calcula scikit-learn: `tests/integration/database.mjs` comprueba que el servidor da el mismo resultado (diferencia
+# < 1e-9) y `tests/unit/noshow-model.test.ts` hace lo mismo con la copia que usa el análisis histórico de Indicadores.
 
 # %%
 if isinstance(modelo_final.named_steps["modelo"], LogisticRegression):
@@ -1236,9 +1260,12 @@ assert controles["cumple"].all()
 #   coherencia tras una limpieza con criterios explícitos.
 # * Se compararon 4 modelos de la Unidad 3 contra 3 líneas base con la misma partición cronológica y el mismo pipeline; el
 #   modelo seleccionado y su umbral se fijaron con validación cruzada temporal, y la prueba se usó una sola vez.
-# * El modelo exportado responde con el esquema del MVP mediante una función y un endpoint HTTP.
-# * **Límite:** los resultados son indicativos porque los datos son simulados. El siguiente paso (PROY) es registrar asistencia
-#   real en `/admin`, exportarla a `data/export_mvp_real.csv`, volver a ejecutar este notebook y comparar real vs. simulado.
+# * Proyecto Final: se corrigieron las observaciones del APF3 (cupos respetados en el peor caso) y el ciclo de mejora aceptó
+#   la variable `temprano_x_anticipada` con un criterio fijado de antemano; la ganancia es pequeña y se reporta con sus matices.
+# * El modelo exportado (proy-1.0) lo sirve el backend del MVP con registro de cada predicción; también responde con el mismo
+#   contrato mediante `predict.py` y un endpoint HTTP.
+# * **Límite:** los resultados son indicativos porque los datos son simulados. Siguiente paso: registrar asistencia real en
+#   `/admin`, exportarla a `data/export_mvp_real.csv`, volver a ejecutar este notebook y comparar real vs. simulado.
 
 # %%
 print("Archivos generados:")
