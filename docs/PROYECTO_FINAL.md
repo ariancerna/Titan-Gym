@@ -25,7 +25,7 @@ Fuente editable: [arquitectura/arquitectura_final.svg](arquitectura/arquitectura
 | Servicio de predicción (Indicadores) | Estado, prueba de predicción, interruptor y registro | — |
 | Modelo | proy-1.0 entrenado con datos 100 % simulados | Validar con al menos 30 registros reales (`ml/data/export_mvp_real.csv`). |
 | Análisis histórico «¿Acierta el riesgo?» | Se calcula en el navegador con el mismo modelo exportado | Es análisis, no decisión; el modelo que actúa en el flujo es el del servidor. |
-| Validación con TITAN GYM | Pendiente | Acta, captura fechada o video de uso del personal. |
+| Validación con TITAN GYM | Sesión de uso con el administrador el 24/11/2026 ([acta](VALIDACION_TITAN_GYM.md)); sus dos recomendaciones se atendieron | No se tomaron fotos ni se exportaron los registros de esa sesión; falta la confirmación del acta por el administrador. |
 | Registro de asistencia real | Aviso «asistencia sin registrar» en Hoy; exportación y limpieza con `ml/preparar_export_real.py` | Capturar al menos 30 reservas reales con asistencia (ver `ml/README.md`, «Cargar datos reales»). |
 | Segmentación de socios (extensión) | Notebook, sección 8: reincidentes frente a cumplidos | Recalcular con datos reales. |
 

@@ -10,6 +10,9 @@ Cambios del MVP y del modelo de Machine Learning desde la entrega del APF2. Fech
 - **Alerta de asistencia pendiente** en la pestaña Hoy: clases de los últimos 14 días ya dictadas con asistencia sin
   registrar y botón «Registrar asistencia» que abre sus inscritos. Responde a la observación del APF2 y asegura el dato real
   que necesita el modelo.
+- **Botón «Confirmar por WhatsApp»** en «Ver inscritos» para los socios de riesgo medio o alto de clases futuras: abre
+  WhatsApp con el mensaje de confirmación ya escrito. Atiende la recomendación del administrador en la sesión de uso del
+  24/11/2026 ([acta](docs/VALIDACION_TITAN_GYM.md)); no guarda teléfonos.
 - **`ml/preparar_export_real.py`:** limpia la exportación del panel (quita sesiones simuladas y socios de demostración,
   anonimiza instructores, rotula `origen = real`) para validar el modelo con registros reales sin entrenar con ellos.
 - El notebook se presenta como entregable del Proyecto Final, con la tabla de corrección del APF3 y el CHANGELOG al inicio.

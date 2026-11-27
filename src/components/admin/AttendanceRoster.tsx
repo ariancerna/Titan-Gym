@@ -9,12 +9,14 @@ import {
   type ManagedSession,
   type RosterMember,
 } from '../../features/admin/api';
+import { MessageCircle } from 'lucide-react';
 import { useAuth } from '../../app/AuthProvider';
 import { LoadingState, ErrorState, EmptyState } from '../ui/States';
 import { Button } from '../ui/Button';
 import { errorMessage } from '../../lib/errors';
 import { formatDate, formatSessionWhen, formatTime } from '../../utils/sessions';
 import { limaHour, noShowRisk, type RiskLevel } from '../../features/admin/risk';
+import { confirmationLink } from '../../features/admin/whatsapp';
 
 const riskBadge = { bajo: 'available', medio: 'low', alto: 'risk-high' } as const;
 
@@ -186,8 +188,8 @@ export function AttendanceRoster({
                     {highRisk} {highRisk === 1 ? 'inscrito tiene' : 'inscritos tienen'} riesgo alto
                     de no-show.
                   </strong>{' '}
-                  Conviene confirmarles la asistencia por WhatsApp y, si no confirman, liberar el
-                  cupo para la lista de espera.{' '}
+                  Usa «Confirmar por WhatsApp» para enviarles el mensaje ya escrito y, si no
+                  confirman, libera el cupo para la lista de espera.{' '}
                 </>
               ) : null}
               {usesModel ? (
@@ -251,6 +253,22 @@ export function AttendanceRoster({
                         </th>
                         <td data-label="Riesgo">
                           <RiskCell risk={risk} />
+                          {future &&
+                            !cancelled &&
+                            risk &&
+                            risk.source !== 'cargando' &&
+                            risk.level !== 'bajo' && (
+                              <a
+                                className="admin-whatsapp"
+                                href={confirmationLink(r.member_name, session)}
+                                target="_blank"
+                                rel="noreferrer"
+                                aria-label={`Confirmar por WhatsApp a ${r.member_name} (abre WhatsApp)`}
+                              >
+                                <MessageCircle size={14} aria-hidden="true" /> Confirmar por
+                                WhatsApp
+                              </a>
+                            )}
                         </td>
                         <td data-label="Motivos" className="admin-roster-reasons">
                           {risk

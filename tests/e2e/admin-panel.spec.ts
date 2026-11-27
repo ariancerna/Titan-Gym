@@ -210,6 +210,16 @@ test('la lista de espera es visible para el administrador en la agenda y en los 
   await expect(member.locator('.admin-risk')).toContainText(/Riesgo (bajo|medio|alto)/);
   await expect(member.locator('.admin-risk')).toContainText(/% de probabilidad de no-show/);
   await expect(page.getByText(/El riesgo lo estima el modelo de Machine Learning/)).toBeVisible();
+  // Riesgo medio o alto en una clase futura: botón para confirmar por WhatsApp con el mensaje escrito.
+  const level = await member.locator('.admin-risk .badge').textContent();
+  const whatsapp = member.getByRole('link', {
+    name: 'Confirmar por WhatsApp a Ana López (abre WhatsApp)',
+  });
+  if (/bajo/i.test(level ?? '')) {
+    await expect(whatsapp).toHaveCount(0);
+  } else {
+    await expect(whatsapp).toHaveAttribute('href', /^https:\/\/wa\.me\/\?text=Hola%20Ana%2C/);
+  }
   const waitlist = page.getByRole('region', { name: 'Lista de espera' });
   await expect(
     waitlist.getByRole('heading', { name: 'Lista de espera · 1 esperando' }),

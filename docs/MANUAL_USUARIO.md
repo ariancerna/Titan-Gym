@@ -26,8 +26,8 @@ En **Ver inscritos** cada socio aparece en una fila, del riesgo más alto al má
 
 | Riesgo | Qué significa | Qué hacer |
 | --- | --- | --- |
-| **Alto** | Entre los socios con más probabilidad de faltar (como máximo 1 de cada 5 reservas). | Escribirle por WhatsApp para confirmar. Si no confirma antes de la clase, ofrecer el cupo a la lista de espera. |
-| **Medio** | Riesgo algo mayor que el habitual. | Recordatorio adicional solo si hay tiempo. |
+| **Alto** | Entre los socios con más probabilidad de faltar (como máximo 1 de cada 5 reservas). | Pulsar **Confirmar por WhatsApp**: se abre WhatsApp con el mensaje ya escrito; elegir el contacto del socio y enviarlo. Si no confirma antes de la clase, ofrecer el cupo a la lista de espera. |
+| **Medio** | Riesgo algo mayor que el habitual. | Si hay tiempo, enviar el mismo mensaje con **Confirmar por WhatsApp**. |
 | **Bajo** | Lo más probable es que asista. | Nada. |
 
 - El **porcentaje** es la probabilidad estimada de que no llegue sin avisar; los **motivos** explican por qué (por ejemplo, «faltó sin avisar a 3 de sus 6 reservas anteriores», «clase antes de las 8:00»).
